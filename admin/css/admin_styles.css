@@ -1,0 +1,15 @@
+input[readonly] {
+    color: #aaa;
+}
+select[readonly] {
+    background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+    pointer-events: none;
+    touch-action: none;
+    color: #aaa;
+}
+option:disabled{
+    background: black; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+    pointer-events: none;
+    touch-action: none;
+    color: red !important;
+}

@@ -1,0 +1,103 @@
+.tooltip {
+    display:inline-block;
+    position:relative;
+    border-bottom:1px dotted #666;
+    text-align:left;
+}
+
+.tooltip .right {
+    min-width:200px;
+    top:50%;
+    left:100%;
+    width: 50%;
+    margin-left:30px;
+    transform:translate(0, -50%);
+    padding:10px 20px;
+    color:#444444;
+    background-color: rgb(255, 255, 255);
+    font-weight:normal;
+    font-size:15px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+    display:none;
+    column-count: auto;
+    text-align:center;
+}
+
+.tooltip:hover .right {
+    display:block;
+}
+
+.tooltip .right i {
+    position:absolute;
+    top:50%;
+    right:100%;
+    margin-top:-12px;
+    width:12px;
+    height:24px;
+    overflow:hidden;
+}
+
+.tooltip .right i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:0;
+    top:50%;
+    transform:translate(50%,-50%) rotate(-45deg);
+    background-color:#EEEEEE;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+
+#installments_table{
+
+    border: none;
+}
+#installments_table tr{
+    column-width: 10px;
+
+    border: none;
+
+}
+#installments_table td{
+    padding: 2px;
+    border: none;
+
+}
+
+
+a.selected {
+    background-color:#1F75CC;
+    color:white;
+    z-index:100;
+}
+
+.messagepop {
+    background-color:#FFFFFF;
+    border: dotted 1px black;
+
+    cursor:default;
+    display:none;
+    margin-top: 15px;
+    position:absolute;
+    text-align:left;
+    z-index:50;
+    padding: 25px 25px 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 3px;
+    padding-left: 15px;
+    text-indent: -15px;
+}
+
+.messagepop p, .messagepop.div {
+    border-bottom: 1px solid #EFEFEF;
+    margin: 8px 0;
+    padding-bottom: 8px;
+}

@@ -1,0 +1,38 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Darven Múltiplos Preços Informativos\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-19 15:29+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.4; wp-6.1.1\n"
+"X-Domain: darven-epi"
+
+#. Name of the plugin
+msgid "Darven Múltiplos Preços Informativos"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Esse plugin é utilizado para mostrar múltiplos preços para um produto. Como "
+"preço á vista e parcelado."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://darven.wtf"
+msgstr ""
+
+#. Author of the plugin
+msgid "Leticia Moreira"
+msgstr ""
+
+msgid "Position in single product page"
+msgstr ""
