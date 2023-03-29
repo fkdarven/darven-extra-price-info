@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-03-26 22:27-0300\n"
-"PO-Revision-Date: 2023-03-28 02:47+0000\n"
+"PO-Revision-Date: 2023-03-27 02:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -89,23 +89,12 @@ msgstr "Se não houver preço mínimo, você pode deixar esse campo em branco."
 msgid "If there is not a minimum price, you may leave this field blank."
 msgstr "Se não houver preço mínimo, você pode deixar esse campo em branco."
 
-msgid "In Cash and Installments Price"
-msgstr "Preço á Vista e com Parcelamento"
-
-msgid "In Cash Price, Installments Price, Original Price"
-msgstr "Preço á Vista,  Preço com Parcelamento, Preço Original"
-
-msgid "In Cash Price, Original Price, Installments Price"
-msgstr "Preço á Vista, Preço Original, Preço com Parcelamento"
-
 #: includes/admin/settings/class-epi-general-settings.php:37
 msgid "In Cash Settings"
 msgstr "Configurações do Preço á Vista"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:115
-#, fuzzy
-#| msgid "Incremental interest fee (%) "
-msgid "Incremental interest fee (%)"
+msgid "Incremental interest fee (%) "
 msgstr "Taxa de juros incremental (%) "
 
 msgid "Installment Color"
@@ -117,12 +106,6 @@ msgstr "Tamanho da cor da parcela"
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:103
 msgid "Installments from"
 msgstr "Parcelamento a partir da parcela"
-
-msgid "Installments Price, In Cash Price, Original Price"
-msgstr "Preço com Parcelamento, Preço á Vista, Preço Original"
-
-msgid "Installments Price, Original Price, In Cash Price"
-msgstr "Preço com Parcelamento, Preço Original,  Preço á Vista"
 
 #: includes/admin/settings/class-epi-general-settings.php:42
 msgid "Installments Settings"
@@ -176,14 +159,6 @@ msgstr "Preço mínimo necessário para o desconto ser aplicado"
 msgid "Only applied if the exhibition mode has the popup."
 msgstr "Somente aplicado se o modo de exibição incluir o popup."
 
-#, fuzzy
-#| msgid "Original Price,  In Cash price, Installments Price,"
-msgid "Original Price, In Cash price, Installments Price"
-msgstr "Preço Original,  Preço á Vista, Preço com Parcelamento"
-
-msgid "Original Price, Installments Price, In Cash price"
-msgstr "Preço Original, Preço com Parcelamento, Preço á Vista"
-
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:146
 msgid "Percent"
 msgstr "Porcentagem"
@@ -191,12 +166,6 @@ msgstr "Porcentagem"
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:78
 msgid "Popup Text"
 msgstr "Texto do popup"
-
-msgid "Position in catalog page"
-msgstr "Posição na página de categoria"
-
-msgid "Position in other pages"
-msgstr "Posição em outras páginas"
 
 msgid "Position in single product page"
 msgstr "Posição na página do produto "
@@ -246,13 +215,6 @@ msgstr "Texto antes do preço á vista."
 msgid "Text before the installment."
 msgstr "Texto antes da parcela."
 
-msgid ""
-"The Darven Multiple Price Info settings has changed! You can now access it "
-"via WooCommerce -> In cash and Installments Price"
-msgstr ""
-"As configurações do Preço á Vista e com Parcelamento mudaram! Você agora "
-"pode acessá-las através do submenu WooCommerce."
-
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:225
 msgid ""
 "To personalize the interest fees, enter the percentage of interest to be "
@@ -273,20 +235,32 @@ msgstr ""
 msgid "Type of Discount"
 msgstr "Tipo de Desconto"
 
-msgid ""
-"Use this section to set up customized interest fees. If your gateway has "
-"incremental fees (each month the same value is summed up), please use the "
-"incremental interest fee settings in the previous section for a better "
-"experience."
-msgstr ""
-"Utilize essa seção para configurar taxas de juros personalizados. Caso seu "
-"gateway possua taxas incrementais (todo mês o mesmo valor é acrescido), por "
-"gentileza, utilize as configurações de juros incrementais da seção anterior "
-"para uma melhor experiência."
-
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:45
 msgid "Value of Discount"
 msgstr "Valor do Desconto"
 
-msgid "Don't show this message anymore"
-msgstr "Não exibir mais essa mensagem"
+msgid "Original Price,  In Cash price, Installments Price,"
+msgstr "Preço Original,  Preço á Vista, Preço com Parcelamento"
+
+
+msgid "Original Price, Installments Price, In Cash price"
+msgstr "Preço Original, Preço com Parcelamento, Preço á Vista"
+
+msgid "In Cash Price, Original Price, Installments Price"
+msgstr "Preço á Vista, Preço Original, Preço com Parcelamento"
+
+msgid "In Cash Price, Installments Price, Original Price"
+msgstr "Preço á Vista,  Preço com Parcelamento, Preço Original"
+
+msgid "Installments Price, Original Price, In Cash Price"
+msgstr "Preço com Parcelamento, Preço Original,  Preço á Vista"
+
+msgid "Installments Price, In Cash Price, Original Price"
+msgstr "Preço com Parcelamento, Preço á Vista, Preço Original"
+
+msgid "Position in catalog page"
+msgstr "Posição na página de categoria"
+
+msgid "Position in other pages"
+msgstr "Posição em outras páginas"
+

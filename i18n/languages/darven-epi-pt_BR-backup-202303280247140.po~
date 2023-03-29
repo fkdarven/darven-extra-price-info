@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-03-26 22:27-0300\n"
-"PO-Revision-Date: 2023-03-28 02:47+0000\n"
+"PO-Revision-Date: 2023-03-27 02:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: uninstall.php:6
 #, php-format
 msgid "%s should only be called when uninstalling the plugin."
-msgstr ""
+msgstr " "
 
 #: includes/admin/settings/class-epi-general-settings.php:56
 msgid "Advanced Installments Settings Section"
@@ -89,9 +89,6 @@ msgstr "Se não houver preço mínimo, você pode deixar esse campo em branco."
 msgid "If there is not a minimum price, you may leave this field blank."
 msgstr "Se não houver preço mínimo, você pode deixar esse campo em branco."
 
-msgid "In Cash and Installments Price"
-msgstr "Preço á Vista e com Parcelamento"
-
 msgid "In Cash Price, Installments Price, Original Price"
 msgstr "Preço á Vista,  Preço com Parcelamento, Preço Original"
 
@@ -103,9 +100,7 @@ msgid "In Cash Settings"
 msgstr "Configurações do Preço á Vista"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:115
-#, fuzzy
-#| msgid "Incremental interest fee (%) "
-msgid "Incremental interest fee (%)"
+msgid "Incremental interest fee (%) "
 msgstr "Taxa de juros incremental (%) "
 
 msgid "Installment Color"
@@ -246,13 +241,6 @@ msgstr "Texto antes do preço á vista."
 msgid "Text before the installment."
 msgstr "Texto antes da parcela."
 
-msgid ""
-"The Darven Multiple Price Info settings has changed! You can now access it "
-"via WooCommerce -> In cash and Installments Price"
-msgstr ""
-"As configurações do Preço á Vista e com Parcelamento mudaram! Você agora "
-"pode acessá-las através do submenu WooCommerce."
-
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:225
 msgid ""
 "To personalize the interest fees, enter the percentage of interest to be "
@@ -273,20 +261,15 @@ msgstr ""
 msgid "Type of Discount"
 msgstr "Tipo de Desconto"
 
-msgid ""
-"Use this section to set up customized interest fees. If your gateway has "
-"incremental fees (each month the same value is summed up), please use the "
-"incremental interest fee settings in the previous section for a better "
-"experience."
-msgstr ""
-"Utilize essa seção para configurar taxas de juros personalizados. Caso seu "
-"gateway possua taxas incrementais (todo mês o mesmo valor é acrescido), por "
-"gentileza, utilize as configurações de juros incrementais da seção anterior "
-"para uma melhor experiência."
-
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:45
 msgid "Value of Discount"
 msgstr "Valor do Desconto"
 
-msgid "Don't show this message anymore"
-msgstr "Não exibir mais essa mensagem"
+msgid "Use this section to set up customized interest fees. If your gateway has incremental fees (each month the same value is summed up), please use the incremental interest fee settings in the previous section for a better experience."
+msgstr "Utilize essa seção para configurar taxas de juros personalizados. Caso seu gateway possua taxas incrementais (todo mês o mesmo valor é acrescido), por gentileza, utilize as configurações de juros incrementais da seção anterior para uma melhor experiência."
+
+msgid "The Darven Multiple Price Info settings has changed! You can now access it via WooCommerce -> In cash and Installments Price"
+msgstr "As configurações do Preço á Vista e com Parcelamento mudaram! Você agora pode acessá-las através do submenu WooCommerce."
+
+msgid "In Cash and Installments Price"
+msgstr "Preço á Vista e com Parcelamento"

@@ -2,8 +2,8 @@
 
 if ( ! class_exists( "Darven_Epi" ) ) {
 	class Darven_Epi {
-		protected $loader;
-		protected $plugin_name;
+		protected Darven_Epi_Loader $loader;
+		protected string $plugin_name;
 		protected $version;
 
 
@@ -14,8 +14,7 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 			} else {
 				$this->version = '1.0.0';
 			}
-			$this->plugin_name = 'plugin-name';
-
+			$this->plugin_name = 'darven-epi';
 
 			$this->load_dependencies();
 			$this->set_locale();
@@ -47,8 +46,18 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 
 			}
 		}
+		public function sample_admin_notice__success() {
+			?>
+			<div class="notice notice-warning is-dismissible">
+				<p><?php _e( 'The Darven Multiple Price Info settings has changed! You can now access it via WooCommerce -> In cash and Installments Price', DARVEN_EPI_LANGUAGE_DOMAIN ); ?>  <button class="button button-primary"><?php echo __("Don't show this message anymore.", DARVEN_EPI_LANGUAGE_DOMAIN)?></button> </p>
+
+			</div>
+			<?php
+		}
 		private function load_dependencies(): void {
 
+
+			add_action( 'admin_notices', array($this, 'sample_admin_notice__success'));
 			//spl_autoload_register( array($this, 'autoloader' ));
 
 			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings-fields.php';
@@ -61,6 +70,7 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 			require DARVEN_EPI_DIR_PATH . 'admin/class-darven-epi-admin.php';
 			require DARVEN_EPI_DIR_PATH . 'public/class-darven-epi-public.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/functions/class-darven-epi-format-final-price.php';
+
 
 			$this->loader = new Darven_Epi_Loader();
 
@@ -94,7 +104,7 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 		}
 		public function define_public_filters(): void {
 			$plugin_final = new Darven_Epi_Format_Final_Price();
-			$this->loader->add_filter( 'woocommerce_get_price_html', $plugin_final, 'get_discount_price');
+			//$this->loader->add_filter( 'woocommerce_get_price_html', $plugin_final, 'get_discount_price', 10);
 		}
 
 

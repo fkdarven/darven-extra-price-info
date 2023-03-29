@@ -24,14 +24,14 @@ if ( ! class_exists( 'Darven_Epi_Product_Options' ) ) {
 			woocommerce_wp_checkbox( array(
 				'id'          => '_darven_epi_is_incash_enabled',
 				'placeholder' => '',
-				'label'       => __( 'Desativar preço á vista para esse produto', 'woocommerce' ),
+				'label'       => __( 'Disable in cash price for this product', 'woocommerce' ),
 				'type'        => 'boolean'
 			) );
 			//Custom Product Number Field
 			woocommerce_wp_checkbox( array(
 				'id'          => '_darven_epi_is_installment_enabled',
 				'placeholder' => '',
-				'label'       => __( 'Desativar preço parcelado para esse produto', 'woocommerce' ),
+				'label'       => __( 'Disable installments price for this product', 'woocommerce' ),
 				'type'        => 'boolean',
 
 			) );

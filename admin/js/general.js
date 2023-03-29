@@ -1,9 +1,9 @@
 window.onload = function () {
 
-    var modal = document.getElementById("installments_auxiliary_table_div");
-    var btn = document.getElementById("myBtn");
+    const modal = document.getElementById("installments_auxiliary_table_div");
+    const btn = document.getElementById("myBtn");
 
-    var span = document.getElementsByClassName("close")[0];
+    const span = document.getElementsByClassName("close")[0];
 
     btn.onclick = function() {
         modal.style.display = "block";
@@ -85,6 +85,9 @@ window.onload = function () {
 
 jQuery.noConflict();
 jQuery(document).ready(function () {
+
+    jQuery('#darven_epi_color_of_incash_price').wpColorPicker();
+
     customized_values = customized_values.split('|');
     let installments_table_div = jQuery('#installments_auxiliary_table_div');
     for (let install_number = 0; install_number < max_install; install_number++) {
@@ -102,6 +105,8 @@ jQuery(document).ready(function () {
 
         }
     }
+
+
     jQuery('#customized_values_button').on('click', function () {
         let installments_final_result = "";
         for (let child = first_install - 1; child < max_install; child++) {

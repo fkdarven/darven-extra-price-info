@@ -47,8 +47,11 @@ if(!class_exists('Darven_Epi_Admin')){
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
+		$page = $_GET['page'] ?? null;
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/admin_styles.css', array(), $this->version, 'all' );
+		if($page === 'darven-epi-admin') {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/admin_styles.css', array(), $this->version, 'all' );
+		}
 
 	}
 
@@ -71,7 +74,22 @@ if(!class_exists('Darven_Epi_Admin')){
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), $this->version, false );
+		global $wp;
+
+		$tab = $_GET['tab'] ?? null;
+		$page = $_GET['page'] ?? null;
+
+		if($page === 'darven-epi-admin'){
+
+			if( $tab === 'colorsandstyles' ){
+				wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/colorsandstyles.js', [ 'jquery', 'wp-color-picker' ], $this->version, false );
+			}elseif( $tab === 'positions'){
+				//wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/colorsandstyles.js', ['jquery', 'wp-color-picker'], $this->version, false);
+			}else{
+				wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/general.js' , ['jquery'], $this->version, false);
+			}
+		}
+
 
 	}
 	}

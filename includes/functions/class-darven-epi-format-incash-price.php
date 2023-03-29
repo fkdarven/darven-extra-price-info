@@ -14,45 +14,48 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 		private string $incash_suffix;
 		private string $minimum_price;
 		private string $type_of_discount;
+		private string $overwrite_price;
+
+		public function __construct($overwrite_price = null) {
 
 
-
-		public function __construct() {
-
-
+			if($overwrite_price){
+				$this->overwrite_price = $overwrite_price;
+			}
 			if ( ! isset( get_option( 'darven_epi_option_general' )['darven_epi_incash_is_enabled'] ) || ! get_option( 'darven_epi_option_general' )['darven_epi_incash_is_enabled'] ) {
 
 				return;
 
 			}
 
-
 			$this->initiate_options();
-
-
 
 		}
 
 		public function initiate_options(): void {
+
 			$this->value_of_discount = get_option( 'darven_epi_option_general' )['darven_epi_value_of_incash_discount'];
-			$this->minimum_price     = get_option( 'darven_epi_option_general' )['darven_epi_minimum_incash_value'];
+			$this->minimum_price     = get_option( 'darven_epi_option_general' )['darven_epi_minimum_incash_value'] ?? 0;
 			$this->incash_prefix     = get_option( 'darven_epi_option_general' )['darven_epi_incash_prefix'];
 			$this->incash_suffix     = get_option( 'darven_epi_option_general' )['darven_epi_incash_suffix'];
-			$this->type_of_discount = get_option( 'darven_epi_option_general' )['darven_epi_type_of_discount'];
+			$this->type_of_discount  = get_option( 'darven_epi_option_general' )['darven_epi_type_of_discount'];
 		}
 
 		public function get_discount_price(): string {
 			$clean_price  = $this->get_active_price();
 			$incash_price = $this->get_incash_price( $clean_price );
 
-			if($clean_price < $this->minimum_price){
+
+			if ( $clean_price <= $this->minimum_price ) {
 				return '';
 			}
+
 			return '<br><span id="incash-prefix">' . $this->incash_prefix . '</span><span id="incash-price"> ' . $incash_price . '</span><span id="incash-suffix"> ' . $this->incash_suffix . '</span>';
 		}
 
 
 		public function get_active_price(): float {
+
 			global $product;
 
 			if ( $product->is_type( 'variable' ) ) {
@@ -60,9 +63,12 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 				$sale_price    = $product->get_variation_sale_price( 'min', true );
 				$regular_price = $product->get_variation_regular_price( 'max', true );
 				if ( $sale_price ) {
+					$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
+					return $yith;
 					return $sale_price;
 				}
-
+				$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
+				return $yith;
 				return $regular_price;
 			}
 
@@ -70,23 +76,28 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 			$sale_price    = (float) $product->get_sale_price();
 
 			if ( $sale_price ) {
+				$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
+				return $yith;
 				return $sale_price;
 			}
 
+			$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
+			return $yith;
 			return $regular_price;
 		}
 
 		public function get_incash_price( $price ): string {
 
-			if ( $price < $this->minimum_price ) {
-				return $price;
+			if ( $price <= $this->minimum_price ) {
+				return strip_tags( wc_price( $price ) );
 			}
-			$price             = (float) $price;
+			$price = (float) $price;
 
-			if($this->type_of_discount === 'fixed'){
-				if($price - $this->value_of_discount <= 0){
+			if ( $this->type_of_discount === 'fixed' ) {
+				if ( $price - $this->value_of_discount <= 0 ) {
 					return $price;
 				}
+
 				return $price - $this->value_of_discount;
 			}
 			$value_of_discount = ( (int) $this->value_of_discount ) / 100;
@@ -95,7 +106,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 			$final_price = $price - ( $price * $value_of_discount );
 			$final_price = round( $final_price, 2 );
 
-			return wc_price( $final_price );
+			return strip_tags( wc_price( $final_price ) );
 		}
 
 

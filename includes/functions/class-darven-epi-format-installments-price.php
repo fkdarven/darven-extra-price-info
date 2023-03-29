@@ -18,7 +18,6 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 		private string $mode_of_view;
 		private string $interest_fee;
 		private string $interest_fee_from;
-
 		private string $install_count;
 		private string $installments_popup_text;
 		private string $interest_fee_first_install;
@@ -77,7 +76,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 			}
 			if ( $this->mode_of_view === 'popup' ) {
 
-				$installments_statement = '<br><span id="installment-prefix">' . esc_attr( $this->installments_prefix ) . '</span><span id="installment-install"> ' . esc_attr( $this->number_of_installments ) . 'x de </span><span id="installment-price"> ' . wc_price( $price_result[1] ) . '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
+				$installments_statement = '<br><span id="installment-prefix">' . esc_attr( $this->installments_prefix ) . '</span><span id="installment-install"> ' . esc_attr( $this->number_of_installments ) . 'x de </span><span id="installment-price"> ' . strip_tags(wc_price( $price_result[1] ) ). '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
 
 				return $installments_statement . '<div class="messagepop pop">' . $price_result[0] . '</div> <a href="#" id="contact">' . $this->installments_popup_text . '</a>';
 
@@ -85,12 +84,12 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
 
 			if ( $this->mode_of_view === 'nofee' ) {
-				$installments_statement = '<br><span id="installment-prefix">' . esc_attr( $this->installments_prefix ) . '</span><span id="installment-install"> ' . esc_attr( $this->number_of_installments ) . 'x de </span><span id="installment-price"> ' . wc_price( $installment_price ) . '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
+				$installments_statement = '<br><span id="installment-prefix">' . esc_attr( $this->installments_prefix ) . '</span><span id="installment-install"> ' . esc_attr( $this->number_of_installments ) . 'x de </span><span id="installment-price"> ' . strip_tags(wc_price( $installment_price )) . '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
 
 				return $installments_statement . '<div class="messagepop pop">' . $price_result[0] . '</div> <a href="#" id="contact">' . $this->installments_popup_text . '</a>';
 			}
 
-			return '<br><span id="installment-prefix">' . esc_attr( $this->installments_prefix ) . '</span><span id="installment-install"> ' . esc_attr( $this->number_of_installments ) . 'x de </span><span id="installment-price"> ' . wc_price( $price_result[1] ) . '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
+			return '<br><span id="installment-prefix">' . esc_attr( $this->installments_prefix ) . '</span><span id="installment-install"> ' . esc_attr( $this->number_of_installments ) . 'x de </span><span id="installment-price"> ' . strip_tags(wc_price( $price_result[1] )) . '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
 
 
 		}

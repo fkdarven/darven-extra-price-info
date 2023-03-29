@@ -1,201 +1,211 @@
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Darven Múltiplos Preços Informativos\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 15:29+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: LETICIA MOREIRA <leticia@vivaldi.net>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-03-26 22:27-0300\n"
+"PO-Revision-Date: 2023-03-27 01:38+0000\n"
+"Last-Translator: \n"
+"Language-Team: Português do Brasil\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.4; wp-6.1.1\n"
-"X-Domain: darven-epi\n"
+"X-Poedit-Basepath: C:/Users/letic/Local Sites/darven-epi/app/public/wp-"
+"content/plugins/darven-multiplos-precos-informativos\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-Bookmarks: -1,5,-1,-1,-1,-1,-1,-1,-1,-1\n"
+"X-Poedit-SearchPath-0: .\n"
+"Report-Msgid-Bugs-To: \n"
+"X-Loco-Version: 2.6.4; wp-6.1.1"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:35
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:66
 msgid "Enable"
-msgstr ""
+msgstr "Habilitar"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:40
 msgid "Type of Discount"
-msgstr ""
+msgstr "Tipo de Desconto"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:45
 msgid "Value of Discount"
-msgstr ""
+msgstr "Valor do Desconto"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:50
 msgid "Minimum price to the discount to be applied"
-msgstr ""
+msgstr "Preço mínimo necessário para o desconto ser aplicado"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:55
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:93
 msgid "Prefix"
-msgstr ""
+msgstr "Prefixo"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:60
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:98
 msgid "Suffix"
-msgstr ""
+msgstr "Sufixo"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:72
 msgid "Exhibition Mode"
-msgstr ""
+msgstr "Modo de Exibição"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:78
 msgid "Popup Text"
-msgstr ""
+msgstr "Texto do popup"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:83
 msgid "Maximum of Installments"
-msgstr ""
+msgstr "Máximo de parcelas"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:88
 msgid "Minimum price necessary to apply the installments"
-msgstr ""
+msgstr "Preço mínimo necessário para o parcelamento ser aplicado"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:103
 msgid "Installments from"
-msgstr ""
+msgstr "Parcelamento a partir da parcela"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:109
 msgid "Interest fee in the first install (%)"
-msgstr ""
+msgstr "Taxa de juros na primeira parcela (%)"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:115
-msgid "Incremental interest fee (%)"
-msgstr ""
+msgid "Incremental interest fee (%) "
+msgstr "Taxa de juros incremental (%) "
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:120
 msgid "Customize the interest fees"
-msgstr ""
+msgstr "Customizar as taxas de juros"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:127
 msgid "Customized values"
-msgstr ""
+msgstr "Valores customizados"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:146
 msgid "Percent"
-msgstr ""
+msgstr "Porcentagem"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:148
 msgid "Fixed"
-msgstr ""
+msgstr "Fixo"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:157
 msgid "If there is not a minimum price, you may leave the field blank."
-msgstr ""
+msgstr "Se não houver preço mínimo, você pode deixar esse campo em branco."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:161
 msgid "Text before the in cash price."
-msgstr ""
+msgstr "Texto antes do preço á vista."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:165
 msgid "Text after the in cash price."
-msgstr ""
+msgstr "Texto após o preço á vista."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:175
 msgid "Maximum of installments"
-msgstr ""
+msgstr "Máximo de parcelas"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:177
 msgid "Maximum of installments and a popup with each installment"
-msgstr ""
+msgstr "Máximo de parcelas e um popup sobre cada parcela"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:180
 msgid ""
 "Maximum of installments without interest fee and a popup with each "
 "installment"
-msgstr ""
+msgstr "Máximo de parcelas s/juros e um popup sobre cada parcela"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:186
 msgid "Only applied if the exhibition mode has the popup."
-msgstr ""
+msgstr "Somente aplicado se o modo de exibição incluir o popup."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:190
 msgid "Maximum installments possible. With or without interest fee."
-msgstr ""
+msgstr "Máximo de parcelas possíveis. Com ou sem juros."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:194
 msgid "If there is not a minimum price, you may leave this field blank."
-msgstr ""
+msgstr "Se não houver preço mínimo, você pode deixar esse campo em branco."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:198
 msgid "Text before the installment."
-msgstr ""
+msgstr "Texto antes da parcela."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:202
 msgid "Text after the installment."
-msgstr ""
+msgstr "Texto após a parcela."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:207
 msgid "Interest fee applied in the first installment (with i.f)."
-msgstr ""
+msgstr "Taxa de juros aplicada na primeira parcela com juros."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:212
 msgid "Interest fee incrementally applied on each install."
 msgstr ""
-
+"Taxa de juros incremental aplicada a cada parcela. Começa a contar a partir "
+"da 2ª parcela com juros."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:216
 msgid "At which installment should the interest fee start being applied."
 msgstr ""
-
+"A partir de qual parcela a taxa de juros deve começar a ser contabilizada."
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:220
 msgid ""
 "If enabled, only the customized interest fee values will be considered. Be "
 "aware!"
 msgstr ""
-
+"Se habilitado, apenas as taxas de juros customizadas serão consideradas. "
+"Fique atento!"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:225
 msgid ""
 "To personalize the interest fees, enter the percentage of interest to be "
 "charged for each installment that has a fee. Separate the values with a "
 "vertical bar (|), and use the format 'fee,fee,fee', where each fee "
-"corresponds to an installment with an interest fee. For example: '8,25|9,50|"
-"10,12'. Please note that you should only include installments that have an "
-"interest fee."
+"corresponds to an installment with an interest fee. For example: '8,25|9,"
+"50|10,12'. Please note that you should only include installments that have "
+"an interest fee."
 msgstr ""
-
+"Para personalizar as taxas de juros, insira a porcentagem que deve ser "
+"considerada a cada parcela que tem juros. Separe os valores com uma barra "
+"vertical | e use o formato 'taxa|taxa|taxa', onde cada taxa corresponde a "
+"parcela com sua taxa de juros. Por exemplo: '8,25|9,50|10,12'. Por favor "
+"inclua apenas as parcelas que devem possuir taxas de juros para que o módulo "
+"funcione corretamente."
 
 #: includes/admin/settings/class-epi-general-settings.php:37
 msgid "In Cash Settings"
-msgstr ""
+msgstr "Configurações do Preço á Vista"
 
 #: includes/admin/settings/class-epi-general-settings.php:42
 msgid "Installments Settings"
-msgstr ""
+msgstr "Configurações do Preço com Parcelamento"
 
 #: includes/admin/settings/class-epi-general-settings.php:56
 msgid "Advanced Installments Settings Section"
-msgstr ""
+msgstr "Configurações de Parcelamento Avançado "
 
 #: includes/functions/class-darven-epi-product-options.php:27
 msgid "Disable in cash price for this product"
-msgstr ""
+msgstr "Desabilitar preço á vista para esse produto"
 
 #: includes/functions/class-darven-epi-product-options.php:34
 msgid "Disable installments price for this product"
-msgstr ""
+msgstr "Desabilitar preço com parcelamento para esse produto"
 
 #: templates/admin/general-settings.php:7
 msgid "General Settings"
-msgstr ""
+msgstr "Configurações Gerais"
 
 #: templates/admin/general-settings.php:9
 msgid "Colors and Styles"
-msgstr ""
+msgstr "Cores e Estilos"
 
 #: templates/admin/general-settings.php:11
 msgid "Positions"
-msgstr ""
+msgstr "Posições"
 
 #: uninstall.php:6
 #, php-format
@@ -203,66 +213,4 @@ msgid "%s should only be called when uninstalling the plugin."
 msgstr ""
 
 msgid "Position in single product page"
-msgstr ""
-
-msgid "Price Color"
-msgstr ""
-
-msgid "Color Font Size"
-msgstr ""
-
-msgid "Suffix Color"
-msgstr ""
-
-msgid "Suffix Font Size"
-msgstr ""
-
-msgid "Prefix Color"
-msgstr ""
-
-msgid "Prefix Font Size"
-msgstr ""
-
-msgid "Installment Color"
-msgstr ""
-
-msgid "Installment Font Size"
-msgstr ""
-
-
-msgid "Original Price, In Cash price, Installments Price"
-msgstr ""
-
-msgid "Original Price, Installments Price, In Cash price"
-msgstr ""
-
-msgid "In Cash Price, Original Price, Installments Price"
-msgstr ""
-
-msgid "In Cash Price, Installments Price, Original Price"
-msgstr ""
-
-msgid "Installments Price, Original Price, In Cash Price"
-msgstr ""
-
-msgid "Installments Price, In Cash Price, Original Price"
-msgstr ""
-
-msgid "Position in catalog page"
-msgstr ""
-
-msgid "Position in other pages"
-msgstr ""
-
-
-msgid "Use this section to set up customized interest fees. If your gateway has incremental fees (each month the same value is summed up), please use the incremental interest fee settings in the previous section for a better experience."
-msgstr ""
-
-msgid "The Darven Multiple Price Info settings has changed! You can now access it via WooCommerce -> In cash and Installments Price"
-msgstr ""
-
-msgid "In Cash and Installments Price"
-msgstr ""
-
-msgid "Don't show this message anymore"
-msgstr
+msgstr "Posição na página do produto"
