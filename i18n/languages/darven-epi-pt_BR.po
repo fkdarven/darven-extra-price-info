@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-03-26 22:27-0300\n"
-"PO-Revision-Date: 2023-03-28 02:47+0000\n"
+"PO-Revision-Date: 2023-04-10 04:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -17,12 +17,12 @@ msgstr ""
 "X-Poedit-Bookmarks: -1,5,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "X-Poedit-SearchPath-0: .\n"
 "Report-Msgid-Bugs-To: \n"
-"X-Loco-Version: 2.6.4; wp-6.1.1"
+"X-Loco-Version: 2.6.4; wp-6.2"
 
 #: uninstall.php:6
 #, php-format
 msgid "%s should only be called when uninstalling the plugin."
-msgstr ""
+msgstr " %s should only be called when uninstalling the plugin."
 
 #: includes/admin/settings/class-epi-general-settings.php:56
 msgid "Advanced Installments Settings Section"
@@ -40,6 +40,12 @@ msgstr "Tamanho da fonte do preço"
 msgid "Colors and Styles"
 msgstr "Cores e Estilos"
 
+msgid "Compatibility Mode"
+msgstr "Modo de Compatibilidade"
+
+msgid "Compatibility Settings"
+msgstr "Configurações de Compatibilidade com outros módulos"
+
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:120
 msgid "Customize the interest fees"
 msgstr "Customizar as taxas de juros"
@@ -56,10 +62,16 @@ msgstr "Desabilitar preço á vista para esse produto"
 msgid "Disable installments price for this product"
 msgstr "Desabilitar preço com parcelamento para esse produto"
 
+msgid "Don't show this message anymore"
+msgstr "Não exibir mais essa mensagem"
+
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:35
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:66
 msgid "Enable"
 msgstr "Habilitar"
+
+msgid "Enable YITH Compatibility"
+msgstr "Habilitar Compatibilidade com YITH"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:72
 msgid "Exhibition Mode"
@@ -80,6 +92,13 @@ msgid ""
 msgstr ""
 "Se habilitado, apenas as taxas de juros customizadas serão consideradas. "
 "Fique atento!"
+
+msgid ""
+"If enabled, the plugin will consider the price defined by YITH WooCommerce "
+"Dynamic Pricing and Discounts!"
+msgstr ""
+"Se habilitado, o plugin considerará o preço definido pelo plugin YITH "
+"WooCommerce Dynamic Pricing and Discounts!"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:157
 msgid "If there is not a minimum price, you may leave the field blank."
@@ -103,7 +122,6 @@ msgid "In Cash Settings"
 msgstr "Configurações do Preço á Vista"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:115
-#, fuzzy
 #| msgid "Incremental interest fee (%) "
 msgid "Incremental interest fee (%)"
 msgstr "Taxa de juros incremental (%) "
@@ -112,11 +130,11 @@ msgid "Installment Color"
 msgstr "Cor da parcela"
 
 msgid "Installment Font Size"
-msgstr "Tamanho da cor da parcela"
+msgstr "Tamanho da fonte da parcela"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:103
 msgid "Installments from"
-msgstr "Parcelamento a partir da parcela"
+msgstr "Juros a partir a partir da parcela"
 
 msgid "Installments Price, In Cash Price, Original Price"
 msgstr "Preço com Parcelamento, Preço á Vista, Preço Original"
@@ -166,7 +184,7 @@ msgstr "Máximo de parcelas s/juros e um popup sobre cada parcela"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:88
 msgid "Minimum price necessary to apply the installments"
-msgstr "Preço mínimo necessário para o parcelamento ser aplicado"
+msgstr "Preço mínimo de cada parcela"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:50
 msgid "Minimum price to the discount to be applied"
@@ -178,7 +196,7 @@ msgstr "Somente aplicado se o modo de exibição incluir o popup."
 
 #, fuzzy
 #| msgid "Original Price,  In Cash price, Installments Price,"
-msgid "Original Price, In Cash price, Installments Price"
+msgid "Original Price, In Cash Price, Installments Price"
 msgstr "Preço Original,  Preço á Vista, Preço com Parcelamento"
 
 msgid "Original Price, Installments Price, In Cash price"
@@ -218,6 +236,9 @@ msgstr "Tamanho da fonte do prefixo"
 
 msgid "Price Color"
 msgstr "Cor do Preço"
+
+msgid "Statements Positions Settings"
+msgstr "Configurações das Posições dos Preços"
 
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:60
 #: includes/admin/settings/class-darven-epi-general-settings-fields.php:98
@@ -288,5 +309,12 @@ msgstr ""
 msgid "Value of Discount"
 msgstr "Valor do Desconto"
 
-msgid "Don't show this message anymore"
-msgstr "Não exibir mais essa mensagem"
+msgid ""
+"This plugin is used to show multiple prices for a product. Incash and "
+"installments price."
+msgstr ""
+"Esse plugin é usado para mostrar múltiplos preços de um produto. Preço á "
+"Vista e com Parcelamento"
+
+msgid "Mode of View"
+msgstr "Modo de Exibição"

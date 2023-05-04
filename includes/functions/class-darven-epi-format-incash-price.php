@@ -6,6 +6,9 @@
  */
 //namespace Darven\Epi\Includes\Functions\Incash;
 
+defined( 'ABSPATH' ) || exit();
+require 'class-darven-epi-product-price.php';
+
 if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 	class Darven_Epi_Format_Incash_Price {
 
@@ -14,14 +17,10 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 		private string $incash_suffix;
 		private string $minimum_price;
 		private string $type_of_discount;
-		private string $overwrite_price;
 
 		public function __construct($overwrite_price = null) {
 
 
-			if($overwrite_price){
-				$this->overwrite_price = $overwrite_price;
-			}
 			if ( ! isset( get_option( 'darven_epi_option_general' )['darven_epi_incash_is_enabled'] ) || ! get_option( 'darven_epi_option_general' )['darven_epi_incash_is_enabled'] ) {
 
 				return;
@@ -42,7 +41,8 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 		}
 
 		public function get_discount_price(): string {
-			$clean_price  = $this->get_active_price();
+			$darven_product_price = new Darven_Epi_Product_Price();
+			$clean_price  = $darven_product_price->get_active_price();
 			$incash_price = $this->get_incash_price( $clean_price );
 
 
@@ -50,40 +50,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 				return '';
 			}
 
-			return '<br><span id="incash-prefix">' . $this->incash_prefix . '</span><span id="incash-price"> ' . $incash_price . '</span><span id="incash-suffix"> ' . $this->incash_suffix . '</span>';
-		}
-
-
-		public function get_active_price(): float {
-
-			global $product;
-
-			if ( $product->is_type( 'variable' ) ) {
-
-				$sale_price    = $product->get_variation_sale_price( 'min', true );
-				$regular_price = $product->get_variation_regular_price( 'max', true );
-				if ( $sale_price ) {
-					$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
-					return $yith;
-					return $sale_price;
-				}
-				$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
-				return $yith;
-				return $regular_price;
-			}
-
-			$regular_price = (float) $product->get_price();
-			$sale_price    = (float) $product->get_sale_price();
-
-			if ( $sale_price ) {
-				$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
-				return $yith;
-				return $sale_price;
-			}
-
-			$yith = YWDPD_Frontend::get_instance()->get_dynamic_price( $regular_price, $product, 1 );
-			return $yith;
-			return $regular_price;
+			return '<div id="incash-price-statement"><span id="incash-prefix">' . $this->incash_prefix . '</span><span id="incash-price"> ' . $incash_price . '</span><span id="incash-suffix"> ' . $this->incash_suffix . '</span></div>';
 		}
 
 		public function get_incash_price( $price ): string {

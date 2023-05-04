@@ -1,5 +1,6 @@
 <?php
 
+defined( 'ABSPATH' ) || exit();
 if(!class_exists("Darven_Epi_Deactivator")){
 	class Darven_Epi_Deactivator {
 

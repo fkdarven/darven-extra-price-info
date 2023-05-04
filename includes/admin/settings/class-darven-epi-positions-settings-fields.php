@@ -1,5 +1,6 @@
 <?php
 
+defined( 'ABSPATH' ) || exit();
 if ( ! class_exists( 'Darven_Epi_Positions_Fields' ) ) {
 	class Darven_Epi_Positions_Fields {
 		private $darven_epi_options;
@@ -44,25 +45,20 @@ if ( ! class_exists( 'Darven_Epi_Positions_Fields' ) ) {
 				echo "<option value='" . $key . "' "
 				     . selected( $this->darven_epi_options['darven_epi_single_product_position'], $key, false ) . ">" . esc_html( __( $value, DARVEN_EPI_LANGUAGE_DOMAIN ) ) .
 				     "</option>";
-
 			}
 			echo "</select>";
-
 		}
 
 		public function darven_epi_others_product_position_callback(): void {
-
 			echo " <label for='darven_epi_others_product_position'></label><select id='darven_epi_others_product_position' name='darven_epi_option_positions[darven_epi_others_product_position]'>";
 			foreach ( $this->items as $key => $value ) {
 				echo "<option value='" . $key . "' "
 				     . selected( $this->darven_epi_options['darven_epi_others_product_position'] ?? null, $key, false ) . ">" . esc_html( __( $value, DARVEN_EPI_LANGUAGE_DOMAIN ) ) .
 				     "</option>";
-
 			}
 			echo "</select>";
 
 		}
-
 		public function darven_epi_catalog_product_position_callback(): void {
 
 			echo " <label for='darven_epi_catalog_product_position'></label><select id='darven_epi_catalog_product_position' name='darven_epi_option_positions[darven_epi_catalog_product_position]'>";

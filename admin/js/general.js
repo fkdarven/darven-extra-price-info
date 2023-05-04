@@ -1,25 +1,5 @@
-window.onload = function () {
+jQuery(document).ready(function () {
 
-    const modal = document.getElementById("installments_auxiliary_table_div");
-    const btn = document.getElementById("myBtn");
-
-    const span = document.getElementsByClassName("close")[0];
-
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-
-// When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-// When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
 
     let is_incash_enabled = document.getElementById('darven_epi_incash_is_enabled');
     let incash_array = ['darven_epi_type_of_discount', 'darven_epi_value_of_incash_discount', 'darven_epi_minimum_incash_value', 'darven_epi_incash_prefix', 'darven_epi_incash_suffix'];
@@ -33,15 +13,45 @@ window.onload = function () {
     shallEnable('incash');
     shallEnable('');
     shallEnableTable();
+    jQuery('#darven_epi_incash_is_enabled').on('change', function () {
+        shallEnable('incash');
+    });
 
-    is_incash_enabled.onchange = function () {
-        shallEnable('incash')
-    };
-    is_installments_enabled.onchange = function () {
-        shallEnable()
-    };
-    is_table_enabled.onchange = function () {
-        shallEnableTable()
+    jQuery('#darven_epi_installments_is_enabled').on('change', function () {
+        shallEnable('installments');
+    });
+
+    jQuery('#darven_epi_installments_interest_fee_is_table_enabled').on('change', function () {
+        shallEnableTable();
+    });
+
+    function shallEnable(section) {
+
+        if (section === 'incash') {
+            if (!is_incash_enabled.checked) {
+                incash_array.forEach(function (element) {
+                    jQuery('#'+element).attr('readonly', 'true');
+                });
+                return;
+            }
+            incash_array.forEach(function (element) {
+                jQuery('#'+element).removeAttr('readonly');
+                //document.getElementById(element).removeAttribute('readonly');
+            });
+            return;
+        }
+        if (!is_installments_enabled.checked) {
+
+            installments_array.forEach(function (element) {
+                jQuery('#'+element).attr('readonly', 'true');
+                //document.getElementById(element).setAttribute('readonly', 'true');
+            });
+            return;
+        }
+        installments_array.forEach(function (element) {
+            jQuery('#'+element).removeAttr('readonly');
+        });
+
     }
 
     function shallEnableTable() {
@@ -56,72 +66,42 @@ window.onload = function () {
         document.getElementById('darven_epi_installments_interest_fee_first_install').removeAttribute('readonly');
     }
 
-    function shallEnable(section) {
 
-        if (section === 'incash') {
-            if (!is_incash_enabled.checked) {
-                incash_array.forEach(function (element) {
-                    document.getElementById(element).setAttribute('readonly', 'true');
-                });
-                return;
-            }
-            incash_array.forEach(function (element) {
-                document.getElementById(element).removeAttribute('readonly');
-            });
-        }
-        if (!is_installments_enabled.checked) {
+    /*
+        customized_values = customized_values.split('|');
+        let installments_table_div = jQuery('#installments_auxiliary_table_div');
+        for (let install_number = 0; install_number < max_install; install_number++) {
+            if (install_number < (first_install - 1)) {
+                jQuery('<p><label for="darven_epi_install_numbers">' + (install_number + 1) + 'ª Parcela <input type="text" id="darven_epi_install_number" size="20" name="darven_epi_install_number_' + install_number + '" value="0" readonly placeholder="Insira a Taxa" /></label></p>').appendTo(installments_table_div);
 
-            installments_array.forEach(function (element) {
-                document.getElementById(element).setAttribute('readonly', 'true');
-            });
-            return;
-        }
-        installments_array.forEach(function (element) {
-            document.getElementById(element).removeAttribute('readonly');
-        });
-
-    }
-}
-
-jQuery.noConflict();
-jQuery(document).ready(function () {
-
-    jQuery('#darven_epi_color_of_incash_price').wpColorPicker();
-
-    customized_values = customized_values.split('|');
-    let installments_table_div = jQuery('#installments_auxiliary_table_div');
-    for (let install_number = 0; install_number < max_install; install_number++) {
-        if (install_number < (first_install - 1)) {
-            jQuery('<p><label for="darven_epi_install_numbers">' + (install_number + 1) + 'ª Parcela <input type="text" id="darven_epi_install_number" size="20" name="darven_epi_install_number_' + install_number + '" value="0" readonly placeholder="Insira a Taxa" /></label></p>').appendTo(installments_table_div);
-
-        } else {
-            if(customized_values[install_number - first_install + 1] === undefined){
-                jQuery('<p><label for="darven_epi_install_numbers">' + (install_number + 1) + 'ª Parcela <input type="text" id="darven_epi_install_number" size="20" name="darven_epi_install_number_' + install_number + '" value="0" placeholder="Insira a Taxa" /></label></p>').appendTo(installments_table_div);
-            }
-            else{
-
-                jQuery('<p><label for="darven_epi_install_numbers">' + (install_number + 1) + 'ª Parcela <input type="text" id="darven_epi_install_number" size="20" name="darven_epi_install_number_' + install_number + '" value="' + customized_values[install_number - first_install + 1] + '" placeholder="Insira a Taxa" /></label></p>').appendTo(installments_table_div);
-            }
-
-        }
-    }
-
-
-    jQuery('#customized_values_button').on('click', function () {
-        let installments_final_result = "";
-        for (let child = first_install - 1; child < max_install; child++) {
-            if (document.getElementsByName('darven_epi_install_number_' + child)[0].value === '' && document.getElementsByName('darven_epi_install_number_' + child)[0].readonly === true) {
-               
             } else {
-                installments_final_result += document.getElementsByName('darven_epi_install_number_' + child)[0].value + "|";
+                if(customized_values[install_number - first_install + 1] === undefined){
+                    jQuery('<p><label for="darven_epi_install_numbers">' + (install_number + 1) + 'ª Parcela <input type="text" id="darven_epi_install_number" size="20" name="darven_epi_install_number_' + install_number + '" value="0" placeholder="Insira a Taxa" /></label></p>').appendTo(installments_table_div);
+                }
+                else{
+
+                    jQuery('<p><label for="darven_epi_install_numbers">' + (install_number + 1) + 'ª Parcela <input type="text" id="darven_epi_install_number" size="20" name="darven_epi_install_number_' + install_number + '" value="' + customized_values[install_number - first_install + 1] + '" placeholder="Insira a Taxa" /></label></p>').appendTo(installments_table_div);
+                }
+
             }
-
         }
-        document.getElementsByName('darven_epi_option_general[darven_epi_installments_interest_fee_table]')[0].value = installments_final_result.slice(0, -1);
-    });
-    jQuery('#show_auxiliar_table').on('click', function () {
-        document.getElementById("installments_auxiliar_table_div").style.display = "block";
-        document.getElementById("customized_values_button").style.display = "block";
-    })
 
+
+        jQuery('#customized_values_button').on('click', function () {
+            let installments_final_result = "";
+            for (let child = first_install - 1; child < max_install; child++) {
+                if (document.getElementsByName('darven_epi_install_number_' + child)[0].value === '' && document.getElementsByName('darven_epi_install_number_' + child)[0].readonly === true) {
+
+                } else {
+                    installments_final_result += document.getElementsByName('darven_epi_install_number_' + child)[0].value + "|";
+                }
+
+            }
+            document.getElementsByName('darven_epi_option_general[darven_epi_installments_interest_fee_table]')[0].value = installments_final_result.slice(0, -1);
+        });
+        jQuery('#show_auxiliar_table').on('click', function () {
+            document.getElementById("installments_auxiliar_table_div").style.display = "block";
+            document.getElementById("customized_values_button").style.display = "block";
+        })
+    */
 });

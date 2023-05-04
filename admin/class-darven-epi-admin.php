@@ -80,7 +80,6 @@ if(!class_exists('Darven_Epi_Admin')){
 		$page = $_GET['page'] ?? null;
 
 		if($page === 'darven-epi-admin'){
-
 			if( $tab === 'colorsandstyles' ){
 				wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/colorsandstyles.js', [ 'jquery', 'wp-color-picker' ], $this->version, false );
 			}elseif( $tab === 'positions'){

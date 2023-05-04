@@ -1,14 +1,12 @@
-<style>
-    <?php
-
-	$colors_options       = get_option( "darven_epi_option_colorsandstyles" );
-	$installments_price_color = get_option( "darven_epi_option_colorsandstyles" );
-
-	var_dump($colors_options);
+<?php
+$colors_options       = get_option( "darven_epi_option_colorsandstyles" );
+$installments_price_color = get_option( "darven_epi_option_colorsandstyles" );
 
 //$installment_price = get_option("darven_woo_parcelas_color_of_installment_price");
 
 ?>
+<style>
+
 
     #incash-prefix {
 

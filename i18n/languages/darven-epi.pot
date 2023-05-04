@@ -230,7 +230,7 @@ msgid "Installment Font Size"
 msgstr ""
 
 
-msgid "Original Price, In Cash price, Installments Price"
+msgid "Original Price, In Cash Price, Installments Price"
 msgstr ""
 
 msgid "Original Price, Installments Price, In Cash price"
@@ -265,4 +265,25 @@ msgid "In Cash and Installments Price"
 msgstr ""
 
 msgid "Don't show this message anymore"
-msgstr
+msgstr ""
+
+msgid "Compatibility Mode"
+msgstr ""
+
+msgid "Enable YITH Compatibility"
+msgstr ""
+
+msgid "If enabled, the plugin will consider the price defined by YITH WooCommerce Dynamic Pricing and Discounts!"
+msgstr ""
+
+msgid "Statements Positions Settings"
+msgstr ""
+
+msgid "Compatibility Settings"
+msgstr ""
+
+msgid "This plugin is used to show multiple prices for a product. Incash and installments price."
+msgstr ""
+
+msgid "Mode of View"
+msgstr ""

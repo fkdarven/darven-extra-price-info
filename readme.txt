@@ -1,27 +1,31 @@
 === Plugin Name ===
 Contributors: fkdarven
-Tags: parcelas, parcelamento, múltiplos preços, installments price, in cash price, woocommerce
+Tags: parcelas, parcelamento, preços, installments, price, woocommerce
 Requires at least: 4.7
-Tested up to: 6.1.1
-Stable tag: 2.0.1
+Tested up to: 6.2
+Stable tag: 3.1.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Language: pt_BR, en_US
+Requires WooCommerce
 
-Mostra múltiplos preços em um produto. Preço á vista e com parcelamento.
+Mostra múltiplos preços em um produto. Preço á vista e com parcelamento (preço parcelado).
 
 == Description ==
 
-Esse plugin mostra múltiplos preços de um produto, sendo estes: preço ativo, preço á vista (com desconto) e preço parcelado (com ou sem juros).
+Esse plugin exibe múltiplos preços para um produto: preço regular, preço com desconto á vista e preço parcelado.
 
-Com o plugin ativo, os preços serão mostrados na página individual do produto, no catálogo (categorias), na página inicial ou em outras páginas que possuam produtos.
+Com o plugin ativo, esses preços são exibidos em todas as páginas que contenham produtos, como na visualização de categorias, página inicial e página individual do produto. Você pode habilitar ambas opções ou apenas uma. Também é possível ocultar a visualização dos preços extras para produtos específicos.
 
-Você pode optar por ativar ambas opções ou apenas uma.
+O preço parcelado pode ser definido com ou sem juros, onde existem duas modalidades de juros: incremental e personalizada.
 
-É possível exibir o preço parcelado em uma frase, com o número de parcelas máximas, e um popup informando o cliente sobre o valor parcela a parcela. Assim como é possível
-exibir o máximo de parcelas s/juros e exibir o popup informando o máximo de parcelas c/juros.
+O plugin pode apresentar alguns conflitos com outros plugins de *desconto em massa*, uma vez que ambos manipulam o preço original do produto. Atualmente, o plugin suporta o modo de compatibilidade com o plugin de descontos da YITH, mas, futuramente, será implementado compatibilidade com outros plugins.
 
-É possível consultar um breve manual sobre configurar o plugin, neste link: [Darven EPI Guia de Configuração](https://github.com/fkdarven/darven-extra-price-info/raw/main/darven-epi-manual.pdf)
+Guia para configuração do plugin: [Darven MPI Guia de Configuração](https://github.com/fkdarven/darven-extra-price-info/raw/main/darven-epi-manual.pdf)
+
+***Atenção! As personalizações de cores e tamanhos estão desabilitadas temporariamente ***
+  • Desabilitada a aba de personalização de cores e tamanhos temporariamente, para resolver problemas relativos a performance, número de headers enviadas e conflitos com o Bling. Assim que solucionado, será reativada.
 
 == Frequently Asked Questions ==
 
@@ -54,15 +58,40 @@ No modo personalizado, você determina qual taxa de juros a ser aplicada em cada
 o módulo funcione corretamente.
 
 Os juros na primeira parcela serão aplicados somente a 1 parcela
+
 == Screenshots ==
 
 1. Catálogo de produtos com o preço á vista e com parcelamento ativados
-2. Configurações das cores de cada campo
-3. Configurações do preço com parcelamento
-4. Configurações do preço á vista
-5. Produto individual com o preço á vista e com parcelamento ativados
+2. Configurações do preço com parcelamento
+3. Configurações do preço á vista
+4. Produto individual com o preço á vista e com parcelamento ativados
 
 == Changelog ==
+
+= 3.1.3 = 
+    • Ajustado o posicionamento dos preços á vista e parcelado, para que fiquem logo abaixo ao preço original. 
+    • Correção de um bug que estava mostrando os preços em uma ordem diferente da definida nas configurações.
+= 3.1.1 =
+    • Corrigido um bug que estava fazendo com que o Preço á Vista fosse exibido mesmo estando desabilitado
+    • Adicionado o suporte a alguns tags HTML nos campos de prefixo e sufixo, para facilitar a personalização de partes específicas das frases. As tags suportadas atualmente são: span, br, b, i, em e p
+    • Removido TEMPORARIAMENTE as opções de customização de cores e tamanhos (aba cores e estilos)
+
+= 3.0.0 =
+- Essa atualização contém mudanças massivas na construção do Plugin e também em algumas funcionalidades. Reformulei a estrutura dos arquivos do plugin, isso não impactará ao usuário final, mas evitará conflitos com outros plugins e carregamentos desnecessários onde o plugin não deve ser carregado.
+
+- **MUDANÇAS IMPORTANTES!**:
+    • A localização das configurações do plugin mudou de local! Agora ela está disponível no submenu WooCommerce. Achei mais pertinente ela pertencer ao WooCommerce do que ficar solta no topo do menu. Há uma mensagem de aviso que ficará disponível até a próxima minor update.
+- Alguns problemas que foram corrigidos:
+    • Integração com o Bling: o plugin estava ocasionando erros na hora de exportar os produtos do ERP para o WooCommerce. Caso os preços extras parem de aparecer em alguma página que não seja "Catálogo, Categorias e Página do Produto", por gentileza, entre em contato.
+    • Juros incremental: mudei a fórmula que estava sendo utilizada para o cálculo de juros, com o objetivo de obter uma maior precisão em relação aos preços ofertados pelos Gateways.
+
+- Funcionalidades adicionadas e melhorias:
+    • Posições das informações: embora o fluxo padrão seja Preço Original, Preço á Vista e Preço Parcelado, pode ser que por necessidade do cliente ou do negócio seja necessário mudar essa ordenação. Agora isso é possível acessando a aba "Posições"
+    • Estilização e cores: mudei os tipos de campos de cores, pra facilitar ao cliente definir qual será a cor de cada item. Agora também é possível definir algumas configurações simples do tamanho da fonte de cada um, onde se define a % de tamanho relativo a fonte do preço original do WooCommerce.
+    • Modo de Compatibilidade: acrescentei um modo de compatibilidade com o plugin YITH WooCommerce Dynamic Pricing and Discounts, para que o plugin considere os preços definidos pelo YITH e não pelo WooCommerce. No futuro, pretendo adicionar compatibilidade com outros plugins de desconto em massa conhecidos no mercado.
+    • Carregamento de arquivos JavaScript e CSS: melhorei a lógica por trás do carregamento de arquivos css e javascript, isso fará com que os arquivos só sejam carregados onde eles serão necessários
+
+Agradeço a todos que disponibilizaram uma parte do seu tempo para testar meu plugin e prover feedback. Como é um projeto novo, estou sempre em busca de entender as necessidades dos comerciantes brasileiros e melhorá-lo ainda mais!
 
 = 2.0.1 =
 - Correção de um bug que fazia com que o parcelamento aparecesse zerado para produtos com valor abaixo do mínimo. 

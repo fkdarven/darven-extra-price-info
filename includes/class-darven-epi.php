@@ -1,5 +1,5 @@
 <?php
-
+defined( 'ABSPATH' ) || exit();
 if ( ! class_exists( "Darven_Epi" ) ) {
 	class Darven_Epi {
 		protected Darven_Epi_Loader $loader;
@@ -25,22 +25,22 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 		}
 		private function autoloader( $class_name ): void {
 
+
+            $paths = ['admin', 'includes', 'includes/admin/settings','includes/functions', 'public'];
+            $base_dir = DARVEN_EPI_DIR_PATH;
 			if ( strpos( $class_name, 'Darven_Epi' ) !== false ) {
 				try {
-					$classes_dir =  'functions/class-';
-					$class_file  = str_replace( '_', '-', $class_name ) . '.php';
-					$class_file  = strtolower( $class_file );
+                    foreach ($paths as $path){
 
+                        $class_file = $base_dir . $path . DIRECTORY_SEPARATOR;
+	                    $class_file  .= 'class-' . str_replace( '_', '-', $class_name ) . '.php';
+	                    $class_file  = strtolower( $class_file );
 
-					if ( ! file_exists( $classes_dir . $class_file ) ) {
-						$classes_dir =  'admin/settings/class-';
-						$class_file  = str_replace( '_', '-', $class_name ) . '.php';
-						$class_file  = strtolower( $class_file );
-					}
-					printf($classes_dir . $class_file);
-					include( $classes_dir . $class_file );
+                        if(file_exists($class_file)){
+                            require_once $class_file;
+                        }
+                    }
 				} catch (Exception $e){
-					printf('exception');
 				}
 
 
@@ -49,23 +49,35 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 		public function sample_admin_notice__success() {
 			?>
 			<div class="notice notice-warning is-dismissible">
-				<p><?php _e( 'The Darven Multiple Price Info settings has changed! You can now access it via WooCommerce -> In cash and Installments Price', DARVEN_EPI_LANGUAGE_DOMAIN ); ?>  <button class="button button-primary"><?php echo __("Don't show this message anymore.", DARVEN_EPI_LANGUAGE_DOMAIN)?></button> </p>
-
+				<p><?php _e( 'The Darven Multiple Price Info settings has changed! You can now access it via WooCommerce -> In cash and Installments Price', DARVEN_EPI_LANGUAGE_DOMAIN ); ?> </p>
 			</div>
 			<?php
+		}
+
+		function simplarity_autoloader( $class_name ) {
+			if ( false !== strpos( $class_name, 'Darven' ) ) {
+				$classes_dir = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
+
+                $class_name = str_replace( '_', '-', $class_name );
+				$class_file = 'class-' . strtolower($class_name) . '.php';
+
+				require_once $classes_dir . $class_file;
+			}
 		}
 		private function load_dependencies(): void {
 
 
-			add_action( 'admin_notices', array($this, 'sample_admin_notice__success'));
+			//add_action( 'admin_notices', array($this, 'sample_admin_notice__success'));
+			//spl_autoload_register( array($this, 'autoloader' ));
 			//spl_autoload_register( array($this, 'autoloader' ));
 
 			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings-fields.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-colorsandstyles-settings-fields.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-positions-settings-fields.php';
-			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-epi-general-settings.php';
+			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings.php';
+			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-compatibility-settings-fields.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/functions/class-darven-epi-product-options.php';
-			require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-i18.php';
+			require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-i18n.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-loader.php';
 			require DARVEN_EPI_DIR_PATH . 'admin/class-darven-epi-admin.php';
 			require DARVEN_EPI_DIR_PATH . 'public/class-darven-epi-public.php';
@@ -104,7 +116,7 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 		}
 		public function define_public_filters(): void {
 			$plugin_final = new Darven_Epi_Format_Final_Price();
-			//$this->loader->add_filter( 'woocommerce_get_price_html', $plugin_final, 'get_discount_price', 10);
+			$this->loader->add_filter( 'woocommerce_get_price_html', $plugin_final, 'get_discount_price', 2000);
 		}
 
 

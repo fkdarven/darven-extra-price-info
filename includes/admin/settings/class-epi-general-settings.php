@@ -2,11 +2,6 @@
 
 if ( ! class_exists( 'Darven_Epi_General_Settings' ) ) {
 	class Darven_Epi_General_Settings {
-
-
-		/**
-		 * @var false|mixed|null
-		 */
 		private $darven_epi_options;
 
 		public function __construct() {
@@ -17,10 +12,10 @@ if ( ! class_exists( 'Darven_Epi_General_Settings' ) ) {
 		}
 
 		public function darven_epi_add_plugin_page(): void {
-			add_submenu_page( 'woocommerce',__('In Cash and Installments Price', DARVEN_EPI_LANGUAGE_DOMAIN), 'Preço á Vista e com Parcelamento', 'manage_options', 'darven-epi-admin', array(
+			add_menu_page( 'Preço á Vista e com Parcelamento', 'Preço á Vista e com Parcelamento', 'manage_options', 'darven-epi-admin', array(
 				$this,
 				'darven_epi_create_admin_page'
-			));
+			), 'dashicons-admin-generic', 2 );
 		}
 
 		public function darven_epi_create_admin_page(): void {
@@ -34,25 +29,21 @@ if ( ! class_exists( 'Darven_Epi_General_Settings' ) ) {
 
 			$tab = filter_input( INPUT_GET, 'tab' );
 
-			add_settings_section( 'darven_epi_incash_settings_section', __('In Cash Settings', DARVEN_EPI_LANGUAGE_DOMAIN), array(
+			add_settings_section( 'darven_epi_incash_settings_section', __('Configurações do Preço á Vista'), array(
 				$this,
 				'darven_epi_incash_section_info'
 			), 'darven-epi-admin' );
 
-			add_settings_section( 'darven_epi_installments_settings_section', __('Installments Settings', DARVEN_EPI_LANGUAGE_DOMAIN), array(
+			add_settings_section( 'darven_epi_installments_settings_section', __('Configurações do Preço com Parcelamento'), array(
 				$this,
 				'darven_epi_installments_section_info'
 			), 'darven-epi-admin' );
 
+
 			if ( $tab === 'colorsandstyles' ) {
 				new Darven_Epi_Colorsandstyles_Settings_Fields();
-			} elseif ($tab === 'positions'){
-                new Darven_Epi_Positions_Fields();
-            }
-            else {
-	            add_settings_section('darven_epi_advanced_installments_settings_section', __('Advanced Installments Settings Section', DARVEN_EPI_LANGUAGE_DOMAIN), array(
-		            $this, 'darven_epi_advanced_installments_section_info'
-	            ), 'darven-epi-admin');
+			} else {
+
 				new Darven_Epi_General_Settings_Fields();
 
 			}
@@ -63,13 +54,6 @@ if ( ! class_exists( 'Darven_Epi_General_Settings' ) ) {
 		}
 
 		public function darven_epi_installments_section_info(): void {
-		}
-
-		public function darven_epi_advanced_installments_section_info(): void{
-
-            printf('<div class="wrap"> %s</div>', esc_attr(__('Use this section to set up customized interest fees. If your gateway has incremental fees (each month the same value is summed up), please use the incremental interest fee settings in the previous section for a better experience.', DARVEN_EPI_LANGUAGE_DOMAIN)))
-            ?>
-		<?php
 		}
 
 	}

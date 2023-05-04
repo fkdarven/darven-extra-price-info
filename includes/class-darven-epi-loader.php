@@ -22,6 +22,7 @@
  * @author     Your Name <email@example.com>
  */
 
+defined( 'ABSPATH' ) || exit();
 if(!class_exists("Darven_Epi_Loader")){
 	class Darven_Epi_Loader {
 

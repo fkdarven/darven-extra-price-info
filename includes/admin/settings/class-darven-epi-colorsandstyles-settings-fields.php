@@ -3,6 +3,9 @@
  *
  * Class responsible for generating all settings associated with colors and styles
  */
+
+defined( 'ABSPATH' ) || exit();
+
 if ( ! class_exists( 'Darven_Epi_Colorsandstyles_Settings_Fields' ) ) {
 	class Darven_Epi_Colorsandstyles_Settings_Fields {
 
