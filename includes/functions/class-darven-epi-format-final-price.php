@@ -25,8 +25,8 @@ if ( ! class_exists( 'Darven_Epi_Format_Final_Price' ) ) {
 			$product = get_post();
 			//if($product->ID){
 
-				$disable_incash      = get_post_meta( $product->ID, '_darven_epi_is_incash_enabled', true );
-				$disable_installment = get_post_meta( $product->ID, '_darven_epi_is_installment_enabled', true );
+			$disable_incash      = get_post_meta( $product->ID, '_darven_epi_is_incash_enabled', true );
+			$disable_installment = get_post_meta( $product->ID, '_darven_epi_is_installment_enabled', true );
 
 			//}
 
@@ -46,33 +46,33 @@ if ( ! class_exists( 'Darven_Epi_Format_Final_Price' ) ) {
 
 			//return ( $installments_statement .'<br>'. $price . $incash_statement );
 
-			return $this->get_ordination( $price , $incash_statement , $installments_statement );
+			return $this->get_ordination( $price, $incash_statement, $installments_statement );
 		}
 
 		public function get_ordination( $price, $incash_statement, $installments_statement ): string {
 
-			if(is_product()){
+			if ( is_product() ) {
 				$order = get_option( 'darven_epi_option_positions' )['darven_epi_single_product_position'] ?? null;
-			} elseif (is_product_category()){
+			} elseif ( is_product_category() ) {
 				$order = get_option( 'darven_epi_option_positions' )['darven_epi_catalog_product_position'] ?? null;
-			} else{
+			} else {
 				$order = get_option( 'darven_epi_option_positions' )['darven_epi_others_product_position'] ?? null;
 			}
 
 
 			switch ( $order ) {
 				case 'second':
-					return ($price .'<div>' .  $installments_statement . $incash_statement . '</div>');
+					return ( $price . $installments_statement . $incash_statement );
 				case 'third':
-					return ($incash_statement . $price . $installments_statement );
+					return ( $incash_statement . $price . $installments_statement );
 				case 'fourth':
-					return ('<div>'.$incash_statement  . $installments_statement . '</div>' . $price);
+					return ( $incash_statement . $installments_statement . $price );
 				case 'fifth':
 					return ( $installments_statement . $price . $incash_statement );
 				case 'sixth':
-					return ('<div>' . $installments_statement . $incash_statement . '</div>'. $price);
+					return ( $installments_statement . $incash_statement . $price );
 				default:
-					return ($price . '<div>' . $incash_statement . $installments_statement . '</div>');
+					return ( $price . $incash_statement . $installments_statement );
 
 			}
 		}
