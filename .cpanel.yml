@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/darven11/public_html/
+    - /bin/cp -R * $DEPLOYPATH
+    
