@@ -57,7 +57,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
             $this->interest_fee_from          = $darven_options['darven_epi_installments_interest_fee_from'] ?: 0;
             $this->interest_fee_first_install = $darven_options['darven_epi_installments_interest_fee_first_install'] ?: 0;
 
-            
+
 
             $this->mode_of_view            = $darven_options['darven_epi_mode_of_view'];
             $this->installments_popup_text = $darven_options['darven_epi_popup_text'];
@@ -76,7 +76,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
             }
 
             if ( $this->mode_of_view === 'popup' ) {
-                    return "teste1";
+                  
                 $installments_statement = '<span id="installment-prefix">' . $this->installments_prefix . '</span><span id="installment-install"> ' . $this->number_of_installments . 'x de </span><span id="installment-price"> ' . strip_tags( wc_price( $price_result[1] ) ) . '</span><span id="installment-suffix"> ' . $this->installments_suffix . '</span>';
 
                 return '<div id="installments-price-statement">' . $installments_statement . '<div class="messagepop pop">' . $price_result[0] . '</div> <a href="#" id="contact">' . $this->installments_popup_text . '</a></div>';
