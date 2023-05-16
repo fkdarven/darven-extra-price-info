@@ -190,7 +190,8 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
 					$html_result .= '<tr>';
 					$i_price = $this->get_tax_calculation( $price, 'second_period', $i );
-					$html_result .= '<td>' . $i . 'x</td><td>' . wc_price( $i_price ) . '  = ' .  $i_price * $i  . 'piranha</td>';
+					var_dump($i_price);
+					$html_result .= '<td>' . $i . 'x</td><td>' . wc_price( $i_price ) . '  = ' .  $i_price * $i  . '</td>';
 
 				} else {
 					$i;
