@@ -148,6 +148,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 				for ( $shalk = 0; $shalk <= $this->interest_fee_from --; $shalk ++ ) {
 					array_unshift( $customised_values, 0 );
 				}
+
 				for ( $i = 1; $i <= $install_count; $i ++ ) {
 
 					if ( isset( $this->interest_fee_from ) && $i >= $this->interest_fee_from ) {
@@ -189,7 +190,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
 					$html_result .= '<tr>';
 					$i_price = $this->get_tax_calculation( $price, 'second_period', $i );
-					$html_result .= '<td>' . $i . 'x</td><td>' . wc_price( $i_price ) . '  = ' . wc_price( $i_price * $i ) . '</td>';
+					$html_result .= '<td>' . $i . 'x</td><td>' . wc_price( $i_price ) . '  = ' .  $i_price * $i  . '</td>';
 
 				} else {
 					$i;

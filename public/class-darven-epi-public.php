@@ -19,6 +19,10 @@ if(!class_exists('Darven_Epi_Public')){
 		public function enqueue_styles(): void {
 
 			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/styles.css', array(), $this->version, 'all' );
+			include
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__) . 'css/custom_styles.css', array(), $this->version, 'all' );
+
+
 
 		}
 
