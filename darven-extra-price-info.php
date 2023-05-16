@@ -4,7 +4,7 @@
  * @package darven-extra-price-info
  * Plugin URI: wordpress.org/plugins/darven-multiplos-precos-informativos/
  * Description: This plugin is used to show multiple prices for a product. Incash and installments price.
- * Version: 3.1.3
+ * Version: 3.1.4
  * Author: Leticia Moreira
  * Author URI: https://darven.wtf
  * Text Domain: darven-epi
@@ -23,7 +23,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-const DARVEN_EPI_VERSION = '3.1.3';
+const DARVEN_EPI_VERSION = '3.1.4';
 
 function activate_plugin_name() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-darven-activator.php';
