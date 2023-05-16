@@ -174,6 +174,8 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
                 return array( $html_result, $i_price );
 
+            }else{
+                $this->get_price_table_2($price);
             }
 
 
