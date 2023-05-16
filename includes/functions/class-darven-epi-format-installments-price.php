@@ -24,8 +24,6 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
         private string $is_table_enabled;
         private string $customised_values;
 
-        private array $darven_epi_option_general;
-
         public function __construct() {
 
             if ( ! isset( get_option( 'darven_epi_option_general' )['darven_epi_installments_is_enabled'] ) || ! get_option( 'darven_epi_option_general' )['darven_epi_installments_is_enabled'] ) {
@@ -48,16 +46,16 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
             $this->installments_prefix = $darven_options['darven_epi_installments_prefix'];
             $this->installments_suffix = $darven_options['darven_epi_installments_suffix'];
 
-            if ( isset( $darven_options['darven_epi_installments_interest_fee_is_table_enabled'] )  ) {
+            if ( isset( $darven_options['darven_epi_installments_interest_fee_is_table_enabled'] ) ) {
                 $this->is_table_enabled  = true;
                 $this->customised_values = $darven_options['darven_epi_installments_interest_fee_table'];
             } else {
                 $this->is_table_enabled = false;
             }
 
-            $this->interest_fee                    = $darven_options['darven_epi_installments_interest_fee'] ?: 0;
-            $this->interest_fee_from           = $darven_options['darven_epi_installments_interest_fee_from'] ?: 0;
-            $this->interest_fee_first_install  = $darven_options['darven_epi_installments_interest_fee_first_install'] ?: 0;
+            $this->interest_fee               = $darven_options['darven_epi_installments_interest_fee'] ?: 0;
+            $this->interest_fee_from          = $darven_options['darven_epi_installments_interest_fee_from'] ?: 0;
+            $this->interest_fee_first_install = $darven_options['darven_epi_installments_interest_fee_first_install'] ?: 0;
 
 
             $this->mode_of_view            = $darven_options['darven_epi_mode_of_view'];
@@ -174,12 +172,10 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
                 return array( $html_result, $i_price );
 
-            }else{
-               return $this->get_price_table_2($price);
+            } else {
+                return $this->get_price_table_2( $price );
             }
 
-
-            return array( $html_result, $i_price );
         }
 
         public function get_price_table_2( $price ): array {
