@@ -57,6 +57,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
             $this->interest_fee_from          = $darven_options['darven_epi_installments_interest_fee_from'] ?: 0;
             $this->interest_fee_first_install = $darven_options['darven_epi_installments_interest_fee_first_install'] ?: 0;
 
+            
 
             $this->mode_of_view            = $darven_options['darven_epi_mode_of_view'];
             $this->installments_popup_text = $darven_options['darven_epi_popup_text'];
