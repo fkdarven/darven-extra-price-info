@@ -1,0 +1,11 @@
+
+Qphp:S105"EReplace all tab characters in this file by sequences of white-spaces.
+zphp:S101"aRename class "Darven_Epi_Format_Final_Price" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(žèÇ¼úÿÿÿÿ
+V	php:S11424"<This method has 6 returns, which is more than the 3 allowed.(Öù›×ùÿÿÿÿ
+;	php:S2003"&Replace "require" with "require_once".(Ý´·ô
+@	php:S2003"&Replace "require" with "require_once".(¯ü³Öÿÿÿÿÿ
+8php:S125"Remove this commented out code.(ËØõ×ùÿÿÿÿ
+8php:S125"Remove this commented out code.(éØ»Úûÿÿÿÿ
+3php:S125/"Remove this commented out code.(£œï¨
+a	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(Ý´·ô
+f	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(¯ü³Öÿÿÿÿÿ

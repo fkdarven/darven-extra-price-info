@@ -1,0 +1,33 @@
+
+kphp:S103"KSplit this 196 characters long line (which is greater than 120 authorized).(€—ψÿÿÿÿ8Οαι¥‚1
+fphp:S103:"KSplit this 123 characters long line (which is greater than 120 authorized).(›ª¨Ω8Παι¥‚1
+fphp:S103P"KSplit this 356 characters long line (which is greater than 120 authorized).(›•ϋλ8Παι¥‚1
+fphp:S103R"KSplit this 228 characters long line (which is greater than 120 authorized).(ΗΗά8Παι¥‚1
+kphp:S103U"KSplit this 358 characters long line (which is greater than 120 authorized).(Ξ“™ώÿÿÿÿ8Παι¥‚1
+fphp:S103W"KSplit this 228 characters long line (which is greater than 120 authorized).(ΗΗά8Παι¥‚1
+kphp:S103Z"KSplit this 378 characters long line (which is greater than 120 authorized).(Θ†βΞψÿÿÿÿ8Παι¥‚1
+ephp:S103x"KSplit this 161 characters long line (which is greater than 120 authorized).(Ρ¨¦8Παι¥‚1
+lphp:S103Β"KSplit this 125 characters long line (which is greater than 120 authorized).(–¥ά―ÿÿÿÿÿ8Παι¥‚1
+lphp:S103Λ"KSplit this 133 characters long line (which is greater than 120 authorized).(†™“ύÿÿÿÿ8Παι¥‚1
+‚php:S101"hRename class "Darven_Epi_Format_Installments_Price" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(ή΅²d8Παι¥‚1
+X	php:S1142B"<This method has 4 returns, which is more than the 3 allowed.(¬’±Β8Παι¥‚1
+yphp:S116"^Rename this field "$maximum_installments" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(νΓΛν8Παι¥‚1
+}php:S116"]Rename this field "$installments_prefix" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(±®΄·όÿÿÿÿ8Παι¥‚1
+}php:S116"]Rename this field "$installments_suffix" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(―Ϋ„ωÿÿÿÿ8Ραι¥‚1
+qphp:S116"WRename this field "$minimum_price" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(«™Ϊ8Ραι¥‚1
+€php:S116"`Rename this field "$number_of_installments" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(¨Βρϊÿÿÿÿ8Ραι¥‚1
+vphp:S116"VRename this field "$mode_of_view" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(αλ‰ϊÿÿÿÿ8Òαι¥‚1
+pphp:S116"VRename this field "$interest_fee" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(•Εu8Òαι¥‚1
+{php:S116"[Rename this field "$interest_fee_from" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(¦ηΩÿÿÿÿÿ8Òαι¥‚1
+rphp:S116"WRename this field "$install_count" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(»ΙΊΒ8Òαι¥‚1
+|php:S116"aRename this field "$installments_popup_text" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(€²…8Òαι¥‚1
+„php:S116"dRename this field "$interest_fee_first_install" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(ΤύΞ³ϊÿÿÿÿ8Òαι¥‚1
+uphp:S116"ZRename this field "$is_table_enabled" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(™μεΆ8Òαι¥‚1
+vphp:S116"[Rename this field "$customised_values" to match the regular expression ^[a-z][a-zA-Z0-9]*$.(Μ’σ8Òαι¥‚1
+„	php:S1192P"hDefine a constant instead of duplicating this literal "</span><span id="installment-install"> " 3 times.(›•ϋλ8Òαι¥‚1
+‡	php:S1192P"kDefine a constant instead of duplicating this literal "x de </span><span id="installment-price"> " 3 times.(›•ϋλ8Òαι¥‚1
+ƒ	php:S1192P"gDefine a constant instead of duplicating this literal "</span><span id="installment-suffix"> " 3 times.(›•ϋλ8Σαι¥‚1
+h	php:S1192¦"FDefine a constant instead of duplicating this literal "</td>" 4 times.(β—…‘ψÿÿÿÿ8Σαι¥‚1
+V	php:S1481Ύ"4Remove this unused "$interest_count" local variable.(½χΛάϋÿÿÿÿ8Σαι¥‚1
+V	php:S1481"4Remove this unused "$interest_count" local variable.(½χΛάϋÿÿÿÿ8Σαι¥‚1
+	php:S1186_"lAdd a nested comment explaining why this method is empty, throw an Exception or complete the implementation.(­Ϊ½Δÿÿÿÿÿ8Σαι¥‚1
