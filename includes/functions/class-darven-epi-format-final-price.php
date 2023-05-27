@@ -18,7 +18,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Final_Price' ) ) {
 		public function get_discount_price( $price ): string {
 
 
-			if ( is_admin() ) {
+			if ( is_admin() || is_cart() || is_checkout() ) {
 				return $price;
 			}
 
