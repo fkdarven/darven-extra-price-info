@@ -1,0 +1,23 @@
+# Folders
+node_modules
+tests
+vendor
+doc
+tmpnodejsnpm-cache
+src/tmpnodejsnpm-cache
+tests
+
+# Files
+composer.phar
+composer.php
+tags
+
+# Extensions
+.zip
+.phpdoc
+.phpunit.result.cache
+.npmrc
+
+# Remove os dist assets do git. Esses arquivos devem ser gerados localmente ou através de uma pipeline.
+assets/css/dist/*
+assets/js/dist/*

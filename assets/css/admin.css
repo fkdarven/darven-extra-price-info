@@ -1,0 +1,252 @@
+/* General styling for the settings page */
+.wrap {
+	background: #fff;
+	padding: 20px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+}
+
+/* Style the section titles */
+h1, h2 {
+	border-bottom: 2px solid #0073aa;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	font-size: 24px;
+}
+
+/* Style the form table */
+.form-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+/* Style each form row */
+.form-table tr {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+/* Style the labels */
+.form-table th {
+	flex: 1;
+	padding: 0 10px 0 0;
+	text-align: left;
+	font-weight: bold;
+	font-size: 14px;
+	box-sizing: border-box;
+}
+
+/* Style the form controls */
+.form-table td {
+	flex: 2;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+/* Style the text input fields */
+input[type="text"],
+input[type="number"],
+select.darven-epi-select {
+	width: 100%;
+	max-width: 300px;
+	padding: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-size: 14px;
+	background: #fff;
+	color: #333;
+}
+
+/* Add styling for select fields */
+select.darven-epi-select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	background-size: 16px 16px;
+	padding-right: 30px;
+	padding-left: 10px;
+	text-align: left;
+}
+
+/* Style the options */
+select.darven-epi-select option {
+	padding: 10px;
+	font-size: 14px;
+	color: #333;
+	background: #fff;
+	font-family: Arial, sans-serif;
+}
+
+/* Style the checkboxes */
+input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+/* Style the switch */
+.darven-switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.darven-switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	transition: .4s;
+	border-radius: 34px;
+}
+
+/* The slider - before */
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	transition: .4s;
+	border-radius: 50%;
+}
+
+/* Checked switch */
+input:checked + .slider {
+	background-color: #0073aa;
+}
+
+/* Move the slider when checked */
+input:checked + .slider:before {
+	transform: translateX(26px);
+}
+
+/* Rounded slider */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
+
+/* Style the sections */
+.settings-section {
+	margin-bottom: 40px;
+}
+
+/* Style the nav tabs */
+.nav-tab-wrapper {
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 20px;
+}
+
+.nav-tab {
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: 14px;
+	text-decoration: none;
+	background: #f1f1f1;
+	border: 1px solid #ddd;
+	border-bottom: none;
+	border-radius: 4px 4px 0 0;
+	color: #333;
+	margin-right: 5px;
+	transition: background 0.3s, color 0.3s;
+}
+
+.nav-tab-active {
+	background: #0073aa;
+	color: #fff;
+	border-color: #0073aa;
+}
+
+.nav-tab:hover {
+	background: #e7e7e7;
+	color: #0073aa;
+}
+
+/* Style the tab content */
+.tab-content {
+	padding: 20px;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 0 4px 4px 4px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the submit button */
+.submit input[type="submit"] {
+	background: #0073aa;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background 0.3s, color 0.3s;
+}
+
+.submit input[type="submit"]:hover {
+	background: #005177;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+	.form-table th,
+	.form-table td {
+		display: block;
+		width: 100%;
+	}
+
+	.form-table tr {
+		flex-direction: column;
+	}
+
+	.nav-tab-wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.nav-tab {
+		margin-right: 0;
+		margin-bottom: 5px;
+	}
+
+	.nav-tab-active {
+		margin-bottom: 5px;
+	}
+}
+
+.description {
+	display: flex;
+	align-items: center;
+	margin-top: 5px;
+	font-size: 0.9em;
+	color: #555;
+}
+
+.description .dashicons-info {
+	margin-right: 5px;
+}
+
+.instruction-text {
+	font-style: italic;
+}

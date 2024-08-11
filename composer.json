@@ -1,0 +1,49 @@
+{
+	"name": "darven/extra-price-info",
+	"description": "This plugin shows multiple prices for a product. Incash and installments price.",
+	"type": "wordpress-plugin",
+	"minimum-stability": "stable",
+	"authors": [
+		{
+			"name": "Letícia K. Moreira",
+			"email": "leticia@vivaldi.net",
+			"homepage": "https://darven.zip",
+			"role": "Backend Developer"
+		}
+	],
+	"config": {
+		"vendor-lib": "vendor",
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Darven\\Epi\\": "Core/"
+		}
+	},
+	"require-dev": {
+		"roave/security-advisories": "dev-latest"
+		,
+		"pheromone/phpcs-security-audit": "^2.0",
+		"wp-coding-standards/wpcs": "^2.3",
+		"squizlabs/php_codesniffer": "^3.7"
+	},
+	"scripts": {
+		"fix-style": "phpcbf -p --standard=phpcs.xml --extensions=php --ignore=vendor,node_modules .",
+		"check-style": "phpcs -p --standard=phpcs.xml --extensions=php --ignore=vendor,node_modules .",
+		"check": [
+			"@fix-style",
+			"@check-style"
+		],
+		"build": [
+			"composer install --no-dev",
+			"wp dist-archive .",
+			"composer install"
+		]
+	},
+	"require": {
+		"php": ">=7.0",
+		"brick/math": "^0.12.1"
+	}
+}
