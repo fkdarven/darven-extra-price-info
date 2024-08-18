@@ -1,0 +1,76 @@
+body {
+	font-family: Arial, sans-serif;
+}
+
+.darven-epi-price {
+	display: flex;
+	flex-direction: column;
+	gap: 0; /* Remove gap between flex items */
+	margin: 0; /* Remove any default margin */
+	padding: 0; /* Remove any default padding */
+}
+
+.darven-epi-incash,
+.darven-epi-installments {
+	margin: 0;
+	padding: 0;
+}
+
+.darven-epi-incash-text,
+.darven-epi-installments-text {
+	display: flex;
+	gap: 2px; /* Adjust this value to control the spacing between text elements */
+	margin: 0;
+	padding: 0;
+}
+
+.darven-epi-incash-text span,
+.darven-epi-installments-text span {
+	margin: 0;
+	padding: 0;
+}
+
+.toggle-table-button {
+	display: inline-block;
+	margin-top: 10px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	transition: background-color 0.3s ease;
+}
+
+.toggle-table-button:hover {
+	background-color: #0056b3;
+}
+
+.installment-table {
+	display: none;
+	margin-top: 20px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: center;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+tr:hover {
+	background-color: #ddd;
+}

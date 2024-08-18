@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress standard">
+	<config name="installed_paths" value="vendor/wp-coding-standards/wpcs/,vendor/pheromone/phpcs-security-audit/" />
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
+	<rule ref="Squiz.Commenting.FunctionComment.Missing">
+		<exclude-pattern>./tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Security">
+	</rule>
+</ruleset>
