@@ -9,7 +9,8 @@
  * Author URI: https://darven.wtf
  * Text Domain: darven-epi
  * Domain Path: /i18n/languages/
- * Requires WooCommerce
+ * Requires PHP: 7.4
+ * Requires Plugins: woocommerce
 */
 
 defined( 'ABSPATH' ) || exit();
@@ -25,23 +26,8 @@ if ( ! defined( 'WPINC' ) ) {
 
 const DARVEN_EPI_VERSION = '3.2.0';
 
-function activate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-darven-activator.php';
-	Darven_Epi_Activator::activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-plugin-name-deactivator.php
- */
-function deactivate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-deactivator.php';
-	Darven_Epi_Deactivator::deactivate();
-}
-
-register_activation_hook( DARVEN_EPI_DIR_PATH . '/includes', 'activate_plugin_name' );
-register_deactivation_hook( DARVEN_EPI_DIR_PATH . '/includes', 'deactivate_plugin_name' );
-
+require_once DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-lifecycle.php';
+Darven_Epi_Lifecycle::register( __FILE__ );
 
 require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi.php';
 function run_plugin_name() {

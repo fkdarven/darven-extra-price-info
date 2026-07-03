@@ -10,6 +10,8 @@ defined( 'ABSPATH' ) || exit();
 if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 	class Darven_Epi_Format_Installments_Price {
 
+		private bool $is_enabled = false;
+		private $product;
 		private string $maximum_installments;
 		private string $installments_prefix;
 		private string $installments_suffix;
@@ -24,12 +26,18 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 		private string $is_table_enabled;
 		private string $customised_values;
 
-		public function __construct() {
+		/**
+		 * @param WC_Product|null $product Product whose price should be formatted.
+		 */
+		public function __construct( $product = null ) {
+
+			$this->product = $product;
 
 			if ( ! isset( get_option( 'darven_epi_option_general' )['darven_epi_installments_is_enabled'] ) || ! get_option( 'darven_epi_option_general' )['darven_epi_installments_is_enabled'] ) {
 				return;
 			}
 
+			$this->is_enabled = true;
 			$this->initiate_options();
 
 		}
@@ -61,7 +69,11 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 		}
 
 		public function get_discount_price(): string {
-			$darven_product_price = new Darven_Epi_Product_Price();
+			if ( ! $this->is_enabled ) {
+				return '';
+			}
+
+			$darven_product_price = new Darven_Epi_Product_Price( $this->product );
 			$clean_price          = $darven_product_price->get_active_price();
 			$installment_price    = $this->get_installments_price( $clean_price );
 			$price_result         = $this->get_price_table( $clean_price );
@@ -130,38 +142,30 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 			$html_result    = '<table id="installments_table">';
 			$i_price        = '';
 			$first_install  = true;
-			$interest_count = 0;
 
 			if ( $this->is_table_enabled ) {
+				$customised_values = array_map(
+					static function ( $value ): float {
+						$value = str_replace( ',', '.', trim( $value ) );
 
-				str_replace( ' ', '', trim( $this->customised_values ) );
-				$customised_values = str_replace( ',', '.', trim( $this->customised_values ) );
-				$customised_values = explode( '|', $customised_values );
+						return is_numeric( $value ) ? (float) $value : 0.0;
+					},
+					explode( '|', $this->customised_values )
+				);
+				$interest_fee_from = max( 1, (int) $this->interest_fee_from );
 
-				for ( $shalk = 0; $shalk <= $this->interest_fee_from --; $shalk ++ ) {
-					array_unshift( $customised_values, 0 );
-				}
 				for ( $i = 1; $i <= $install_count; $i ++ ) {
+					$interest_rate = 0.0;
 
-					if ( isset( $this->interest_fee_from ) && $i >= $this->interest_fee_from ) {
-						$html_result .= '<tr>';
-						if ( $first_install ) {
-							$price_        = ( (float) $price * $customised_values[0] / 100 ) + $price;
-							$first_install = false;
-							$install_price = $price_ / $i;
-							$i_price       = $install_price;
-						} else {
-							$install_price = $price / $i;
-							$i_price       = ( $install_price * $customised_values[ $i ] / 100 ) + $install_price;
-
-						}
-
-						$html_result .= '<td>' . $i . 'x de</td><td>' . wc_price( $i_price ) . '</td>';
-
-					} else {
-						$i_price      = $price / $i;
-						$html_result .= '<td>' . $i . 'x de</td><td>' . wc_price( $price / $i ) . '</td>';
+					if ( $i >= $interest_fee_from ) {
+						$interest_index = $i - $interest_fee_from;
+						$interest_rate  = $customised_values[ $interest_index ] ?? 0.0;
 					}
+
+					$total_with_interest = (float) $price * ( 1 + ( $interest_rate / 100 ) );
+					$i_price             = $total_with_interest / $i;
+					$html_result        .= '<tr>';
+					$html_result        .= '<td>' . $i . 'x de</td><td>' . wc_price( $i_price ) . '</td>';
 					$html_result .= '</tr>';
 				}
 				$html_result .= '</table>';

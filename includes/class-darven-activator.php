@@ -11,11 +11,16 @@ if(!class_exists("Darven_Epi_Activator")){
 		 *
 		 * @since    1.0.0
 		 */
-		public static function activate() {
+		/**
+		 * Validate activation requirements.
+		 *
+		 * @param string $plugin_file Absolute path to the main plugin file.
+		 */
+		public static function activate( string $plugin_file ): void {
 
 			if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 				// WooCommerce is not active, so we cannot activate the plugin.
-				deactivate_plugins( plugin_basename( __FILE__ ) );
+				deactivate_plugins( plugin_basename( $plugin_file ) );
 				wp_die( 'Sorry, but this plugin requires WooCommerce to be installed and activated. Please activate WooCommerce and try again.' );
 			}
 		}

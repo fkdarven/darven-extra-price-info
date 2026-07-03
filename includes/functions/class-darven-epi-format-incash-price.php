@@ -13,13 +13,20 @@ require 'class-darven-epi-product-price.php';
 if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 	class Darven_Epi_Format_Incash_Price {
 
+		private bool $is_enabled = false;
+		private $product;
 		private string $value_of_discount;
 		private string $incash_prefix;
 		private string $incash_suffix;
 		private string $minimum_price;
 		private string $type_of_discount;
 
-		public function __construct() {
+		/**
+		 * @param WC_Product|null $product Product whose price should be formatted.
+		 */
+		public function __construct( $product = null ) {
+
+			$this->product = $product;
 
 			if ( ! isset( get_option( 'darven_epi_option_general' )['darven_epi_incash_is_enabled'] ) || ! get_option( 'darven_epi_option_general' )['darven_epi_incash_is_enabled'] ) {
 
@@ -27,6 +34,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 
 			}
 
+			$this->is_enabled = true;
 			$this->initiate_options();
 
 		}
@@ -51,7 +59,11 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 		 * @return string
 		 */
 		public function get_discount_price(): string {
-			$darven_product_price = new Darven_Epi_Product_Price();
+			if ( ! $this->is_enabled ) {
+				return '';
+			}
+
+			$darven_product_price = new Darven_Epi_Product_Price( $this->product );
 			$clean_price          = $darven_product_price->get_active_price();
 			$incash_price         = $this->get_incash_price( $clean_price );
 

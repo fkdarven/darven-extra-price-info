@@ -10,12 +10,16 @@ if ( ! class_exists( 'Darven_Epi_Product_Price' ) ) {
 	class Darven_Epi_Product_Price {
 
 		private $is_yith_compatibility_enabled;
+		private $product;
 
 		/**
 		 * Construct method.
+		 *
+		 * @param WC_Product|null $product Product whose active price should be resolved.
 		 */
-		public function __construct() {
+		public function __construct( $product = null ) {
 
+			$this->product = $product;
 			$this->initiate_options();
 		}
 
@@ -33,39 +37,25 @@ if ( ! class_exists( 'Darven_Epi_Product_Price' ) ) {
 		 */
 		public function get_active_price(): float {
 
-			global $product;
+			$product = $this->product;
 
-			if ( $this->is_yith_compatibility_enabled ) {
-				return YWDPD_Frontend::get_instance()->get_dynamic_price( $product->get_price(), $product, 1 );
+			if ( ! $product instanceof WC_Product ) {
+				return 0.0;
 			}
 
-			if ( is_null( $product ) || is_string( $product ) ) {
-				return 0;
-			}
+			if ( $this->is_yith_compatibility_enabled && class_exists( 'YWDPD_Frontend' ) ) {
+				$dynamic_price = YWDPD_Frontend::get_instance()->get_dynamic_price( $product->get_price(), $product, 1 );
 
-			if ( is_checkout() || is_cart() ) {
-				return $product->get_price();
+				if ( is_numeric( $dynamic_price ) ) {
+					return (float) $dynamic_price;
+				}
 			}
 
 			if ( $product->is_type( 'variable' ) ) {
-
-				$sale_price    = $product->get_variation_sale_price( 'min', true );
-				$regular_price = $product->get_variation_regular_price( 'max', true );
-				if ( $sale_price ) {
-					return $sale_price;
-				}
-
-				return $regular_price;
+				return (float) $product->get_variation_price( 'min', true );
 			}
 
-			$regular_price = (float) $product->get_price();
-			$sale_price    = (float) $product->get_sale_price();
-
-			if ( $sale_price ) {
-				return $sale_price;
-			}
-
-			return $regular_price;
+			return (float) $product->get_price();
 		}
 	}
 

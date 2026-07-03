@@ -117,7 +117,7 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 		}
 		public function define_public_filters(): void {
 			$plugin_final = new Darven_Epi_Format_Final_Price();
-			$this->loader->add_filter( 'woocommerce_get_price_html', $plugin_final, 'get_discount_price', 2000);
+			$this->loader->add_filter( 'woocommerce_get_price_html', $plugin_final, 'get_discount_price', 2000, 2 );
 		}
 
 

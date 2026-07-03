@@ -20,30 +20,33 @@ if ( ! class_exists( 'Darven_Epi_Format_Final_Price' ) ) {
 		/**
 		 * Method responsible for getting the product price with discount. Ignored if in the admin, checkout or cart page.
 		 *
-		 * @param float $price product price.
+		 * @param string          $price   Product price HTML.
+		 * @param WC_Product|null $product Product supplied by WooCommerce.
 		 *
 		 * @return string
 		 */
-		final public function get_discount_price( $price ): string {
+		final public function get_discount_price( $price, $product = null ): string {
 
 			if ( is_admin() || is_checkout() || is_cart() ) {
 				return $price;
 			}
 
-			$product = get_post();
+			if ( ! $product instanceof WC_Product ) {
+				return $price;
+			}
 
-			$disable_incash      = get_post_meta( $product->ID, '_darven_epi_is_incash_enabled', true );
-			$disable_installment = get_post_meta( $product->ID, '_darven_epi_is_installment_enabled', true );
+			$disable_incash      = $product->get_meta( '_darven_epi_is_incash_enabled', true );
+			$disable_installment = $product->get_meta( '_darven_epi_is_installment_enabled', true );
 
-			$incash                 = new Darven_Epi_Format_Incash_Price();
-			$installments           = new Darven_Epi_Format_Installments_Price();
+			$incash                 = new Darven_Epi_Format_Incash_Price( $product );
+			$installments           = new Darven_Epi_Format_Installments_Price( $product );
 			$incash_statement       = '';
 			$installments_statement = '';
 
-			if ( ! $disable_incash && count( (array) $incash ) > 0 ) {
+			if ( ! $disable_incash ) {
 				$incash_statement = $incash->get_discount_price();
 			}
-			if ( ! $disable_installment && count( (array) $installments ) > 0 ) {
+			if ( ! $disable_installment ) {
 				$installments_statement = $installments->get_discount_price();
 			}
 
