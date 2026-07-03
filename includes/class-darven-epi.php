@@ -77,6 +77,7 @@ if ( ! class_exists( "Darven_Epi" ) ) {
 			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-compatibility-settings-fields.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/functions/class-darven-epi-product-options.php';
+            require DARVEN_EPI_DIR_PATH . 'includes/utils/class-darven-epi-html-generator.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-i18n.php';
 			require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-loader.php';
 			require DARVEN_EPI_DIR_PATH . 'admin/class-darven-epi-admin.php';

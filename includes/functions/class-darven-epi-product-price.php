@@ -1,20 +1,36 @@
 <?php
 
 defined( 'ABSPATH' ) || exit();
+
 if ( ! class_exists( 'Darven_Epi_Product_Price' ) ) {
+	/*
+	 * Responsible for retrieving the product active price.
+	 */
+
 	class Darven_Epi_Product_Price {
 
 		private $is_yith_compatibility_enabled;
 
+		/**
+		 * Construct method.
+		 */
 		public function __construct() {
 
 			$this->initiate_options();
 		}
 
+		/**
+		 * Initiate options.
+		 * @return void
+		 */
 		private function initiate_options(): void {
 			$this->is_yith_compatibility_enabled = get_option( 'darven_epi_option_compatibility' )['darven_epi_is_yith_dynamic_compatibility_enabled'] ?? null;
 		}
 
+		/**
+		 * Get active price. Either promotional or full.
+		 * @return float
+		 */
 		public function get_active_price(): float {
 
 			global $product;
@@ -23,9 +39,10 @@ if ( ! class_exists( 'Darven_Epi_Product_Price' ) ) {
 				return YWDPD_Frontend::get_instance()->get_dynamic_price( $product->get_price(), $product, 1 );
 			}
 
-			if ( is_null( $product ) ) {
+			if ( is_null( $product ) || is_string( $product ) ) {
 				return 0;
 			}
+
 			if ( is_checkout() || is_cart() ) {
 				return $product->get_price();
 			}
