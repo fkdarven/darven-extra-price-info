@@ -35,8 +35,8 @@ if ( ! class_exists( 'Darven_Epi_Format_Final_Price' ) ) {
 				return $price;
 			}
 
-			$disable_incash      = $product->get_meta( '_darven_epi_is_incash_enabled', true );
-			$disable_installment = $product->get_meta( '_darven_epi_is_installment_enabled', true );
+			$disable_incash      = 'yes' === $product->get_meta( '_darven_epi_is_incash_enabled', true );
+			$disable_installment = 'yes' === $product->get_meta( '_darven_epi_is_installment_enabled', true );
 
 			$incash                 = new Darven_Epi_Format_Incash_Price( $product );
 			$installments           = new Darven_Epi_Format_Installments_Price( $product );

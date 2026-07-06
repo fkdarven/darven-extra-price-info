@@ -35,4 +35,21 @@ final class FinalPriceTest extends TestCase {
 
 		self::assertSame( $original_html, $subject->get_discount_price( $original_html, null ) );
 	}
+
+	public function test_does_not_treat_no_checkbox_metadata_as_disabled(): void {
+		$product = new WC_Product(
+			'100.00',
+			'simple',
+			null,
+			array(
+				'_darven_epi_is_incash_enabled'      => 'no',
+				'_darven_epi_is_installment_enabled' => 'no',
+			)
+		);
+		$subject = new Darven_Epi_Format_Final_Price();
+
+		$result = $subject->get_discount_price( '<span class="amount">R$ 100.00</span>', $product );
+
+		self::assertStringContainsString( 'R$ 90.00', $result );
+	}
 }
