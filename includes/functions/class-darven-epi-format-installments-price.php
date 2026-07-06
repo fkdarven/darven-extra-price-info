@@ -84,19 +84,21 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
 			$utils = new Darven_Epi_Html_Generator();
 
-			$installments_prefix = $utils->generate_span( 'installment-prefix', $this->installments_prefix, 'installments' );
-			$installments_suffix = $utils->generate_span( 'installment-suffix', $this->installments_suffix, 'installments' );
+			$installments_prefix = $utils->generate_span( 'installment-prefix darven-epi-installment-prefix', $this->installments_prefix, 'installments' );
+			$installments_suffix = $utils->generate_span( 'installment-suffix darven-epi-installment-suffix', $this->installments_suffix, 'installments' );
 
 			if ( 'popup' === $this->mode_of_view ) {
-				$installments_statement = $installments_prefix . '<span id="installment-install">' . $this->number_of_installments . 'x de</span><span id="installment-price"> ' . wp_strip_all_tags( wc_price( $price_result[1] ) ) . '</span>' . $installments_suffix;
-				return $utils->generate_div( 'installments-price-statement', $installments_statement, 'installments' );
+				$installments_statement = $installments_prefix . '<span class="darven-epi-installment-count">' . $this->number_of_installments . 'x de</span><span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_result[1] ) ) . '</span>' . $installments_suffix;
+				return $utils->generate_div( 'installments-price-statement darven-epi-installments-price-statement', $installments_statement, 'installments' );
 			} elseif ( 'nofee' === $this->mode_of_view  ) {
-				$installments_statement = $installments_prefix . '<span id="installment-install">' . $this->number_of_installments . 'x de</span><span id="installment-price"> ' . wp_strip_all_tags( wc_price( $installment_price ) ) . '</span>' . $installments_suffix;
-				return $utils->generate_div('installments-price-statement', $installments_statement . '<div class="messagepop pop">' . $price_result[0] . '</div> <a href="#" id="contact">' . $this->installments_popup_text . '</a>', 'installments');
+				$installments_statement = $installments_prefix . '<span class="darven-epi-installment-count">' . $this->number_of_installments . 'x de</span><span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $installment_price ) ) . '</span>' . $installments_suffix;
+				$popup_content          = '<div class="messagepop pop darven-epi-installments-popup" aria-hidden="true">' . $price_result[0] . '</div>';
+				$popup_toggle           = '<button type="button" class="darven-epi-installments-toggle" aria-expanded="false">' . $this->installments_popup_text . '</button>';
+				return $utils->generate_div( 'installments-price-statement darven-epi-installments-price-statement', $installments_statement . $popup_content . $popup_toggle, 'installments' );
 			}
 
-			$installments_statement = $installments_prefix . '<span id="installment-install">' . $this->number_of_installments . 'x de</span><span id="installment-price"> ' . wp_strip_all_tags( wc_price( $price_result[1] ) ) . '</span>' . $installments_suffix;
-			return $utils->generate_div('installments-price-statement', $installments_statement, 'installments');
+			$installments_statement = $installments_prefix . '<span class="darven-epi-installment-count">' . $this->number_of_installments . 'x de</span><span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_result[1] ) ) . '</span>' . $installments_suffix;
+			return $utils->generate_div( 'installments-price-statement darven-epi-installments-price-statement', $installments_statement, 'installments' );
 
 		}
 
@@ -139,7 +141,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 
 			$install_count = $this->install_count;
 
-			$html_result    = '<table id="installments_table">';
+			$html_result    = '<table class="installments_table darven-epi-installments-table">';
 			$i_price        = '';
 			$first_install  = true;
 
@@ -175,6 +177,7 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 			}
 
 			for ( $i = 1; $i <= $install_count; $i ++ ) {
+				$html_result .= '<tr>';
 
 				if ( isset( $this->interest_fee_from ) && $i >= $this->interest_fee_from && $this->interest_fee_from != 0 ) {
 					if ( $first_install ) {
@@ -182,7 +185,6 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 						$first_install = false;
 					}
 
-					$html_result .= '<tr>';
 					$i_price      = $this->get_tax_calculation( $price, 'second_period', $i );
 					$html_result .= '<td>' . $i . 'x</td><td>' . wc_price( $i_price ) . '  = ' . wc_price( $i_price * $i ) . '</td>';
 

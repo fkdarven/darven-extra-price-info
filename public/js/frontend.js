@@ -1,32 +1,35 @@
-window.onload = function() {
-function deselect(e) {
-    jQuery('.pop').slideFadeToggle(function() {
-        e.removeClass('selected');
-    });
-}
+( function( $ ) {
+	'use strict';
 
-jQuery(function() {
-    jQuery('#contact').on('click', function() {
-        if(jQuery(this).hasClass('selected')) {
-            deselect(jQuery(this));
-        } else {
-            jQuery(this).addClass('selected');
-            jQuery('.pop').slideFadeToggle();
-        }
-        return false;
-    });
+	var toggleSelector = '.darven-epi-installments-toggle';
 
-    jQuery('.close').on('click', function() {
-        deselect(jQuery('#contact'));
-        return false;
-    });
+	function setExpanded( $toggle, expanded ) {
+		var $statement = $toggle.closest( '.darven-epi-installments-price-statement' );
+		var $popup = $statement.find( '.darven-epi-installments-popup' ).first();
 
-    jQuery('#contact').on('blur', function() {
-        deselect(jQuery(this));
-    })
-});
+		$toggle
+			.toggleClass( 'selected', expanded )
+			.attr( 'aria-expanded', expanded ? 'true' : 'false' );
 
-jQuery.fn.slideFadeToggle = function(easing, callback) {
-    return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
-};
-}
+		$popup
+			.attr( 'aria-hidden', expanded ? 'false' : 'true' )
+			.stop( true, true )[ expanded ? 'slideDown' : 'slideUp' ]( 'fast' );
+	}
+
+	$( document ).on( 'click', toggleSelector, function() {
+		var $toggle = $( this );
+		var expanded = 'true' === $toggle.attr( 'aria-expanded' );
+
+		setExpanded( $toggle, ! expanded );
+	} );
+
+	$( document ).on( 'blur', toggleSelector, function() {
+		setExpanded( $( this ), false );
+	} );
+
+	$( document ).on( 'keydown', toggleSelector, function( event ) {
+		if ( 'Escape' === event.key ) {
+			setExpanded( $( this ), false );
+		}
+	} );
+}( jQuery ) );

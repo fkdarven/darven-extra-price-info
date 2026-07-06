@@ -72,10 +72,15 @@ if ( ! class_exists( 'Darven_Epi_Format_Incash_Price' ) ) {
 			}
 			$utils = new Darven_Epi_Html_Generator();
 
-			$incash_prefix = $utils->generate_span( 'incash-prefix', $this->incash_prefix, 'incash' );
-			$incash_suffix = $utils->generate_span( 'incash-suffix', $this->incash_suffix, 'incash' );
+			$incash_prefix     = $utils->generate_span( 'incash-prefix darven-epi-incash-prefix', $this->incash_prefix, 'incash' );
+			$incash_price_html = $utils->generate_span( 'darven-epi-incash-price', $incash_price, 'incash' );
+			$incash_suffix     = $utils->generate_span( 'incash-suffix darven-epi-incash-suffix', $this->incash_suffix, 'incash' );
 
-			return $utils->generate_div( 'incash-price-statement', ($incash_prefix . $incash_price . $incash_suffix), 'incash' );
+			return $utils->generate_div(
+				'incash-price-statement darven-epi-incash-price-statement',
+				$incash_prefix . $incash_price_html . $incash_suffix,
+				'incash'
+			);
 		}
 
 		/**

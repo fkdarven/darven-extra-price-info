@@ -52,4 +52,28 @@ final class FinalPriceTest extends TestCase {
 
 		self::assertStringContainsString( 'R$ 90.00', $result );
 	}
+
+	public function test_incash_markup_uses_repeatable_prefixed_classes(): void {
+		$product = new WC_Product( '100.00' );
+		$subject = new Darven_Epi_Format_Final_Price();
+
+		$result = $subject->get_discount_price( '<span class="amount">R$ 100.00</span>', $product );
+
+		self::assertStringNotContainsString( ' id=', $result );
+		self::assertStringContainsString( 'darven-epi-incash-price-statement', $result );
+		self::assertStringContainsString( 'darven-epi-incash-prefix', $result );
+		self::assertStringContainsString( 'darven-epi-incash-price', $result );
+		self::assertStringContainsString( 'darven-epi-incash-suffix', $result );
+	}
+
+	public function test_ordination_does_not_wrap_the_original_price_in_a_generic_div(): void {
+		$product       = new WC_Product( '100.00' );
+		$subject       = new Darven_Epi_Format_Final_Price();
+		$original_html = '<span class="amount">R$ 100.00</span>';
+
+		$result = $subject->get_discount_price( $original_html, $product );
+
+		self::assertStringStartsWith( $original_html, $result );
+		self::assertStringNotContainsString( '<div>' . $original_html, $result );
+	}
 }

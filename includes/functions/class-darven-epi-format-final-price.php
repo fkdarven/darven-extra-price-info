@@ -75,17 +75,17 @@ if ( ! class_exists( 'Darven_Epi_Format_Final_Price' ) ) {
 
 			switch ( $order ) {
 				case 'second':
-					return ( '<div>' . $price . $installments_statement . $incash_statement . '</div>' );
+					return $price . $installments_statement . $incash_statement;
 				case 'third':
-					return ( '<div>' . $incash_statement . $price . $installments_statement . '</div>' );
+					return $incash_statement . $price . $installments_statement;
 				case 'fourth':
-					return ( '<div>' . $incash_statement . $installments_statement . $price . '</div>' );
+					return $incash_statement . $installments_statement . $price;
 				case 'fifth':
-					return ( '<div>' . $installments_statement . $price . $incash_statement . '</div>' );
+					return $installments_statement . $price . $incash_statement;
 				case 'sixth':
-					return ( '<div>' . $installments_statement . $incash_statement . $price . '</div>' );
+					return $installments_statement . $incash_statement . $price;
 				default:
-					return ( '<div>' . $price . $incash_statement . $installments_statement . '</div>' );
+					return $price . $incash_statement . $installments_statement;
 
 			}
 

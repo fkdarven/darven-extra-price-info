@@ -8,48 +8,48 @@ $installments_price_color = get_option( "darven_epi_option_colorsandstyles" );
 <style>
 
 
-    #incash-prefix {
+    .darven-epi-incash-prefix {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_incash_prefix']); ?>;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_incash_prefix']) ?? 1;  ?>em;
     }
 
-    #incash-price {
+    .darven-epi-incash-price {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_incash_price']); ?> !important;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_incash_price']) ?? 1;  ?>em;
 
     }
 
-    #incash-suffix {
+    .darven-epi-incash-suffix {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_incash_suffix']); ?>;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_incash_suffix']) ?? 1;  ?>em;
     }
 
 
-    #installment-prefix {
+    .darven-epi-installment-prefix {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_installments_prefix']); ?>;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_installments_prefix']) ?? 1;  ?>em;
 
     }
 
-    #installment-install {
+    .darven-epi-installment-count {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_installments_install']); ?>;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_installments_install']) ?? 1;  ?>em;
 
     }
 
-    #installment-price {
+    .darven-epi-installment-price {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_installments_price']); ?>;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_installments_price']) ?? 1;  ?>em;
 
     }
 
-    #installment-suffix {
+    .darven-epi-installment-suffix {
 
         color: <?php echo esc_attr($colors_options['darven_epi_color_of_installments_suffix']); ?>;
         font-size: <?php echo esc_attr($colors_options['darven_epi_font_size_of_installments_suffix']) ?? 1;  ?>em;
