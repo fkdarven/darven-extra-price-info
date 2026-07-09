@@ -32,13 +32,21 @@ if ( ! class_exists( 'Darven_Epi_Compatibility_Settings_Fields' ) ) {
 			printf( '<input type="checkbox" name="darven_epi_option_compatibility[darven_epi_is_yith_dynamic_compatibility_enabled]" id="darven_epi_is_yith_dynamic_compatibility_enabled" value="darven_epi_is_yith_dynamic_compatibility_enabled" %s><p class="description">%s</p>', ( isset( $this->darven_epi_options['darven_epi_is_yith_dynamic_compatibility_enabled'] ) && $this->darven_epi_options['darven_epi_is_yith_dynamic_compatibility_enabled'] === 'darven_epi_is_yith_dynamic_compatibility_enabled' ) ? 'checked' : '', esc_attr( __( 'If enabled, the plugin will consider the price defined by YITH WooCommerce Dynamic Pricing and Discounts!', DARVEN_EPI_LANGUAGE_DOMAIN ) ) );
 		}
 		public function darven_epi_sanitize( $input ): array {
+			if ( ! is_array( $input ) ) {
+				return [];
+			}
+
 			$sanitary_values = [
 				'darven_epi_is_yith_dynamic_compatibility_enabled'
 			];
 			$sanitized_values = [];
 			foreach ( $sanitary_values as $sanitary_value ) {
-				if ( isset( $input[ $sanitary_value ] ) ) {
-					$sanitized_values[ $sanitary_value ] = sanitize_text_field( $input[ $sanitary_value ] );
+				if ( array_key_exists( $sanitary_value, $input ) ) {
+					$value = sanitize_text_field( $input[ $sanitary_value ] );
+
+					if ( $value === $sanitary_value ) {
+						$sanitized_values[ $sanitary_value ] = $sanitary_value;
+					}
 				}
 			}
 

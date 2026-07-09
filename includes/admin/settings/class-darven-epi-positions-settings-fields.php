@@ -73,11 +73,19 @@ if ( ! class_exists( 'Darven_Epi_Positions_Fields' ) ) {
 		}
 
 		public function darven_epi_sanitize( $input ): array {
+			if ( ! is_array( $input ) ) {
+				return [];
+			}
+
 			$sanitary_values = ['darven_epi_others_product_position','darven_epi_single_product_position', 'darven_epi_catalog_product_position'];
 			$sanitized_values = [];
+			$allowed_values = array_keys( $this->items );
+
 			foreach ( $sanitary_values as $sanitary_value ) {
-				if ( isset( $input[ $sanitary_value ] ) ) {
-					$sanitized_values[ $sanitary_value ] = sanitize_text_field( $input[ $sanitary_value ] );
+				if ( array_key_exists( $sanitary_value, $input ) ) {
+					$value = sanitize_text_field( $input[ $sanitary_value ] );
+
+					$sanitized_values[ $sanitary_value ] = in_array( $value, $allowed_values, true ) ? $value : 'first';
 				}
 			}
 

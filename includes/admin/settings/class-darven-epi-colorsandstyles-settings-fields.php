@@ -269,7 +269,11 @@ if ( ! class_exists( 'Darven_Epi_Colorsandstyles_Settings_Fields' ) ) {
 
 
 		public function darven_epi_sanitize( $input ): array {
-			$sanitary_values  = [
+			if ( ! is_array( $input ) ) {
+				return [];
+			}
+
+			$color_fields = [
 				'darven_epi_color_of_installments_install',
 				'darven_epi_color_of_installments_prefix',
 				'darven_epi_color_of_installments_suffix',
@@ -277,6 +281,8 @@ if ( ! class_exists( 'Darven_Epi_Colorsandstyles_Settings_Fields' ) ) {
 				'darven_epi_color_of_incash_prefix',
 				'darven_epi_color_of_incash_suffix',
 				'darven_epi_color_of_incash_price',
+			];
+			$font_size_fields = [
 				'darven_epi_font_size_of_incash_price',
 				'darven_epi_font_size_of_incash_suffix',
 				'darven_epi_font_size_of_incash_prefix',
@@ -286,9 +292,21 @@ if ( ! class_exists( 'Darven_Epi_Colorsandstyles_Settings_Fields' ) ) {
 				'darven_epi_font_size_of_installments_install',
 			];
 			$sanitized_values = [];
-			foreach ( $sanitary_values as $sanitary_value ) {
-				if ( isset( $input[ $sanitary_value ] ) ) {
-					$sanitized_values[ $sanitary_value ] = sanitize_text_field( $input[ $sanitary_value ] );
+			$allowed_font_sizes = array_keys( $this->items );
+
+			foreach ( $color_fields as $sanitary_value ) {
+				if ( array_key_exists( $sanitary_value, $input ) ) {
+					$value = strtolower( sanitize_text_field( $input[ $sanitary_value ] ) );
+
+					$sanitized_values[ $sanitary_value ] = preg_match( '/^#(?:[0-9a-f]{3}){1,2}$/', $value ) ? $value : '';
+				}
+			}
+
+			foreach ( $font_size_fields as $sanitary_value ) {
+				if ( array_key_exists( $sanitary_value, $input ) ) {
+					$value = sanitize_text_field( $input[ $sanitary_value ] );
+
+					$sanitized_values[ $sanitary_value ] = in_array( $value, $allowed_font_sizes, true ) ? $value : '1.0';
 				}
 			}
 
