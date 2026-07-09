@@ -111,6 +111,16 @@ function sanitize_text_field( $value ): string {
 	return trim( strip_tags( (string) $value ) );
 }
 
+function wp_kses( $value, $allowed_html ): string {
+	$allowed_tags = '';
+
+	foreach ( array_keys( $allowed_html ) as $tag ) {
+		$allowed_tags .= '<' . $tag . '>';
+	}
+
+	return strip_tags( (string) $value, $allowed_tags );
+}
+
 function current_user_can( $capability, $object_id = null ): bool {
 	$GLOBALS['darven_epi_test_capability_check'] = array( $capability, $object_id );
 

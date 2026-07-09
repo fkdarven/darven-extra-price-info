@@ -6,6 +6,8 @@
 	 */
 	defined('ABSPATH') || exit();
 
+	require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings-sanitizer.php';
+
 	if (!class_exists('Darven_Epi_General_Settings_Fields')) {
 		class Darven_Epi_General_Settings_Fields
 		{
@@ -300,58 +302,9 @@
 
 			public function darven_epi_sanitize($input): array
 			{
-				$sanitary_values  = [
-					'darven_epi_max_installments',
-					'darven_epi_minimum_installments_value',
-					'darven_epi_installments_prefix',
-					'darven_epi_installments_suffix',
-					'darven_epi_installments_interest_fee',
-					'darven_epi_installments_interest_fee_first_install',
-					'darven_epi_installments_interest_fee_from',
-					'darven_epi_installments_is_enabled',
-					'darven_epi_incash_suffix',
-					'darven_epi_incash_prefix',
-					'darven_epi_minimum_incash_value',
-					'darven_epi_value_of_incash_discount',
-					'darven_epi_installments_interest_fee_table',
-					'darven_epi_installments_interest_fee_is_table_enabled',
-					'darven_epi_color_of_installments_install',
-					'darven_epi_popup_text',
-					'darven_epi_incash_is_enabled',
-					'darven_epi_type_of_discount',
-					'darven_epi_mode_of_view'
-				];
-				$sanitized_values = [];
-				$allowed_tags     = [
-					'a' => [
-						'href' => [],
-						'class' => [],
-					],
-					'br' => [],
-					'i' => [],
-					'b' => [],
-					'div' => [
-						'style' => [],
-						'class' => [],
-					],
-					'span' => [
-						'style' => [],
-						'class' => [],
-					],
-					'p' => [
-						'style' => [],
-						'class' => [],
-					],
-					'em' => [],
-				];
-				foreach ($sanitary_values as $sanitary_value) {
-					if (isset($input[$sanitary_value])) {
-						$sanitized_values[$sanitary_value] = wp_kses($input[$sanitary_value], $allowed_tags);
-					}
-				}
+				$sanitizer = new Darven_Epi_General_Settings_Sanitizer();
 
-				return $sanitized_values;
-
+				return $sanitizer->sanitize( $input );
 			}
 
 
