@@ -186,7 +186,7 @@ final class FinalPriceFormatter {
 - Produces: Composer mapping Darven\ExtraPriceInfo\ to src/.
 - Consumes: no namespaced runtime service; the existing Darven_Epi boot remains active in this task.
 
-- [ ] **Step 1: Write the failing autoload contract test**
+- [x] **Step 1: Write the failing autoload contract test**
 
 ~~~php
 public function test_declares_the_psr4_namespace_and_loads_the_runtime_autoloader(): void {
@@ -201,7 +201,7 @@ public function test_declares_the_psr4_namespace_and_loads_the_runtime_autoloade
 }
 ~~~
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/PluginAutoloadTest.php
@@ -209,7 +209,7 @@ public function test_declares_the_psr4_namespace_and_loads_the_runtime_autoloade
 
 Expected: no PSR-4 mapping exists.
 
-- [ ] **Step 3: Add the minimal runtime autoload implementation**
+- [x] **Step 3: Add the minimal runtime autoload implementation**
 
 Add this top-level Composer section while retaining the existing dependencies and scripts:
 
@@ -244,7 +244,7 @@ require_once $darven_epi_autoload_file;
 
 This must precede every namespaced class reference. In tests/bootstrap.php, require vendor/autoload.php after defining DARVEN_EPI_DIR_PATH.
 
-- [ ] **Step 4: Regenerate and verify**
+- [x] **Step 4: Regenerate and verify**
 
 ~~~powershell
 composer dump-autoload --optimize
@@ -253,7 +253,7 @@ composer dump-autoload --optimize
 
 Expected: the test passes.
 
-- [ ] **Step 5: Run regression suite and commit**
+- [x] **Step 5: Run regression suite and commit**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit --configuration phpunit.xml.dist
