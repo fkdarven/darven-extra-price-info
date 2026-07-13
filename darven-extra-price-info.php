@@ -26,6 +26,23 @@ if ( ! defined( 'WPINC' ) ) {
 
 const DARVEN_EPI_VERSION = '3.2.0';
 
+$darven_epi_autoload_file = DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
+
+if ( ! is_readable( $darven_epi_autoload_file ) ) {
+	add_action(
+		'admin_notices',
+		static function (): void {
+			echo '<div class="notice notice-error"><p>'
+				. esc_html__( 'Darven Extra Price Info is missing its runtime dependencies.', 'darven-epi' )
+				. '</p></div>';
+		}
+	);
+
+	return;
+}
+
+require_once $darven_epi_autoload_file;
+
 require_once DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-lifecycle.php';
 Darven_Epi_Lifecycle::register( __FILE__ );
 

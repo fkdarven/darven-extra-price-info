@@ -11,6 +11,11 @@
         "squizlabs/php_codesniffer": "^3.13",
         "wp-coding-standards/wpcs": "^3.2"
     },
+    "autoload": {
+        "psr-4": {
+            "Darven\\ExtraPriceInfo\\": "src/"
+        }
+    },
     "scripts": {
         "test": "phpunit",
         "phpcs": "phpcs"

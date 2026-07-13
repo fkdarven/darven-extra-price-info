@@ -3,6 +3,8 @@
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'DARVEN_EPI_DIR_PATH', dirname( __DIR__ ) . '/' );
 
+require_once DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
+
 $GLOBALS['darven_epi_test_options'] = array();
 $GLOBALS['darven_epi_test_actions'] = array();
 
