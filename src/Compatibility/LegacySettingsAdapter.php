@@ -37,7 +37,7 @@ final class LegacySettingsAdapter {
 				? $settings[ $section ]
 				: array();
 
-			foreach ( $canonical_section as $key => $value ) {
+			foreach ( $this->getPluginOwnedValues( $canonical_section ) as $key => $value ) {
 				$legacy_option[ $key ] = $value;
 			}
 

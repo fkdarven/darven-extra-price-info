@@ -63,6 +63,22 @@ final class LegacySettingsAdapterTest extends TestCase {
 		self::assertSame( 'retain', $result['darven_epi_option_compatibility']['third_party_compatibility_key'] );
 	}
 
+	public function test_does_not_project_third_party_values_from_canonical_sections(): void {
+		$adapter = new LegacySettingsAdapter();
+		$result  = $adapter->projectToLegacyOptions(
+			array(
+				'general' => array(
+					'darven_epi_max_installments' => '12',
+					'third_party_general_key'      => 'replace',
+				),
+			),
+			$this->get_legacy_options()
+		);
+
+		self::assertSame( '12', $result['darven_epi_option_general']['darven_epi_max_installments'] );
+		self::assertSame( 'retain', $result['darven_epi_option_general']['third_party_general_key'] );
+	}
+
 	public function test_uses_empty_sections_for_missing_or_non_array_legacy_options(): void {
 		$adapter  = new LegacySettingsAdapter();
 		$settings = $adapter->fromLegacyOptions(
