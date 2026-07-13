@@ -277,7 +277,7 @@ Expected: the current suite passes; no runtime behavior moved.
 - Produces: LegacySettingsAdapter::projectToLegacyOptions( array $settings, array $existing_options ): array.
 - Consumes: darven_epi_option_general, darven_epi_option_positions, darven_epi_option_colorsandstyles, and darven_epi_option_compatibility.
 
-- [ ] **Step 1: Write a legacy option fixture and failing assertions**
+- [x] **Step 1: Write a legacy option fixture and failing assertions**
 
 Use this fixture:
 
@@ -305,7 +305,7 @@ $legacy_options = array(
 
 Assert that fromLegacyOptions() creates schema_version 1 and four plugin sections, but does not copy third_party keys into canonical data. Assert projectToLegacyOptions() updates a known Darven value while retaining every third_party key in the projected legacy arrays.
 
-- [ ] **Step 2: Run the focused test to verify it fails**
+- [x] **Step 2: Run the focused test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/LegacySettingsAdapterTest.php
@@ -313,7 +313,7 @@ Assert that fromLegacyOptions() creates schema_version 1 and four plugin section
 
 Expected: LegacySettingsAdapter is not found.
 
-- [ ] **Step 3: Implement explicit section mapping**
+- [x] **Step 3: Implement explicit section mapping**
 
 ~~~php
 private const OPTION_BY_SECTION = array(
@@ -326,7 +326,7 @@ private const OPTION_BY_SECTION = array(
 
 fromLegacyOptions() returns all four sections when any option is absent or non-array. projectToLegacyOptions() starts from supplied existing option arrays, replaces only keys present in a canonical section, and returns all four named option arrays. It contains no WordPress function calls.
 
-- [ ] **Step 4: Run focused verification**
+- [x] **Step 4: Run focused verification**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/LegacySettingsAdapterTest.php
@@ -335,7 +335,7 @@ fromLegacyOptions() returns all four sections when any option is absent or non-a
 
 Expected: the adapter test passes and PHP reports no syntax errors.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Compatibility/LegacySettingsAdapter.php tests/LegacySettingsAdapterTest.php
