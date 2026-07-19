@@ -7,9 +7,30 @@ require_once DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
 
 $GLOBALS['darven_epi_test_options'] = array();
 $GLOBALS['darven_epi_test_actions'] = array();
+$GLOBALS['darven_epi_test_failing_options'] = array();
 
 function get_option( $name, $default = false ) {
 	return $GLOBALS['darven_epi_test_options'][ $name ] ?? $default;
+}
+
+function update_option( $name, $value ): bool {
+	if ( in_array( $name, $GLOBALS['darven_epi_test_failing_options'], true ) ) {
+		return false;
+	}
+
+	$GLOBALS['darven_epi_test_options'][ $name ] = $value;
+
+	return true;
+}
+
+function delete_option( $name ): bool {
+	if ( in_array( $name, $GLOBALS['darven_epi_test_failing_options'], true ) ) {
+		return false;
+	}
+
+	unset( $GLOBALS['darven_epi_test_options'][ $name ] );
+
+	return true;
 }
 
 function add_action( $hook, $callback, $priority = 10, $accepted_args = 1 ): void {
