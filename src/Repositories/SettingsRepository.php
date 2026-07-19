@@ -92,9 +92,7 @@ final class SettingsRepository {
 	}
 
 	private function persistAndVerify( string $option_name, array $value ): bool {
-		if ( ! update_option( $option_name, $value ) ) {
-			return false;
-		}
+		update_option( $option_name, $value );
 
 		return get_option( $option_name, null ) === $value;
 	}

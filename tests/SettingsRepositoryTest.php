@@ -77,6 +77,32 @@ final class SettingsRepositoryTest extends TestCase {
 		self::assertArrayNotHasKey( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_options'] );
 	}
 
+	public function test_confirms_idempotent_writes_and_clears_pending_sync_state(): void {
+		$canonical = array(
+			'schema_version' => 1,
+			'general'        => array(
+				'darven_epi_max_installments' => '6',
+			),
+			'positions'      => array(
+				'darven_epi_single_product_position' => 'third',
+			),
+			'display'        => array(),
+			'compatibility'  => array(),
+		);
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = $canonical;
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::SYNC_STATE_OPTION ] = array(
+			'pending_sections' => array( 'positions' ),
+			'failed_options'   => array( 'darven_epi_option_positions' ),
+		);
+
+		$result = $this->getRepository()->saveSection( 'general', $canonical['general'] );
+
+		self::assertTrue( $result );
+		self::assertSame( $canonical, $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] );
+		self::assertArrayNotHasKey( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_options'] );
+	}
+
 	public function test_preserves_unknown_legacy_keys_when_projecting_a_save(): void {
 		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
 

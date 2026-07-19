@@ -18,6 +18,10 @@ function update_option( $name, $value ): bool {
 		return false;
 	}
 
+	if ( array_key_exists( $name, $GLOBALS['darven_epi_test_options'] ) && $GLOBALS['darven_epi_test_options'][ $name ] === $value ) {
+		return false;
+	}
+
 	$GLOBALS['darven_epi_test_options'][ $name ] = $value;
 
 	return true;
