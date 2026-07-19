@@ -8,6 +8,7 @@ final class SettingsRepositoryTest extends TestCase {
 	protected function setUp(): void {
 		$GLOBALS['darven_epi_test_options']         = array();
 		$GLOBALS['darven_epi_test_failing_options'] = array();
+		$GLOBALS['darven_epi_test_option_reads']    = array();
 	}
 
 	public function test_reads_normalized_legacy_options_without_writing_a_migration(): void {
@@ -101,6 +102,50 @@ final class SettingsRepositoryTest extends TestCase {
 		self::assertTrue( $result );
 		self::assertSame( $canonical, $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] );
 		self::assertArrayNotHasKey( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_options'] );
+	}
+
+	public function test_returns_false_when_the_pending_sync_state_cannot_be_deleted(): void {
+		$sync_state = array(
+			'pending_sections' => array( 'positions' ),
+			'failed_options'   => array( 'darven_epi_option_positions' ),
+		);
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::SYNC_STATE_OPTION ] = $sync_state;
+		$GLOBALS['darven_epi_test_failing_options'] = array( SettingsRepository::SYNC_STATE_OPTION );
+
+		$result = $this->getRepository()->saveSection(
+			'general',
+			array(
+				'darven_epi_max_installments' => '12',
+			)
+		);
+
+		self::assertFalse( $result );
+		self::assertSame( $sync_state, $GLOBALS['darven_epi_test_options'][ SettingsRepository::SYNC_STATE_OPTION ] );
+	}
+
+	public function test_returns_false_when_a_pending_sync_state_cannot_be_recorded(): void {
+		$GLOBALS['darven_epi_test_options']         = $this->getLegacyOptions();
+		$GLOBALS['darven_epi_test_failing_options'] = array(
+			'darven_epi_option_positions',
+			SettingsRepository::SYNC_STATE_OPTION,
+		);
+
+		$result = $this->getRepository()->saveSection(
+			'positions',
+			array(
+				'darven_epi_single_product_position' => 'sixth',
+			)
+		);
+
+		self::assertFalse( $result );
+		self::assertSame(
+			'sixth',
+			$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['positions']['darven_epi_single_product_position']
+		);
+		// No new marker can be observed when the sync-state option itself fails to write.
+		self::assertArrayNotHasKey( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_options'] );
+		self::assertContains( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_option_reads'] );
 	}
 
 	public function test_preserves_unknown_legacy_keys_when_projecting_a_save(): void {

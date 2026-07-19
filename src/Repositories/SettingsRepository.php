@@ -107,20 +107,22 @@ final class SettingsRepository {
 		}
 
 		if ( ! empty( $failed_options ) ) {
-			update_option(
+			if ( ! $this->persistAndVerify(
 				self::SYNC_STATE_OPTION,
 				array(
 					'pending_sections' => array( $section ),
 					'failed_options'   => $failed_options,
 				)
-			);
+			) ) {
+				return false;
+			}
 
 			return false;
 		}
 
 		delete_option( self::SYNC_STATE_OPTION );
 
-		return true;
+		return null === get_option( self::SYNC_STATE_OPTION, null );
 	}
 
 	private function assertKnownSection( string $section ): void {

@@ -8,8 +8,11 @@ require_once DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
 $GLOBALS['darven_epi_test_options'] = array();
 $GLOBALS['darven_epi_test_actions'] = array();
 $GLOBALS['darven_epi_test_failing_options'] = array();
+$GLOBALS['darven_epi_test_option_reads'] = array();
 
 function get_option( $name, $default = false ) {
+	$GLOBALS['darven_epi_test_option_reads'][] = $name;
+
 	return $GLOBALS['darven_epi_test_options'][ $name ] ?? $default;
 }
 
