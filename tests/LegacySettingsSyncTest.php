@@ -95,6 +95,30 @@ final class LegacySettingsSyncTest extends TestCase {
 		);
 	}
 
+	public function test_non_array_positions_form_save_keeps_empty_return_and_creates_empty_canonical_section(): void {
+		$sanitized = $this->getSubject( Darven_Epi_Positions_Fields::class )->darven_epi_sanitize( null );
+
+		self::assertSame( array(), $sanitized );
+		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['positions'] );
+	}
+
+	public function test_non_array_compatibility_form_save_keeps_empty_return_and_creates_empty_canonical_section(): void {
+		$sanitized = $this->getSubject( Darven_Epi_Compatibility_Settings_Fields::class )->darven_epi_sanitize( null );
+
+		self::assertSame( array(), $sanitized );
+		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['compatibility'] );
+	}
+
+	public function test_non_array_display_form_save_keeps_empty_return_and_creates_empty_canonical_section(): void {
+		$sanitized = $this->getSubject( Darven_Epi_Colorsandstyles_Settings_Fields::class )->darven_epi_sanitize( null );
+
+		self::assertSame( array(), $sanitized );
+		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['display'] );
+	}
+
 	public function test_failed_legacy_mirror_keeps_sanitized_return_and_reports_pending_sync(): void {
 		$GLOBALS['darven_epi_test_failing_options'] = array( 'darven_epi_option_positions' );
 

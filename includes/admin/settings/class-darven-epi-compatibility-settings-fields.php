@@ -33,7 +33,7 @@ if ( ! class_exists( 'Darven_Epi_Compatibility_Settings_Fields' ) ) {
 		}
 		public function darven_epi_sanitize( $input ): array {
 			if ( ! is_array( $input ) ) {
-				return [];
+				return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'compatibility', array() );
 			}
 
 			$sanitary_values = [

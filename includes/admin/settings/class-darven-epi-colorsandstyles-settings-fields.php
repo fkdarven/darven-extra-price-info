@@ -270,7 +270,7 @@ if ( ! class_exists( 'Darven_Epi_Colorsandstyles_Settings_Fields' ) ) {
 
 		public function darven_epi_sanitize( $input ): array {
 			if ( ! is_array( $input ) ) {
-				return [];
+				return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'display', array() );
 			}
 
 			$color_fields = [

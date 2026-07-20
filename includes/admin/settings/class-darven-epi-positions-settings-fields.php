@@ -74,7 +74,7 @@ if ( ! class_exists( 'Darven_Epi_Positions_Fields' ) ) {
 
 		public function darven_epi_sanitize( $input ): array {
 			if ( ! is_array( $input ) ) {
-				return [];
+				return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'positions', array() );
 			}
 
 			$sanitary_values = ['darven_epi_others_product_position','darven_epi_single_product_position', 'darven_epi_catalog_product_position'];
