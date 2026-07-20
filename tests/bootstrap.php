@@ -88,6 +88,7 @@ class WC_Product {
 	private $price;
 	private $type;
 	private $variation_price;
+	private $save_count = 0;
 
 	public function __construct( $price, $type = 'simple', $variation_price = null, $meta = array(), $id = 1 ) {
 		$this->id              = $id;
@@ -119,6 +120,14 @@ class WC_Product {
 
 	public function update_meta_data( $key, $value ): void {
 		$this->meta[ $key ] = $value;
+	}
+
+	public function save(): void {
+		$this->save_count++;
+	}
+
+	public function get_save_count(): int {
+		return $this->save_count;
 	}
 }
 
