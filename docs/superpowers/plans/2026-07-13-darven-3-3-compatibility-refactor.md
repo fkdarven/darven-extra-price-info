@@ -356,7 +356,7 @@ git commit -m "feat: add legacy settings adapter" -m "Vault-Author: codex"
 - Consumes: LegacySettingsAdapter.
 - Produces: darven_epi_settings only after saveSection(); reading alone must not create it.
 
-- [ ] **Step 1: Extend test doubles and write failing repository tests**
+- [x] **Step 1: Extend test doubles and write failing repository tests**
 
 Add update_option(), delete_option(), and a failure list to tests/bootstrap.php:
 
@@ -384,7 +384,7 @@ public function test_records_pending_sync_when_a_legacy_mirror_cannot_be_verifie
 
 For the last test, fail darven_epi_option_positions, save positions with sixth, assert canonical stores sixth, and assert darven_epi_settings_sync_state contains positions.
 
-- [ ] **Step 2: Run the focused test to verify it fails**
+- [x] **Step 2: Run the focused test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/SettingsRepositoryTest.php
@@ -392,7 +392,7 @@ For the last test, fail darven_epi_option_positions, save positions with sixth, 
 
 Expected: SettingsRepository is not found.
 
-- [ ] **Step 3: Implement verified persistence**
+- [x] **Step 3: Implement verified persistence**
 
 ~~~php
 public function getSettings(): array {
@@ -432,7 +432,7 @@ array(
 
 to darven_epi_settings_sync_state. On complete sync delete that option. getSection() throws InvalidArgumentException for an unknown section.
 
-- [ ] **Step 4: Run repository and full regression tests**
+- [x] **Step 4: Run repository and full regression tests**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/SettingsRepositoryTest.php
@@ -441,7 +441,7 @@ to darven_epi_settings_sync_state. On complete sync delete that option. getSecti
 
 Expected: repository tests and all current tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Repositories/SettingsRepository.php tests/bootstrap.php tests/SettingsRepositoryTest.php
