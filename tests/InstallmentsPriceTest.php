@@ -27,4 +27,21 @@ final class InstallmentsPriceTest extends TestCase {
 		self::assertStringContainsString( 'R$ 25.00', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
 	}
+
+	public function test_legacy_shim_keeps_the_nullable_string_installment_value_contract(): void {
+		$subject = new Darven_Epi_Format_Installments_Price( new WC_Product( '100.00' ) );
+		$method  = new ReflectionMethod( Darven_Epi_Format_Installments_Price::class, 'get_installments_price' );
+
+		self::assertSame( '?string', (string) $method->getReturnType() );
+		self::assertSame( '25', $subject->get_installments_price( 100.00 ) );
+	}
+
+	public function test_legacy_shim_reloads_settings_when_initiated_again(): void {
+		$subject = new Darven_Epi_Format_Installments_Price( new WC_Product( '100.00' ) );
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general']['darven_epi_max_installments'] = '2';
+
+		$subject->initiate_options();
+
+		self::assertSame( '50', $subject->get_installments_price( 100.00 ) );
+	}
 }

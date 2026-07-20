@@ -22,7 +22,10 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 		 */
 		public function __construct( $product = null ) {
 			$this->product = $product;
+			$this->initiate_options();
+		}
 
+		public function initiate_options(): void {
 			$settings_repository = new \Darven\ExtraPriceInfo\Repositories\SettingsRepository(
 				new \Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter()
 			);
@@ -33,9 +36,6 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 			);
 		}
 
-		public function initiate_options(): void {
-		}
-
 		public function get_discount_price(): string {
 			if ( ! $this->product instanceof WC_Product ) {
 				return '';
@@ -44,8 +44,8 @@ if ( ! class_exists( 'Darven_Epi_Format_Installments_Price' ) ) {
 			return $this->formatter->format( $this->product );
 		}
 
-		public function get_installments_price( $price ) {
-			return $this->formatter->getInstallmentPrice( (float) $price );
+		public function get_installments_price( $price ): ?string {
+			return (string) $this->formatter->getInstallmentPrice( (float) $price );
 		}
 
 		public function get_price_table( $price ): array {

@@ -37,6 +37,11 @@ final class FinalPriceFormatterTest extends TestCase {
 		self::assertStringContainsString( '4x de', $result );
 		self::assertStringContainsString( 'darven-epi-incash-price-statement', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
+		self::assertStringContainsString( 'darven-epi-incash-prefix', $result );
+		self::assertStringContainsString( 'darven-epi-incash-price', $result );
+		self::assertStringContainsString( 'darven-epi-incash-suffix', $result );
+		self::assertStringContainsString( 'darven-epi-installment-count', $result );
+		self::assertStringContainsString( 'darven-epi-installment-price', $result );
 		self::assertStringNotContainsString( ' id=', $result );
 	}
 

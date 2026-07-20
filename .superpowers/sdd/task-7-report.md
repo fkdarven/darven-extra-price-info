@@ -21,3 +21,9 @@
 - RED: CSS compatibility assertion caught an unintended `!important` on the installment-price color; it was removed.
 - PHP 8.5 final suite: 76 tests, 229 assertions, all passing.
 - `git diff --check`: no whitespace errors.
+
+## Follow-up review corrections
+
+- Restored the legacy `Darven_Epi_Format_Installments_Price::get_installments_price()` return signature to `?string` and delegates its calculated value without exposing the formatter's float return value.
+- Restored `initiate_options()` as a settings reload boundary by rebuilding the formatter with a fresh normalized settings repository.
+- Added RED/GREEN tests for both legacy methods and explicit coverage for the cash prefix/price/suffix plus installment count/price markup classes.
