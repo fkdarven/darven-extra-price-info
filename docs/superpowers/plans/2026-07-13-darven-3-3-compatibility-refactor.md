@@ -547,7 +547,7 @@ git commit -m "feat: mirror legacy settings saves to canonical storage" -m "Vaul
 - Produces: ProductOptionsController::register(): void, renderFields(): void, and save( \WC_Product $product ): void.
 - Preserves: WooCommerce product-options and product-object-save hooks.
 
-- [ ] **Step 1: Write failing canonical product-setting tests**
+- [x] **Step 1: Write failing canonical product-setting tests**
 
 Extend the WC_Product double with save() and seed/read support for _darven_epi_product_settings. Add tests for legacy fallback, canonical precedence, dual-write, and absent-checkbox behavior. The dual-write test must assert:
 
@@ -560,7 +560,7 @@ self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', tr
 self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
 ~~~
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/ProductSettingsRepositoryTest.php
@@ -568,7 +568,7 @@ self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled'
 
 Expected: adapter and repository classes are not found.
 
-- [ ] **Step 3: Implement adapter, repository, and secure controller**
+- [x] **Step 3: Implement adapter, repository, and secure controller**
 
 The adapter maps legacy yes to true and every other legacy value to false. save() writes canonical meta first, then both legacy flags, and verifies each get_meta() result.
 
@@ -598,7 +598,7 @@ $settings = array(
 
 Turn Darven_Epi_Product_Options into a thin delegating shim until Task 8; it must not register duplicate hooks.
 
-- [ ] **Step 4: Run product regressions**
+- [x] **Step 4: Run product regressions**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/ProductSettingsRepositoryTest.php tests/ProductOptionsTest.php tests/FinalPriceTest.php
@@ -606,7 +606,7 @@ Turn Darven_Epi_Product_Options into a thin delegating shim until Task 8; it mus
 
 Expected: product save, nonce, capability, and legacy disabled-flag semantics pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Compatibility/LegacyProductSettingsAdapter.php src/Repositories/ProductSettingsRepository.php src/Admin/ProductOptionsController.php includes/functions/class-darven-epi-product-options.php tests/bootstrap.php tests/ProductSettingsRepositoryTest.php tests/ProductOptionsTest.php
