@@ -465,7 +465,7 @@ git commit -m "feat: add canonical settings repository" -m "Vault-Author: codex"
 - Consumes: the existing sanitizer output.
 - Preserves: each register_setting() option name, field name, returned legacy array, URL, and form.
 
-- [ ] **Step 1: Write failing form-save tests**
+- [x] **Step 1: Write failing form-save tests**
 
 For each section, call the existing sanitizer through the reflection pattern already used by tests and assert both its normal return value and canonical storage. The general assertion is:
 
@@ -479,7 +479,7 @@ self::assertSame(
 
 Cover sections general, positions, compatibility, and display.
 
-- [ ] **Step 2: Run the bridge test to verify it fails**
+- [x] **Step 2: Run the bridge test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/LegacySettingsSyncTest.php
@@ -487,7 +487,7 @@ Cover sections general, positions, compatibility, and display.
 
 Expected: canonical storage is absent after sanitization.
 
-- [ ] **Step 3: Implement the bridge and call it after sanitization**
+- [x] **Step 3: Implement the bridge and call it after sanitization**
 
 ~~~php
 namespace Darven\ExtraPriceInfo\Admin;
@@ -513,7 +513,7 @@ final class LegacySettingsSync {
 
 At the end of each existing darven_epi_sanitize() method, replace its return with LegacySettingsSync::save() using its section name. The Settings API remains responsible for the legacy write; the bridge creates/updates canonical data with the same sanitized values.
 
-- [ ] **Step 4: Run focused tests**
+- [x] **Step 4: Run focused tests**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/LegacySettingsSyncTest.php tests/GeneralSettingsSanitizationTest.php tests/SecondarySettingsSanitizationTest.php
@@ -522,7 +522,7 @@ git diff --check
 
 Expected: existing sanitizer assertions stay unchanged and every tested save creates canonical storage.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Admin/LegacySettingsSync.php includes/admin/settings tests/LegacySettingsSyncTest.php
