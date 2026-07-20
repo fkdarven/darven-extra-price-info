@@ -5,6 +5,10 @@ use PHPUnit\Framework\TestCase;
 final class ProductPriceTest extends TestCase {
 	protected function setUp(): void {
 		$GLOBALS['darven_epi_test_options'] = array();
+
+		if ( class_exists( 'YWDPD_Frontend' ) && property_exists( 'YWDPD_Frontend', 'dynamic_price' ) ) {
+			YWDPD_Frontend::$dynamic_price = null;
+		}
 	}
 
 	public function test_returns_the_active_price_from_the_given_simple_product(): void {
