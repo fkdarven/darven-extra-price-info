@@ -89,7 +89,7 @@ if ( ! class_exists( 'Darven_Epi_Positions_Fields' ) ) {
 				}
 			}
 
-			return $sanitized_values;
+			return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'positions', $sanitized_values );
 		}
 	}
 }

@@ -50,7 +50,7 @@ if ( ! class_exists( 'Darven_Epi_Compatibility_Settings_Fields' ) ) {
 				}
 			}
 
-			return $sanitized_values;
+			return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'compatibility', $sanitized_values );
 
 		}
 	}

@@ -310,7 +310,7 @@ if ( ! class_exists( 'Darven_Epi_Colorsandstyles_Settings_Fields' ) ) {
 				}
 			}
 
-			return $sanitized_values;
+			return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'display', $sanitized_values );
 		}
 
 	}

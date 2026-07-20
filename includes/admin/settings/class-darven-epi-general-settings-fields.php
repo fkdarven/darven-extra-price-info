@@ -304,7 +304,7 @@
 			{
 				$sanitizer = new Darven_Epi_General_Settings_Sanitizer();
 
-				return $sanitizer->sanitize( $input );
+				return \Darven\ExtraPriceInfo\Admin\LegacySettingsSync::save( 'general', $sanitizer->sanitize( $input ) );
 			}
 
 
