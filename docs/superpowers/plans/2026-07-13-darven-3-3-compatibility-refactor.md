@@ -633,7 +633,7 @@ git commit -m "feat: add canonical product settings" -m "Vault-Author: codex"
 - Consumes: normalized general and compatibility sections through SettingsRepository.
 - Preserves: cash markup classes and visible wc_price() output.
 
-- [ ] **Step 1: Write namespaced regression tests**
+- [x] **Step 1: Write namespaced regression tests**
 
 Copy simple, variable, invalid, unavailable-YITH, cash output, and prefixed-selector assertions into services tests. Add a missing-options regression:
 
@@ -648,7 +648,7 @@ $formatter  = new CashPriceFormatter(
 self::assertSame( '', $formatter->format( new WC_Product( '100.00' ) ) );
 ~~~
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/Services/ProductPriceResolverTest.php tests/Services/CashPriceFormatterTest.php
@@ -656,7 +656,7 @@ self::assertSame( '', $formatter->format( new WC_Product( '100.00' ) ) );
 
 Expected: the namespaced service classes are not found.
 
-- [ ] **Step 3: Implement injected services**
+- [x] **Step 3: Implement injected services**
 
 ProductPriceResolver receives SettingsRepository and preserves this decision order: valid YITH dynamic value, variable minimum display price, regular WooCommerce price.
 
@@ -673,7 +673,7 @@ CashPriceFormatter reads general settings once, returns empty unless the exact l
 
 Turn legacy classes into no-side-effect shims that delegate to the new services. Do not instantiate a formatter at file scope.
 
-- [ ] **Step 4: Run focused regression tests**
+- [x] **Step 4: Run focused regression tests**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/Services/ProductPriceResolverTest.php tests/Services/CashPriceFormatterTest.php tests/ProductPriceTest.php tests/FinalPriceTest.php tests/HtmlGeneratorTest.php
@@ -681,7 +681,7 @@ Turn legacy classes into no-side-effect shims that delegate to the new services.
 
 Expected: all price/markup tests pass and new services contain no get_option() call.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Services includes/functions/class-darven-epi-product-price.php includes/functions/class-darven-epi-format-incash-price.php tests/Services tests/ProductPriceTest.php
