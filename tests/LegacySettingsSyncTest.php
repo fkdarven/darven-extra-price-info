@@ -25,11 +25,26 @@ require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-pos
 require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-compatibility-settings-fields.php';
 require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-colorsandstyles-settings-fields.php';
 
+if ( ! defined( 'DARVEN_EPI_ADMIN_PAGE' ) ) {
+	define( 'DARVEN_EPI_ADMIN_PAGE', 'darven-epi-admin' );
+}
+
+if ( ! defined( 'DARVEN_EPI_LANGUAGE_DOMAIN' ) ) {
+	define( 'DARVEN_EPI_LANGUAGE_DOMAIN', 'darven-epi' );
+}
+
 final class LegacySettingsSyncTest extends TestCase {
 	protected function setUp(): void {
 		$GLOBALS['darven_epi_test_options']         = array();
 		$GLOBALS['darven_epi_test_failing_options'] = array();
 		$GLOBALS['darven_epi_test_settings_errors'] = array();
+		$GLOBALS['darven_epi_test_settings_sanitizers'] = array();
+		$GLOBALS['darven_epi_test_update_option_calls'] = array();
+		$GLOBALS['darven_epi_test_update_option_depth'] = 0;
+	}
+
+	protected function tearDown(): void {
+		$GLOBALS['darven_epi_test_settings_sanitizers'] = array();
 	}
 
 	public function test_general_form_save_keeps_sanitized_values_and_creates_canonical_section(): void {
@@ -117,6 +132,50 @@ final class LegacySettingsSyncTest extends TestCase {
 		self::assertSame( array(), $sanitized );
 		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
 		self::assertSame( array(), $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['display'] );
+	}
+
+	public function test_registered_settings_sanitizer_reentry_finishes_and_syncs_canonical_and_legacy_options(): void {
+		new Darven_Epi_Positions_Fields();
+		$reentry_exception = null;
+
+		try {
+			update_option(
+				'darven_epi_option_positions',
+				array(
+					'darven_epi_single_product_position' => 'sixth',
+				)
+			);
+		} catch ( RuntimeException $exception ) {
+			$reentry_exception = $exception;
+		}
+
+		self::assertNull( $reentry_exception );
+		self::assertSame(
+			'sixth',
+			$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['positions']['darven_epi_single_product_position']
+		);
+		self::assertSame(
+			'sixth',
+			$GLOBALS['darven_epi_test_options']['darven_epi_option_positions']['darven_epi_single_product_position']
+		);
+
+		update_option(
+			'darven_epi_option_positions',
+			array(
+				'darven_epi_single_product_position' => 'third',
+			)
+		);
+
+		self::assertSame(
+			'third',
+			$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['positions']['darven_epi_single_product_position']
+		);
+		self::assertSame(
+			'third',
+			$GLOBALS['darven_epi_test_options']['darven_epi_option_positions']['darven_epi_single_product_position']
+		);
+		self::assertSame( array(), $GLOBALS['darven_epi_test_settings_errors'] );
+		self::assertSame( 12, count( $GLOBALS['darven_epi_test_update_option_calls'] ) );
 	}
 
 	public function test_failed_legacy_mirror_keeps_sanitized_return_and_reports_pending_sync(): void {

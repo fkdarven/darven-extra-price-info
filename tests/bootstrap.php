@@ -9,6 +9,9 @@ $GLOBALS['darven_epi_test_options'] = array();
 $GLOBALS['darven_epi_test_actions'] = array();
 $GLOBALS['darven_epi_test_failing_options'] = array();
 $GLOBALS['darven_epi_test_option_reads'] = array();
+$GLOBALS['darven_epi_test_settings_sanitizers'] = array();
+$GLOBALS['darven_epi_test_update_option_calls'] = array();
+$GLOBALS['darven_epi_test_update_option_depth'] = 0;
 
 function get_option( $name, $default = false ) {
 	$GLOBALS['darven_epi_test_option_reads'][] = $name;
@@ -17,17 +20,47 @@ function get_option( $name, $default = false ) {
 }
 
 function update_option( $name, $value ): bool {
-	if ( in_array( $name, $GLOBALS['darven_epi_test_failing_options'], true ) ) {
-		return false;
+	$GLOBALS['darven_epi_test_update_option_calls'][] = $name;
+	$GLOBALS['darven_epi_test_update_option_depth']++;
+
+	try {
+		if ( $GLOBALS['darven_epi_test_update_option_depth'] > 20 ) {
+			throw new RuntimeException( 'Settings sanitizer recursion limit reached.' );
+		}
+
+		if ( in_array( $name, $GLOBALS['darven_epi_test_failing_options'], true ) ) {
+			return false;
+		}
+
+		if ( isset( $GLOBALS['darven_epi_test_settings_sanitizers'][ $name ] ) ) {
+			foreach ( $GLOBALS['darven_epi_test_settings_sanitizers'][ $name ] as $sanitize_callback ) {
+				$value = call_user_func( $sanitize_callback, $value );
+			}
+		}
+
+		if ( array_key_exists( $name, $GLOBALS['darven_epi_test_options'] ) && $GLOBALS['darven_epi_test_options'][ $name ] === $value ) {
+			return false;
+		}
+
+		$GLOBALS['darven_epi_test_options'][ $name ] = $value;
+
+		return true;
+	} finally {
+		$GLOBALS['darven_epi_test_update_option_depth']--;
 	}
+}
 
-	if ( array_key_exists( $name, $GLOBALS['darven_epi_test_options'] ) && $GLOBALS['darven_epi_test_options'][ $name ] === $value ) {
-		return false;
+function register_setting( $option_group, $option_name, $args = array() ): void {
+	$sanitize_callback = is_callable( $args )
+		? $args
+		: ( isset( $args['sanitize_callback'] ) ? $args['sanitize_callback'] : null );
+
+	if ( null !== $sanitize_callback ) {
+		$GLOBALS['darven_epi_test_settings_sanitizers'][ $option_name ][] = $sanitize_callback;
 	}
+}
 
-	$GLOBALS['darven_epi_test_options'][ $name ] = $value;
-
-	return true;
+function add_settings_field( $id, $title, $callback, $page, $section ): void {
 }
 
 function delete_option( $name ): bool {
