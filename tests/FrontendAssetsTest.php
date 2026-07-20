@@ -20,14 +20,17 @@ final class FrontendAssetsTest extends TestCase {
 	public function test_frontend_styles_target_repeatable_component_classes(): void {
 		$styles        = file_get_contents( DARVEN_EPI_DIR_PATH . 'public/css/styles.css' );
 		$custom_styles = file_get_contents( DARVEN_EPI_DIR_PATH . 'public/partials/darven-epi-custom-css.php' );
+		$inline_styles = file_get_contents( DARVEN_EPI_DIR_PATH . 'src/Frontend/InlineStyles.php' );
 
 		self::assertIsString( $styles );
 		self::assertIsString( $custom_styles );
+		self::assertIsString( $inline_styles );
 		self::assertStringNotContainsString( '#installments_table', $styles );
 		self::assertStringContainsString( '.darven-epi-installments-table', $styles );
-		self::assertStringNotContainsString( '#incash-prefix', $custom_styles );
-		self::assertStringNotContainsString( '#installment-price', $custom_styles );
-		self::assertStringContainsString( '.darven-epi-incash-prefix', $custom_styles );
-		self::assertStringContainsString( '.darven-epi-installment-price', $custom_styles );
+		self::assertStringContainsString( 'InlineStyles', $custom_styles );
+		self::assertStringNotContainsString( '#incash-prefix', $inline_styles );
+		self::assertStringNotContainsString( '#installment-price', $inline_styles );
+		self::assertStringContainsString( '.darven-epi-incash-prefix', $inline_styles );
+		self::assertStringContainsString( '.darven-epi-installment-price', $inline_styles );
 	}
 }
