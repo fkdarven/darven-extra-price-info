@@ -30,13 +30,11 @@ final class CompatibilityFields {
 
 		printf(
 			'<input type="checkbox" name="darven_epi_option_compatibility[%1$s]" id="%1$s" value="%1$s" %2$s><p class="description">%3$s</p>',
-			$field,
-			$checked,
-			esc_attr(
-				__(
-					'If enabled, the plugin will consider the price defined by YITH WooCommerce Dynamic Pricing and Discounts!',
-					'darven-epi'
-				)
+			esc_attr( $field ),
+			esc_attr( $checked ),
+			esc_html__(
+				'If enabled, the plugin will consider the price defined by YITH WooCommerce Dynamic Pricing and Discounts!',
+				'darven-epi'
 			)
 		);
 	}

@@ -10,18 +10,6 @@ final class PositionsFields {
 	 */
 	private $options = array();
 
-	/**
-	 * @var array<string,string>
-	 */
-	private $items = array(
-		'first'  => 'Original Price, In Cash Price, Installments Price',
-		'second' => 'Original Price, Installments Price, In Cash price',
-		'third'  => 'In Cash Price, Original Price, Installments Price',
-		'fourth' => 'In Cash Price, Installments Price, Original Price',
-		'fifth'  => 'Installments Price, Original Price, In Cash Price',
-		'sixth'  => 'Installments Price, In Cash Price, Original Price',
-	);
-
 	public function register(): void {
 		register_setting( 'darven_epi_option_group', 'darven_epi_option_positions', array( $this, 'sanitize' ) );
 		$options       = get_option( 'darven_epi_option_positions' );
@@ -48,7 +36,7 @@ final class PositionsFields {
 		}
 
 		$sanitized_values = array();
-		$allowed_values   = array_keys( $this->items );
+		$allowed_values   = array_keys( $this->getItems() );
 
 		foreach ( array(
 			'darven_epi_others_product_position',
@@ -68,17 +56,17 @@ final class PositionsFields {
 	private function registerSettingsFields(): void {
 		$this->registerSettingsField(
 			'darven_epi_single_product_position',
-			'Position in single product page',
+			__( 'Position in single product page', 'darven-epi' ),
 			array( $this, 'renderSingleProductPosition' )
 		);
 		$this->registerSettingsField(
 			'darven_epi_catalog_product_position',
-			'Position in catalog page',
+			__( 'Position in catalog page', 'darven-epi' ),
 			array( $this, 'renderCatalogProductPosition' )
 		);
 		$this->registerSettingsField(
 			'darven_epi_others_product_position',
-			'Position in other pages',
+			__( 'Position in other pages', 'darven-epi' ),
 			array( $this, 'renderOtherProductPosition' )
 		);
 	}
@@ -86,7 +74,7 @@ final class PositionsFields {
 	private function registerSettingsField( string $id, string $label, array $callback ): void {
 		add_settings_field(
 			$id,
-			__( $label, 'darven-epi' ),
+			$label,
 			$callback,
 			'darven-epi-admin',
 			'darven_epi_incash_settings_section'
@@ -94,13 +82,32 @@ final class PositionsFields {
 	}
 
 	private function renderSelect( string $field ): void {
-		echo " <label for='" . $field . "'></label><select id='" . $field . "' name='darven_epi_option_positions[" . $field . "]'>";
-		foreach ( $this->items as $key => $value ) {
-			echo "<option value='" . $key . "' "
-				. selected( $this->options[ $field ] ?? null, $key, false ) . '>'
-				. esc_html( __( $value, 'darven-epi' ) )
-				. '</option>';
+		printf(
+			' <label for="%1$s"></label><select id="%1$s" name="darven_epi_option_positions[%1$s]">',
+			esc_attr( $field )
+		);
+		foreach ( $this->getItems() as $key => $value ) {
+			printf(
+				'<option value="%1$s" %2$s>%3$s</option>',
+				esc_attr( $key ),
+				selected( $this->options[ $field ] ?? null, $key, false ),
+				esc_html( $value )
+			);
 		}
 		echo '</select>';
+	}
+
+	/**
+	 * @return array<string,string>
+	 */
+	private function getItems(): array {
+		return array(
+			'first'  => __( 'Original Price, In Cash Price, Installments Price', 'darven-epi' ),
+			'second' => __( 'Original Price, Installments Price, In Cash price', 'darven-epi' ),
+			'third'  => __( 'In Cash Price, Original Price, Installments Price', 'darven-epi' ),
+			'fourth' => __( 'In Cash Price, Installments Price, Original Price', 'darven-epi' ),
+			'fifth'  => __( 'Installments Price, Original Price, In Cash Price', 'darven-epi' ),
+			'sixth'  => __( 'Installments Price, In Cash Price, Original Price', 'darven-epi' ),
+		);
 	}
 }

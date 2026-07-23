@@ -58,11 +58,19 @@ final class ProductOptionsController {
 			return;
 		}
 
+		$incash_value = isset( $_POST['_darven_epi_is_incash_enabled'] ) && is_string( $_POST['_darven_epi_is_incash_enabled'] )
+			? sanitize_text_field( wp_unslash( $_POST['_darven_epi_is_incash_enabled'] ) )
+			: '';
+		$installments_value = isset( $_POST['_darven_epi_is_installment_enabled'] ) && is_string( $_POST['_darven_epi_is_installment_enabled'] )
+			? sanitize_text_field( wp_unslash( $_POST['_darven_epi_is_installment_enabled'] ) )
+			: '';
+
 		$settings = array(
-			'disable_incash'       => 'yes' === ( $_POST['_darven_epi_is_incash_enabled'] ?? '' ),
-			'disable_installments' => 'yes' === ( $_POST['_darven_epi_is_installment_enabled'] ?? '' ),
+			'disable_incash'       => 'yes' === $incash_value,
+			'disable_installments' => 'yes' === $installments_value,
 		);
 
 		$this->repository->save( $product, $settings );
 	}
+
 }

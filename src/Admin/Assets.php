@@ -4,7 +4,7 @@ namespace Darven\ExtraPriceInfo\Admin;
 
 final class Assets {
 	public function enqueue(): void {
-		$page = $_GET['page'] ?? null;
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;
 
 		if ( 'darven-epi-admin' !== $page ) {
 			return;
@@ -15,7 +15,7 @@ final class Assets {
 
 		wp_enqueue_style( 'darven-epi', $plugin_url . 'admin/css/admin_styles.css', array(), $version, 'all' );
 
-		$tab = $_GET['tab'] ?? null;
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : null;
 		if ( 'colorsandstyles' === $tab ) {
 			wp_enqueue_script(
 				'darven-epi',

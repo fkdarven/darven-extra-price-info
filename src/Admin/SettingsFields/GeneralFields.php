@@ -69,63 +69,63 @@ final class GeneralFields {
 	}
 
 	private function registerFields(): void {
-		$this->registerCheckbox( 'darven_epi_incash_is_enabled', 'Enable', 'darven_epi_incash_settings_section' );
+		$this->registerCheckbox( 'darven_epi_incash_is_enabled', __( 'Enable', 'darven-epi' ), 'darven_epi_incash_settings_section' );
 		$this->registerSelect(
 			'darven_epi_type_of_discount',
-			'Type of Discount',
+			__( 'Type of Discount', 'darven-epi' ),
 			'darven_epi_incash_settings_section',
-			array( 'percent' => 'Percent', 'fixed' => 'Fixed' )
+			array( 'percent' => __( 'Percent', 'darven-epi' ), 'fixed' => __( 'Fixed', 'darven-epi' ) )
 		);
-		$this->registerText( 'darven_epi_value_of_incash_discount', 'Value of Discount', 'darven_epi_incash_settings_section' );
+		$this->registerText( 'darven_epi_value_of_incash_discount', __( 'Value of Discount', 'darven-epi' ), 'darven_epi_incash_settings_section' );
 		$this->registerText(
 			'darven_epi_minimum_incash_value',
-			'Minimum price to the discount to be applied',
+			__( 'Minimum price to the discount to be applied', 'darven-epi' ),
 			'darven_epi_incash_settings_section',
-			'If there is not a minimum price, you may leave the field blank.'
+			__( 'If there is not a minimum price, you may leave the field blank.', 'darven-epi' )
 		);
-		$this->registerText( 'darven_epi_incash_prefix', 'Prefix', 'darven_epi_incash_settings_section', 'Text before the in cash price.' );
-		$this->registerText( 'darven_epi_incash_suffix', 'Suffix', 'darven_epi_incash_settings_section', 'Text after the in cash price.' );
+		$this->registerText( 'darven_epi_incash_prefix', __( 'Prefix', 'darven-epi' ), 'darven_epi_incash_settings_section', __( 'Text before the in cash price.', 'darven-epi' ) );
+		$this->registerText( 'darven_epi_incash_suffix', __( 'Suffix', 'darven-epi' ), 'darven_epi_incash_settings_section', __( 'Text after the in cash price.', 'darven-epi' ) );
 
-		$this->registerCheckbox( 'darven_epi_installments_is_enabled', 'Enable', 'darven_epi_installments_settings_section' );
+		$this->registerCheckbox( 'darven_epi_installments_is_enabled', __( 'Enable', 'darven-epi' ), 'darven_epi_installments_settings_section' );
 		$this->registerSelect(
 			'darven_epi_mode_of_view',
-			'Mode of View',
+			__( 'Mode of View', 'darven-epi' ),
 			'darven_epi_installments_settings_section',
 			array(
-				'default' => 'Maximum of installments',
-				'popup'   => 'Maximum of installments and a popup with each installment',
-				'nofee'   => 'Maximum of installments without interest fee and a popup with each installment',
+				'default' => __( 'Maximum of installments', 'darven-epi' ),
+				'popup'   => __( 'Maximum of installments and a popup with each installment', 'darven-epi' ),
+				'nofee'   => __( 'Maximum of installments without interest fee and a popup with each installment', 'darven-epi' ),
 			)
 		);
 		$this->registerText(
 			'darven_epi_minimum_installments_value',
-			'Minimum price to the discount to be applied',
+			__( 'Minimum price to the discount to be applied', 'darven-epi' ),
 			'darven_epi_installments_settings_section',
-			'If there is not a minimum price, you may leave this field blank.'
+			__( 'If there is not a minimum price, you may leave this field blank.', 'darven-epi' )
 		);
-		$this->registerText( 'darven_epi_installments_prefix', 'Prefix', 'darven_epi_installments_settings_section', 'Text before the installment.' );
-		$this->registerText( 'darven_epi_installments_suffix', 'Suffix', 'darven_epi_installments_settings_section', 'Text after the installment.' );
-		$this->registerText( 'darven_epi_popup_text', 'Popup Text', 'darven_epi_installments_settings_section', 'Only applied if the exhibition mode has the popup.' );
-		$this->registerText( 'darven_epi_max_installments', 'Maximum of Installments', 'darven_epi_installments_settings_section', 'Maximum installments possible. With or without interest fee.' );
+		$this->registerText( 'darven_epi_installments_prefix', __( 'Prefix', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'Text before the installment.', 'darven-epi' ) );
+		$this->registerText( 'darven_epi_installments_suffix', __( 'Suffix', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'Text after the installment.', 'darven-epi' ) );
+		$this->registerText( 'darven_epi_popup_text', __( 'Popup Text', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'Only applied if the exhibition mode has the popup.', 'darven-epi' ) );
+		$this->registerText( 'darven_epi_max_installments', __( 'Maximum of Installments', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'Maximum installments possible. With or without interest fee.', 'darven-epi' ) );
 		$this->registerText(
 			'darven_epi_minimum_installments_value',
-			'Minimum price necessary to apply the installments',
+			__( 'Minimum price necessary to apply the installments', 'darven-epi' ),
 			'darven_epi_installments_settings_section',
-			'If there is not a minimum price, you may leave this field blank.'
+			__( 'If there is not a minimum price, you may leave this field blank.', 'darven-epi' )
 		);
-		$this->registerText( 'darven_epi_installments_interest_fee_from', 'Installments from', 'darven_epi_installments_settings_section', 'At which installment should the interest fee start being applied.' );
-		$this->registerText( 'darven_epi_installments_interest_fee_first_install', 'Interest fee in the first install (%)', 'darven_epi_installments_settings_section', 'Interest fee applied in the first installment (with i.f).' );
-		$this->registerText( 'darven_epi_installments_interest_fee', 'Incremental interest fee (%)', 'darven_epi_installments_settings_section', 'Interest fee incrementally applied on each install.' );
+		$this->registerText( 'darven_epi_installments_interest_fee_from', __( 'Installments from', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'At which installment should the interest fee start being applied.', 'darven-epi' ) );
+		$this->registerText( 'darven_epi_installments_interest_fee_first_install', __( 'Interest fee in the first install (%)', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'Interest fee applied in the first installment (with i.f).', 'darven-epi' ) );
+		$this->registerText( 'darven_epi_installments_interest_fee', __( 'Incremental interest fee (%)', 'darven-epi' ), 'darven_epi_installments_settings_section', __( 'Interest fee incrementally applied on each install.', 'darven-epi' ) );
 
 		$this->registerCheckbox(
 			'darven_epi_installments_interest_fee_is_table_enabled',
-			'Customize the interest fees',
+			__( 'Customize the interest fees', 'darven-epi' ),
 			'darven_epi_advanced_installments_settings_section',
-			'If enabled, only the customized interest fee values will be considered. Be aware!'
+			__( 'If enabled, only the customized interest fee values will be considered. Be aware!', 'darven-epi' )
 		);
 		$this->registerSettingsField(
 			'darven_epi_installments_interest_fee_table',
-			'Customize the interest fees',
+			__( 'Customize the interest fees', 'darven-epi' ),
 			'darven_epi_advanced_installments_settings_section',
 			array( $this, 'renderInterestFeeTable' )
 		);
@@ -135,13 +135,11 @@ final class GeneralFields {
 		$field = 'darven_epi_installments_interest_fee_table';
 		printf(
 			'<input class="" type="text" name="darven_epi_option_general[%1$s]" id="%1$s" value="%2$s"><p class="description">%3$s</p>',
-			$field,
-			$this->optionValue( $field ),
-			esc_attr(
-				__(
-					"To personalize the interest fees, enter the percentage of interest to be charged for each installment that has a fee. Separate the values with a vertical bar (|), and use the format 'fee,fee,fee', where each fee corresponds to an installment with an interest fee. For example: '8,25|9,50|10,12'. Please note that you should only include installments that have an interest fee.",
-					'darven-epi'
-				)
+			esc_attr( $field ),
+			esc_attr( $this->optionValue( $field ) ),
+			esc_html__(
+				"To personalize the interest fees, enter the percentage of interest to be charged for each installment that has a fee. Separate the values with a vertical bar (|), and use the format 'fee,fee,fee', where each fee corresponds to an installment with an interest fee. For example: '8,25|9,50|10,12'. Please note that you should only include installments that have an interest fee.",
+				'darven-epi'
 			)
 		);
 		?>
@@ -154,9 +152,9 @@ final class GeneralFields {
                 <a id="customized_values_button" href="javascript:void(0)" style="display: none">OK</a>
                 <br>
                 <script type="text/javascript">
-                    let customized_values = "<?php echo $this->optionValue( 'darven_epi_installments_interest_fee_table' ); ?>";
-                    let max_install = "<?php echo $this->optionValue( 'darven_epi_max_installments' ); ?>";
-                    let first_install = "<?php echo $this->optionValue( 'darven_epi_installments_interest_fee_from' ); ?>";
+                    let customized_values = <?php echo wp_json_encode( $this->optionValue( 'darven_epi_installments_interest_fee_table' ) ); ?>;
+                    let max_install = <?php echo wp_json_encode( $this->optionValue( 'darven_epi_max_installments' ) ); ?>;
+                    let first_install = <?php echo wp_json_encode( $this->optionValue( 'darven_epi_installments_interest_fee_from' ) ); ?>;
                 </script>
 		<?php
 	}
@@ -170,9 +168,9 @@ final class GeneralFields {
 				$checked = $field === ( $this->options[ $field ] ?? '' ) ? 'checked' : '';
 				printf(
 					'<input type="checkbox" name="darven_epi_option_general[%1$s]" id="%1$s" value="%1$s" %2$s>%3$s',
-					$field,
-					$checked,
-					'' === $description ? '' : '<p class="description">' . esc_attr( __( $description, 'darven-epi' ) ) . '</p>'
+					esc_attr( $field ),
+					esc_attr( $checked ),
+					'' === $description ? '' : '<p class="description">' . esc_html( $description ) . '</p>'
 				);
 			}
 		);
@@ -187,12 +185,17 @@ final class GeneralFields {
 			$label,
 			$section,
 			function () use ( $field, $items ): void {
-				echo '<label for="' . $field . '"></label><select name="darven_epi_option_general[' . $field . ']" id="' . $field . '">';
+				printf(
+					'<label for="%1$s"></label><select name="darven_epi_option_general[%1$s]" id="%1$s">',
+					esc_attr( $field )
+				);
 				foreach ( $items as $value => $item_label ) {
-					echo '<option value="' . $value . '" '
-						. selected( $this->options[ $field ] ?? null, $value, false ) . '>'
-						. esc_attr( __( $item_label, 'darven-epi' ) )
-						. '</option>';
+					printf(
+						'<option value="%1$s" %2$s>%3$s</option>',
+						esc_attr( $value ),
+						selected( $this->options[ $field ] ?? null, $value, false ),
+						esc_html( $item_label )
+					);
 				}
 				echo '</select>';
 			}
@@ -207,20 +210,20 @@ final class GeneralFields {
 			function () use ( $field, $description ): void {
 				printf(
 					'<input class="regular-text" type="text" name="darven_epi_option_general[%1$s]" id="%1$s" value="%2$s"><p class="description">%3$s</p>',
-					$field,
-					$this->optionValue( $field ),
-					'' === $description ? '' : esc_attr( __( $description, 'darven-epi' ) )
+					esc_attr( $field ),
+					esc_attr( $this->optionValue( $field ) ),
+					'' === $description ? '' : esc_html( $description )
 				);
 			}
 		);
 	}
 
 	private function registerSettingsField( string $field, string $label, string $section, callable $callback ): void {
-		add_settings_field( $field, __( $label, 'darven-epi' ), $callback, 'darven-epi-admin', $section );
+		add_settings_field( $field, $label, $callback, 'darven-epi-admin', $section );
 	}
 
 	private function optionValue( string $field ): string {
-		return isset( $this->options[ $field ] ) ? esc_attr( $this->options[ $field ] ) : '';
+		return isset( $this->options[ $field ] ) ? (string) $this->options[ $field ] : '';
 	}
 
 	/**

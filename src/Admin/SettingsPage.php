@@ -34,29 +34,29 @@ final class SettingsPage {
 		$tab = filter_input( INPUT_GET, 'tab' );
 
 		if ( 'colorsandstyles' === $tab ) {
-			$this->addInCashSection( 'In Cash Settings' );
-			$this->addInstallmentsSection( 'Installments Settings' );
+			$this->addInCashSection( __( 'In Cash Settings', 'darven-epi' ) );
+			$this->addInstallmentsSection( __( 'Installments Settings', 'darven-epi' ) );
 			( new DisplayFields() )->register();
 
 			return;
 		}
 
 		if ( 'positions' === $tab ) {
-			$this->addInCashSection( 'Statements Positions Settings' );
+			$this->addInCashSection( __( 'Statements Positions Settings', 'darven-epi' ) );
 			( new PositionsFields() )->register();
 
 			return;
 		}
 
 		if ( 'compatibility' === $tab ) {
-			$this->addInCashSection( 'Compatibility Settings' );
+			$this->addInCashSection( __( 'Compatibility Settings', 'darven-epi' ) );
 			( new CompatibilityFields() )->register();
 
 			return;
 		}
 
-		$this->addInCashSection( 'In Cash Settings' );
-		$this->addInstallmentsSection( 'Installments Settings' );
+		$this->addInCashSection( __( 'In Cash Settings', 'darven-epi' ) );
+		$this->addInstallmentsSection( __( 'Installments Settings', 'darven-epi' ) );
 		add_settings_section(
 			'darven_epi_advanced_installments_settings_section',
 			__( 'Advanced Installments Settings Section', 'darven-epi' ),
@@ -84,7 +84,7 @@ final class SettingsPage {
 	private function addInCashSection( string $title ): void {
 		add_settings_section(
 			'darven_epi_incash_settings_section',
-			__( $title, 'darven-epi' ),
+			$title,
 			array( $this, 'renderSection' ),
 			'darven-epi-admin'
 		);
@@ -93,7 +93,7 @@ final class SettingsPage {
 	private function addInstallmentsSection( string $title ): void {
 		add_settings_section(
 			'darven_epi_installments_settings_section',
-			__( $title, 'darven-epi' ),
+			$title,
 			array( $this, 'renderSection' ),
 			'darven-epi-admin'
 		);

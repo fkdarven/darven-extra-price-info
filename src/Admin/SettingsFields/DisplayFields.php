@@ -62,31 +62,31 @@ final class DisplayFields {
 	}
 
 	private function registerFields(): void {
-		$this->registerColorField( 'darven_epi_color_of_incash_price', 'Price Color', 'darven_epi_incash_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_incash_price', 'Color Font Size', 'darven_epi_incash_settings_section' );
-		$this->registerColorField( 'darven_epi_color_of_incash_suffix', 'Suffix Color', 'darven_epi_incash_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_incash_suffix', 'Suffix Font Size', 'darven_epi_incash_settings_section' );
-		$this->registerColorField( 'darven_epi_color_of_incash_prefix', 'Prefix Color', 'darven_epi_incash_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_incash_prefix', 'Prefix Font Size', 'darven_epi_incash_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_incash_price', __( 'Price Color', 'darven-epi' ), 'darven_epi_incash_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_incash_price', __( 'Color Font Size', 'darven-epi' ), 'darven_epi_incash_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_incash_suffix', __( 'Suffix Color', 'darven-epi' ), 'darven_epi_incash_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_incash_suffix', __( 'Suffix Font Size', 'darven-epi' ), 'darven_epi_incash_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_incash_prefix', __( 'Prefix Color', 'darven-epi' ), 'darven_epi_incash_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_incash_prefix', __( 'Prefix Font Size', 'darven-epi' ), 'darven_epi_incash_settings_section' );
 
-		$this->registerColorField( 'darven_epi_color_of_installments_price', 'Price Color', 'darven_epi_installments_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_price', 'Color Font Size', 'darven_epi_installments_settings_section' );
-		$this->registerColorField( 'darven_epi_color_of_installments_suffix', 'Suffix Color', 'darven_epi_installments_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_suffix', 'Suffix Font Size', 'darven_epi_installments_settings_section' );
-		$this->registerColorField( 'darven_epi_color_of_installments_prefix', 'Prefix Color', 'darven_epi_installments_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_prefix', 'Prefix Font Size', 'darven_epi_installments_settings_section' );
-		$this->registerColorField( 'darven_epi_color_of_installments_install', 'Installment Color', 'darven_epi_installments_settings_section' );
-		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_install', 'Installment Font Size', 'darven_epi_installments_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_installments_price', __( 'Price Color', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_price', __( 'Color Font Size', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_installments_suffix', __( 'Suffix Color', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_suffix', __( 'Suffix Font Size', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_installments_prefix', __( 'Prefix Color', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_prefix', __( 'Prefix Font Size', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerColorField( 'darven_epi_color_of_installments_install', __( 'Installment Color', 'darven-epi' ), 'darven_epi_installments_settings_section' );
+		$this->registerFontSizeField( 'darven_epi_font_size_of_installments_install', __( 'Installment Font Size', 'darven-epi' ), 'darven_epi_installments_settings_section' );
 	}
 
 	private function registerColorField( string $field, string $label, string $section ): void {
 		add_settings_field(
 			$field,
-			__( $label, 'darven-epi' ),
+			$label,
 			function () use ( $field ): void {
 				printf(
 					'<input class="regular" type="color" name="darven_epi_option_colorsandstyles[%1$s]" id="%1$s" value="%2$s">',
-					$field,
+					esc_attr( $field ),
 					isset( $this->options[ $field ] ) ? esc_attr( $this->options[ $field ] ) : ''
 				);
 			},
@@ -98,14 +98,19 @@ final class DisplayFields {
 	private function registerFontSizeField( string $field, string $label, string $section ): void {
 		add_settings_field(
 			$field,
-			__( $label, 'darven-epi' ),
+			$label,
 			function () use ( $field ): void {
-				echo "<label for='" . $field . "'></label><select id='" . $field . "' name='darven_epi_option_colorsandstyles[" . $field . "]'>";
+				printf(
+					'<label for="%1$s"></label><select id="%1$s" name="darven_epi_option_colorsandstyles[%1$s]">',
+					esc_attr( $field )
+				);
 				foreach ( $this->font_sizes as $key => $value ) {
-					echo "<option value='" . $key . "' "
-						. selected( $this->options[ $field ] ?? null, $key, false ) . '>'
-						. esc_html( $value )
-						. '</option>';
+					printf(
+						'<option value="%1$s" %2$s>%3$s</option>',
+						esc_attr( $key ),
+						selected( $this->options[ $field ] ?? null, $key, false ),
+						esc_html( $value )
+					);
 				}
 				echo '</select>';
 			},
