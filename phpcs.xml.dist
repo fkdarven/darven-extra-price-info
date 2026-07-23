@@ -33,9 +33,7 @@
 
 		<!-- Formatting and test-double-only structure are intentionally deferred from this refactor. -->
 		<exclude name="Generic.Classes.OpeningBraceSameLine"/>
-		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
 		<exclude name="Generic.Files.LineEndings"/>
-		<exclude name="Generic.Files.OneObjectStructurePerFile"/>
 		<exclude name="Generic.Formatting.DisallowMultipleStatements"/>
 		<exclude name="Generic.Formatting.MultipleStatementAlignment"/>
 		<exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
@@ -47,7 +45,6 @@
 		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
 		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 		<exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
-		<exclude name="Universal.Files.SeparateFunctionsFromOO"/>
 		<exclude name="Universal.Operators.DisallowStandalonePostIncrementDecrement"/>
 		<exclude name="Universal.WhiteSpace.CommaSpacing"/>
 		<exclude name="Universal.WhiteSpace.DisallowInlineTabs"/>
@@ -61,6 +58,22 @@
 
 		<!-- Sanitized GET values select assets only; mutating requests still require nonce verification. -->
 		<exclude name="WordPress.Security.NonceVerification.Recommended"/>
+	</rule>
+
+	<!-- These files declare only the WordPress/YITH doubles required by their respective test cases. -->
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+		<exclude-pattern>*/tests/LegacySettingsSyncTest.php</exclude-pattern>
+		<exclude-pattern>*/tests/Services/ProductPriceResolverTest.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Generic.Files.OneObjectStructurePerFile">
+		<exclude-pattern>*/tests/Services/ProductPriceResolverTest.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Universal.Files.SeparateFunctionsFromOO">
+		<exclude-pattern>*/tests/LegacySettingsSyncTest.php</exclude-pattern>
+		<exclude-pattern>*/tests/LifecycleTest.php</exclude-pattern>
+		<exclude-pattern>*/tests/Services/FinalPriceFormatterTest.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.WP.AlternativeFunctions">
