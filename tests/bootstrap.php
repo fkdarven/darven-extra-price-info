@@ -30,26 +30,58 @@ function update_option( $name, $value ): bool {
 			throw new RuntimeException( 'Settings sanitizer recursion limit reached.' );
 		}
 
+		$value    = darven_epi_test_sanitize_option( $name, $value );
+		$has_old  = array_key_exists( $name, $GLOBALS['darven_epi_test_options'] );
+		$old_value = $has_old ? $GLOBALS['darven_epi_test_options'][ $name ] : false;
+
+		if ( $has_old && $old_value === $value ) {
+			return false;
+		}
+
+		if ( ! $has_old ) {
+			return add_option( $name, $value );
+		}
+
 		if ( in_array( $name, $GLOBALS['darven_epi_test_failing_options'], true ) ) {
 			return false;
 		}
 
-		if ( isset( $GLOBALS['darven_epi_test_settings_sanitizers'][ $name ] ) ) {
-			foreach ( $GLOBALS['darven_epi_test_settings_sanitizers'][ $name ] as $sanitize_callback ) {
-				$value = call_user_func( $sanitize_callback, $value );
-			}
-		}
-
-		if ( array_key_exists( $name, $GLOBALS['darven_epi_test_options'] ) && $GLOBALS['darven_epi_test_options'][ $name ] === $value ) {
-			return false;
-		}
-
 		$GLOBALS['darven_epi_test_options'][ $name ] = $value;
+		do_action( 'update_option_' . $name, $old_value, $value, $name );
 
 		return true;
 	} finally {
 		$GLOBALS['darven_epi_test_update_option_depth']--;
 	}
+}
+
+function add_option( $name, $value = '', $deprecated = '', $autoload = null ): bool {
+	$value = darven_epi_test_sanitize_option( $name, $value );
+
+	if ( array_key_exists( $name, $GLOBALS['darven_epi_test_options'] ) ) {
+		return false;
+	}
+
+	if ( in_array( $name, $GLOBALS['darven_epi_test_failing_options'], true ) ) {
+		return false;
+	}
+
+	$GLOBALS['darven_epi_test_options'][ $name ] = $value;
+	do_action( 'add_option_' . $name, $name, $value );
+
+	return true;
+}
+
+function darven_epi_test_sanitize_option( $name, $value ) {
+	if ( ! isset( $GLOBALS['darven_epi_test_settings_sanitizers'][ $name ] ) ) {
+		return $value;
+	}
+
+	foreach ( $GLOBALS['darven_epi_test_settings_sanitizers'][ $name ] as $sanitize_callback ) {
+		$value = call_user_func( $sanitize_callback, $value );
+	}
+
+	return $value;
 }
 
 function register_setting( $option_group, $option_name, $args = array() ): void {
@@ -82,6 +114,40 @@ function add_action( $hook, $callback, $priority = 10, $accepted_args = 1 ): voi
 		'priority'      => $priority,
 		'accepted_args' => $accepted_args,
 	);
+}
+
+function remove_action( $hook, $callback, $priority = 10 ): bool {
+	foreach ( $GLOBALS['darven_epi_test_actions'] as $index => $registration ) {
+		if ( $hook === $registration['hook'] && $priority === $registration['priority'] && $callback === $registration['callback'] ) {
+			unset( $GLOBALS['darven_epi_test_actions'][ $index ] );
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function do_action( $hook, ...$args ): void {
+	$registrations = array_values(
+		array_filter(
+			$GLOBALS['darven_epi_test_actions'],
+			function ( array $registration ) use ( $hook ): bool {
+				return $hook === $registration['hook'];
+			}
+		)
+	);
+
+	usort(
+		$registrations,
+		function ( array $left, array $right ): int {
+			return $left['priority'] <=> $right['priority'];
+		}
+	);
+
+	foreach ( $registrations as $registration ) {
+		call_user_func_array( $registration['callback'], array_slice( $args, 0, $registration['accepted_args'] ) );
+	}
 }
 
 function add_filter( $hook, $callback, $priority = 10, $accepted_args = 1 ): void {

@@ -4,6 +4,10 @@ use Darven\ExtraPriceInfo\Admin\SettingsFields\GeneralFields;
 use PHPUnit\Framework\TestCase;
 
 final class GeneralSettingsSanitizationTest extends TestCase {
+	protected function tearDown(): void {
+		do_action( 'shutdown' );
+	}
+
 	public function test_sanitizes_general_options_according_to_field_types(): void {
 		$subject = $this->get_subject();
 

@@ -68,6 +68,18 @@ final class SettingsRepository {
 		);
 	}
 
+	public function recordPendingSync( string $section, string $failed_option ): bool {
+		$this->assertKnownSection( $section );
+
+		return $this->persistAndVerify(
+			self::SYNC_STATE_OPTION,
+			array(
+				'pending_sections' => array( $section ),
+				'failed_options'   => array( $failed_option ),
+			)
+		);
+	}
+
 	private function isCanonicalDocument( $settings ): bool {
 		if ( ! is_array( $settings ) || ! isset( $settings['schema_version'] ) || 1 !== $settings['schema_version'] ) {
 			return false;

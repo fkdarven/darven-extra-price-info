@@ -52,20 +52,37 @@ final class LegacySettingsAdapter {
 		return self::OPTION_BY_SECTION[ $section ];
 	}
 
+	public function fromLegacyOption( string $section, $legacy_option ): array {
+		$this->getLegacyOptionName( $section );
+
+		return $this->getPluginOwnedValues( is_array( $legacy_option ) ? $legacy_option : array() );
+	}
+
 	public function projectSectionToLegacyOption( string $section, array $canonical_section, $existing_option ): array {
 		$legacy_option = is_array( $existing_option ) ? $existing_option : array();
+		$canonical_values = $this->getPluginOwnedValues( $canonical_section );
+		$projected_option = array();
 
 		$this->getLegacyOptionName( $section );
 
-		foreach ( $this->getPluginOwnedValues( $legacy_option ) as $key => $value ) {
-			unset( $legacy_option[ $key ] );
+		foreach ( $legacy_option as $key => $value ) {
+			if ( is_string( $key ) && 0 === strpos( $key, 'darven_epi_' ) ) {
+				if ( array_key_exists( $key, $canonical_values ) ) {
+					$projected_option[ $key ] = $canonical_values[ $key ];
+					unset( $canonical_values[ $key ] );
+				}
+
+				continue;
+			}
+
+			$projected_option[ $key ] = $value;
 		}
 
-		foreach ( $this->getPluginOwnedValues( $canonical_section ) as $key => $value ) {
-			$legacy_option[ $key ] = $value;
+		foreach ( $canonical_values as $key => $value ) {
+			$projected_option[ $key ] = $value;
 		}
 
-		return $legacy_option;
+		return $projected_option;
 	}
 
 	private function getPluginOwnedValues( array $legacy_option ): array {

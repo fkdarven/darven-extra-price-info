@@ -6,6 +6,10 @@ use Darven\ExtraPriceInfo\Admin\SettingsFields\PositionsFields;
 use PHPUnit\Framework\TestCase;
 
 final class SecondarySettingsSanitizationTest extends TestCase {
+	protected function tearDown(): void {
+		do_action( 'shutdown' );
+	}
+
 	public function test_position_settings_only_keep_supported_ordination_values(): void {
 		$subject = $this->get_subject( PositionsFields::class );
 
