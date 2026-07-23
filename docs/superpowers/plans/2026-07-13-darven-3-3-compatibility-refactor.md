@@ -958,6 +958,8 @@ git commit -m "refactor: complete compatibility-first architecture" -m "Vault-Au
 
 Do not push. Create a release or pull-request decision only after manual checks pass.
 
+**Automated execution status:** approved after the follow-up compatibility fixes in `b251703` and `dc5f3ca`. The final matrix passed with 88 tests and 273 assertions under both PHP 8.5 and PHP 8.3; PHP 8.3 lint, the project PHPCS ruleset, and `git diff --check` also passed. Step 5 remains the only outstanding validation.
+
 ## Spec Coverage Review
 
 - PHP 7.4: global constraints and Task 9 dual-PHP verification.
