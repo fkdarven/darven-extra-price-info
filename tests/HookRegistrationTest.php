@@ -1,39 +1,21 @@
 <?php
 
+use Darven\ExtraPriceInfo\Setup\Plugin;
 use PHPUnit\Framework\TestCase;
 
-require_once DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-loader.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi.php';
-
-final class DarvenEpiRecordingLoader extends Darven_Epi_Loader {
-	public array $registered_filters = array();
-
-	public function add_filter( string $hook, object $component, string $callback, int $priority = 10, int $accepted_args = 1 ): void {
-		$this->registered_filters[] = array(
-			'hook'          => $hook,
-			'component'     => $component,
-			'callback'      => $callback,
-			'priority'      => $priority,
-			'accepted_args' => $accepted_args,
-		);
-	}
-}
-
-final class DarvenEpiForHookTest extends Darven_Epi {
-	public function __construct( Darven_Epi_Loader $loader ) {
-		$this->loader = $loader;
-	}
-}
-
 final class HookRegistrationTest extends TestCase {
-	public function test_price_html_filter_accepts_the_product_argument(): void {
-		$loader = new DarvenEpiRecordingLoader();
-		$plugin = new DarvenEpiForHookTest( $loader );
+	protected function setUp(): void {
+		$GLOBALS['darven_epi_test_actions'] = array();
+		$GLOBALS['darven_epi_test_filters'] = array();
+	}
 
-		$plugin->define_public_filters();
+	public function test_price_html_filter_uses_the_required_priority_and_product_argument(): void {
+		Plugin::boot();
 
-		self::assertCount( 1, $loader->registered_filters );
-		self::assertSame( 'woocommerce_get_price_html', $loader->registered_filters[0]['hook'] );
-		self::assertSame( 2, $loader->registered_filters[0]['accepted_args'] );
+		self::assertCount( 1, $GLOBALS['darven_epi_test_filters'] );
+		self::assertSame( 'woocommerce_get_price_html', $GLOBALS['darven_epi_test_filters'][0]['hook'] );
+		self::assertSame( 2000, $GLOBALS['darven_epi_test_filters'][0]['priority'] );
+		self::assertSame( 2, $GLOBALS['darven_epi_test_filters'][0]['accepted_args'] );
+		self::assertSame( 'filter', $GLOBALS['darven_epi_test_filters'][0]['callback'][1] );
 	}
 }

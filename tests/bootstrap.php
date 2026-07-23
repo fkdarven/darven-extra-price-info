@@ -7,6 +7,8 @@ require_once DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
 
 $GLOBALS['darven_epi_test_options'] = array();
 $GLOBALS['darven_epi_test_actions'] = array();
+$GLOBALS['darven_epi_test_filters'] = array();
+$GLOBALS['darven_epi_test_submenu_pages'] = array();
 $GLOBALS['darven_epi_test_failing_options'] = array();
 $GLOBALS['darven_epi_test_option_reads'] = array();
 $GLOBALS['darven_epi_test_settings_sanitizers'] = array();
@@ -79,6 +81,26 @@ function add_action( $hook, $callback, $priority = 10, $accepted_args = 1 ): voi
 		'callback'      => $callback,
 		'priority'      => $priority,
 		'accepted_args' => $accepted_args,
+	);
+}
+
+function add_filter( $hook, $callback, $priority = 10, $accepted_args = 1 ): void {
+	$GLOBALS['darven_epi_test_filters'][] = array(
+		'hook'          => $hook,
+		'callback'      => $callback,
+		'priority'      => $priority,
+		'accepted_args' => $accepted_args,
+	);
+}
+
+function add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $callback ): void {
+	$GLOBALS['darven_epi_test_submenu_pages'][] = array(
+		'parent_slug' => $parent_slug,
+		'page_title'  => $page_title,
+		'menu_title'  => $menu_title,
+		'capability'  => $capability,
+		'menu_slug'   => $menu_slug,
+		'callback'    => $callback,
 	);
 }
 
@@ -181,6 +203,10 @@ function wp_unslash( $value ) {
 
 function sanitize_text_field( $value ): string {
 	return trim( strip_tags( (string) $value ) );
+}
+
+function __( $text, $domain = null ): string {
+	return (string) $text;
 }
 
 function wp_kses( $value, $allowed_html ): string {

@@ -43,15 +43,5 @@ if ( ! is_readable( $darven_epi_autoload_file ) ) {
 
 require_once $darven_epi_autoload_file;
 
-require_once DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi-lifecycle.php';
-Darven_Epi_Lifecycle::register( __FILE__ );
-
-require DARVEN_EPI_DIR_PATH . 'includes/class-darven-epi.php';
-function run_plugin_name() {
-
-	$plugin = new Darven_Epi();
-	$plugin->run();
-
-}
-
-run_plugin_name();
+\Darven\ExtraPriceInfo\Setup\Lifecycle::register( __FILE__ );
+\Darven\ExtraPriceInfo\Setup\Plugin::boot();
