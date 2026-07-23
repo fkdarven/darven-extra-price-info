@@ -1,5 +1,14 @@
 <?php
 
+use Darven\ExtraPriceInfo\Compatibility\LegacyProductSettingsAdapter;
+use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
+use Darven\ExtraPriceInfo\Repositories\ProductSettingsRepository;
+use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
+use Darven\ExtraPriceInfo\Services\CashPriceFormatter;
+use Darven\ExtraPriceInfo\Services\FinalPriceFormatter;
+use Darven\ExtraPriceInfo\Services\InstallmentPriceFormatter;
+use Darven\ExtraPriceInfo\Services\PriceMarkupBuilder;
+use Darven\ExtraPriceInfo\Services\ProductPriceResolver;
 use PHPUnit\Framework\TestCase;
 
 final class FinalPriceTest extends TestCase {
@@ -19,10 +28,10 @@ final class FinalPriceTest extends TestCase {
 		);
 	}
 
-	public function test_legacy_shim_delegates_final_price_formatting(): void {
+	public function test_formats_the_final_product_price(): void {
 		$original_html = '<span class="amount">R$ 100.00</span>';
 
-		$result = ( new Darven_Epi_Format_Final_Price() )->get_discount_price(
+		$result = $this->getFormatter()->filter(
 			$original_html,
 			new WC_Product( '100.00' )
 		);
@@ -30,5 +39,18 @@ final class FinalPriceTest extends TestCase {
 		self::assertStringStartsWith( $original_html, $result );
 		self::assertStringContainsString( 'R$ 90.00', $result );
 		self::assertStringContainsString( 'darven-epi-incash-price-statement', $result );
+	}
+
+	private function getFormatter(): FinalPriceFormatter {
+		$settings_repository = new SettingsRepository( new LegacySettingsAdapter() );
+		$price_resolver      = new ProductPriceResolver( $settings_repository );
+		$markup_builder      = new PriceMarkupBuilder();
+
+		return new FinalPriceFormatter(
+			new CashPriceFormatter( $settings_repository, $price_resolver, $markup_builder ),
+			new InstallmentPriceFormatter( $settings_repository, $price_resolver, $markup_builder ),
+			$settings_repository,
+			new ProductSettingsRepository( new LegacyProductSettingsAdapter() )
+		);
 	}
 }

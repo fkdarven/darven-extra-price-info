@@ -4,6 +4,16 @@ use Darven\ExtraPriceInfo\Setup\Plugin;
 use PHPUnit\Framework\TestCase;
 
 final class PluginBootstrapTest extends TestCase {
+	public function test_plugin_entrypoint_boots_the_namespaced_runtime_without_a_legacy_loader(): void {
+		$plugin    = file_get_contents( DARVEN_EPI_DIR_PATH . 'darven-extra-price-info.php' );
+		$bootstrap = file_get_contents( DARVEN_EPI_DIR_PATH . 'tests/bootstrap.php' );
+
+		self::assertStringNotContainsString( 'includes/class-darven-epi.php', $plugin );
+		self::assertStringNotContainsString( 'new Darven_Epi()', $plugin );
+		self::assertStringContainsString( 'Plugin::boot()', $plugin );
+		self::assertStringNotContainsString( 'includes/', $bootstrap );
+	}
+
 	protected function setUp(): void {
 		$GLOBALS['darven_epi_test_actions']       = array();
 		$GLOBALS['darven_epi_test_filters']       = array();

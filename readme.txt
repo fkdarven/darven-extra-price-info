@@ -22,6 +22,12 @@ O preço parcelado pode ser definido com ou sem juros, onde existem duas modalid
 
 O plugin pode apresentar alguns conflitos com outros plugins de *desconto em massa*, uma vez que ambos manipulam o preço original do produto. Atualmente, o plugin suporta o modo de compatibilidade com o plugin de descontos da YITH, mas, futuramente, será implementado compatibilidade com outros plugins.
 
+As opções e metadados existentes, bem como as classes CSS e seletores públicos, são preservados para manter a compatibilidade com instalações anteriores.
+
+Para gerar o pacote de distribuição, execute:
+
+`composer install --no-dev --prefer-dist --optimize-autoloader`
+
 Guia para configuração do plugin: [Darven MPI Guia de Configuração](https://github.com/fkdarven/darven-extra-price-info/raw/main/darven-epi-manual.pdf)
 
 ***Atenção! As personalizações de cores e tamanhos estão desabilitadas temporariamente ***

@@ -1,5 +1,9 @@
 <?php
 
+use Darven\ExtraPriceInfo\Admin\SettingsFields\CompatibilityFields;
+use Darven\ExtraPriceInfo\Admin\SettingsFields\DisplayFields;
+use Darven\ExtraPriceInfo\Admin\SettingsFields\GeneralFields;
+use Darven\ExtraPriceInfo\Admin\SettingsFields\PositionsFields;
 use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -19,11 +23,6 @@ if ( ! function_exists( 'add_settings_error' ) ) {
 		);
 	}
 }
-
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings-fields.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-positions-settings-fields.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-compatibility-settings-fields.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-colorsandstyles-settings-fields.php';
 
 if ( ! defined( 'DARVEN_EPI_ADMIN_PAGE' ) ) {
 	define( 'DARVEN_EPI_ADMIN_PAGE', 'darven-epi-admin' );
@@ -48,7 +47,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_general_form_save_keeps_sanitized_values_and_creates_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_General_Settings_Fields::class )->darven_epi_sanitize(
+		$sanitized = $this->getSubject( GeneralFields::class )->sanitize(
 			array(
 				'darven_epi_mode_of_view' => 'popup',
 			)
@@ -63,7 +62,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_positions_form_save_keeps_sanitized_values_and_creates_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_Positions_Fields::class )->darven_epi_sanitize(
+		$sanitized = $this->getSubject( PositionsFields::class )->sanitize(
 			array(
 				'darven_epi_single_product_position' => 'sixth',
 			)
@@ -78,7 +77,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_compatibility_form_save_keeps_sanitized_values_and_creates_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_Compatibility_Settings_Fields::class )->darven_epi_sanitize(
+		$sanitized = $this->getSubject( CompatibilityFields::class )->sanitize(
 			array(
 				'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
 			)
@@ -96,7 +95,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_display_form_save_keeps_sanitized_values_and_creates_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_Colorsandstyles_Settings_Fields::class )->darven_epi_sanitize(
+		$sanitized = $this->getSubject( DisplayFields::class )->sanitize(
 			array(
 				'darven_epi_color_of_incash_price' => '#ABCDEF',
 			)
@@ -111,7 +110,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_non_array_positions_form_save_keeps_empty_return_and_creates_empty_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_Positions_Fields::class )->darven_epi_sanitize( null );
+		$sanitized = $this->getSubject( PositionsFields::class )->sanitize( null );
 
 		self::assertSame( array(), $sanitized );
 		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
@@ -119,7 +118,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_non_array_compatibility_form_save_keeps_empty_return_and_creates_empty_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_Compatibility_Settings_Fields::class )->darven_epi_sanitize( null );
+		$sanitized = $this->getSubject( CompatibilityFields::class )->sanitize( null );
 
 		self::assertSame( array(), $sanitized );
 		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
@@ -127,7 +126,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_non_array_display_form_save_keeps_empty_return_and_creates_empty_canonical_section(): void {
-		$sanitized = $this->getSubject( Darven_Epi_Colorsandstyles_Settings_Fields::class )->darven_epi_sanitize( null );
+		$sanitized = $this->getSubject( DisplayFields::class )->sanitize( null );
 
 		self::assertSame( array(), $sanitized );
 		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
@@ -135,7 +134,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	public function test_registered_settings_sanitizer_reentry_finishes_and_syncs_canonical_and_legacy_options(): void {
-		new Darven_Epi_Positions_Fields();
+		( new PositionsFields() )->register();
 		$reentry_exception = null;
 
 		try {
@@ -181,7 +180,7 @@ final class LegacySettingsSyncTest extends TestCase {
 	public function test_failed_legacy_mirror_keeps_sanitized_return_and_reports_pending_sync(): void {
 		$GLOBALS['darven_epi_test_failing_options'] = array( 'darven_epi_option_positions' );
 
-		$sanitized = $this->getSubject( Darven_Epi_Positions_Fields::class )->darven_epi_sanitize(
+		$sanitized = $this->getSubject( PositionsFields::class )->sanitize(
 			array(
 				'darven_epi_single_product_position' => 'sixth',
 			)
@@ -204,8 +203,6 @@ final class LegacySettingsSyncTest extends TestCase {
 	}
 
 	private function getSubject( string $className ) {
-		$reflection = new ReflectionClass( $className );
-
-		return $reflection->newInstanceWithoutConstructor();
+		return new $className();
 	}
 }

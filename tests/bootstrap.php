@@ -248,7 +248,3 @@ function deactivate_plugins( $plugin ): void {
 function wp_die( $message ): void {
 	throw new RuntimeException( $message );
 }
-
-require_once DARVEN_EPI_DIR_PATH . 'includes/functions/class-darven-epi-product-price.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/utils/class-darven-epi-html-generator.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/functions/class-darven-epi-format-final-price.php';

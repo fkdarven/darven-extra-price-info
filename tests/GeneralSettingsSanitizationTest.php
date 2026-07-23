@@ -1,14 +1,13 @@
 <?php
 
+use Darven\ExtraPriceInfo\Admin\SettingsFields\GeneralFields;
 use PHPUnit\Framework\TestCase;
-
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-general-settings-fields.php';
 
 final class GeneralSettingsSanitizationTest extends TestCase {
 	public function test_sanitizes_general_options_according_to_field_types(): void {
 		$subject = $this->get_subject();
 
-		$result = $subject->darven_epi_sanitize(
+		$result = $subject->sanitize(
 			array(
 				'darven_epi_incash_is_enabled'                         => 'yes<script>alert(1)</script>',
 				'darven_epi_installments_is_enabled'                   => 'darven_epi_installments_is_enabled',
@@ -40,7 +39,7 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 	public function test_allows_limited_markup_only_for_general_text_fields(): void {
 		$subject = $this->get_subject();
 
-		$result = $subject->darven_epi_sanitize(
+		$result = $subject->sanitize(
 			array(
 				'darven_epi_incash_prefix'        => 'Pay <b>now</b><script>alert(1)</script>',
 				'darven_epi_installments_suffix'  => '<em>sem juros</em><iframe src="https://example.com"></iframe>',
@@ -58,9 +57,7 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 		self::assertSame( '10', $result['darven_epi_value_of_incash_discount'] );
 	}
 
-	private function get_subject(): Darven_Epi_General_Settings_Fields {
-		$reflection = new ReflectionClass( Darven_Epi_General_Settings_Fields::class );
-
-		return $reflection->newInstanceWithoutConstructor();
+	private function get_subject(): GeneralFields {
+		return new GeneralFields();
 	}
 }

@@ -1,5 +1,10 @@
 <?php
 
+use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
+use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
+use Darven\ExtraPriceInfo\Services\InstallmentPriceFormatter;
+use Darven\ExtraPriceInfo\Services\PriceMarkupBuilder;
+use Darven\ExtraPriceInfo\Services\ProductPriceResolver;
 use PHPUnit\Framework\TestCase;
 
 final class InstallmentsPriceTest extends TestCase {
@@ -20,28 +25,37 @@ final class InstallmentsPriceTest extends TestCase {
 		);
 	}
 
-	public function test_legacy_shim_delegates_default_installment_markup(): void {
-		$result = ( new Darven_Epi_Format_Installments_Price( new WC_Product( '100.00' ) ) )->get_discount_price();
+	public function test_formats_default_installment_markup(): void {
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
 
 		self::assertStringContainsString( '4x de', $result );
 		self::assertStringContainsString( 'R$ 25.00', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
 	}
 
-	public function test_legacy_shim_keeps_the_nullable_string_installment_value_contract(): void {
-		$subject = new Darven_Epi_Format_Installments_Price( new WC_Product( '100.00' ) );
-		$method  = new ReflectionMethod( Darven_Epi_Format_Installments_Price::class, 'get_installments_price' );
+	public function test_returns_installment_values_as_floats(): void {
+		$subject = $this->getFormatter();
+		$method  = new ReflectionMethod( InstallmentPriceFormatter::class, 'getInstallmentPrice' );
 
-		self::assertSame( '?string', (string) $method->getReturnType() );
-		self::assertSame( '25', $subject->get_installments_price( 100.00 ) );
+		self::assertSame( 'float', (string) $method->getReturnType() );
+		self::assertSame( 25.0, $subject->getInstallmentPrice( 100.00 ) );
 	}
 
-	public function test_legacy_shim_reloads_settings_when_initiated_again(): void {
-		$subject = new Darven_Epi_Format_Installments_Price( new WC_Product( '100.00' ) );
+	public function test_reads_current_settings_when_a_new_formatter_is_created(): void {
 		$GLOBALS['darven_epi_test_options']['darven_epi_option_general']['darven_epi_max_installments'] = '2';
 
-		$subject->initiate_options();
+		$subject = $this->getFormatter();
 
-		self::assertSame( '50', $subject->get_installments_price( 100.00 ) );
+		self::assertSame( 50.0, $subject->getInstallmentPrice( 100.00 ) );
+	}
+
+	private function getFormatter(): InstallmentPriceFormatter {
+		$repository = new SettingsRepository( new LegacySettingsAdapter() );
+
+		return new InstallmentPriceFormatter(
+			$repository,
+			new ProductPriceResolver( $repository ),
+			new PriceMarkupBuilder()
+		);
 	}
 }

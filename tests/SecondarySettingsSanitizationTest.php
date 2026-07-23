@@ -1,16 +1,15 @@
 <?php
 
+use Darven\ExtraPriceInfo\Admin\SettingsFields\CompatibilityFields;
+use Darven\ExtraPriceInfo\Admin\SettingsFields\DisplayFields;
+use Darven\ExtraPriceInfo\Admin\SettingsFields\PositionsFields;
 use PHPUnit\Framework\TestCase;
-
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-positions-settings-fields.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-compatibility-settings-fields.php';
-require_once DARVEN_EPI_DIR_PATH . 'includes/admin/settings/class-darven-epi-colorsandstyles-settings-fields.php';
 
 final class SecondarySettingsSanitizationTest extends TestCase {
 	public function test_position_settings_only_keep_supported_ordination_values(): void {
-		$subject = $this->get_subject( Darven_Epi_Positions_Fields::class );
+		$subject = $this->get_subject( PositionsFields::class );
 
-		$result = $subject->darven_epi_sanitize(
+		$result = $subject->sanitize(
 			array(
 				'darven_epi_single_product_position'  => 'sixth',
 				'darven_epi_catalog_product_position' => 'ninth<script>alert(1)</script>',
@@ -26,9 +25,9 @@ final class SecondarySettingsSanitizationTest extends TestCase {
 	}
 
 	public function test_compatibility_checkbox_only_accepts_the_expected_checked_value(): void {
-		$subject = $this->get_subject( Darven_Epi_Compatibility_Settings_Fields::class );
+		$subject = $this->get_subject( CompatibilityFields::class );
 
-		$result = $subject->darven_epi_sanitize(
+		$result = $subject->sanitize(
 			array(
 				'darven_epi_is_yith_dynamic_compatibility_enabled' => '1<script>alert(1)</script>',
 				'darven_epi_unknown_option'                       => 'darven_epi_is_yith_dynamic_compatibility_enabled',
@@ -38,7 +37,7 @@ final class SecondarySettingsSanitizationTest extends TestCase {
 		self::assertArrayNotHasKey( 'darven_epi_is_yith_dynamic_compatibility_enabled', $result );
 		self::assertArrayNotHasKey( 'darven_epi_unknown_option', $result );
 
-		$result = $subject->darven_epi_sanitize(
+		$result = $subject->sanitize(
 			array(
 				'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
 			)
@@ -51,9 +50,9 @@ final class SecondarySettingsSanitizationTest extends TestCase {
 	}
 
 	public function test_color_and_style_settings_validate_hex_colors_and_font_size_options(): void {
-		$subject = $this->get_subject( Darven_Epi_Colorsandstyles_Settings_Fields::class );
+		$subject = $this->get_subject( DisplayFields::class );
 
-		$result = $subject->darven_epi_sanitize(
+		$result = $subject->sanitize(
 			array(
 				'darven_epi_color_of_incash_price'              => '#abcDEF',
 				'darven_epi_color_of_installments_price'        => 'red<script>alert(1)</script>',
@@ -75,8 +74,6 @@ final class SecondarySettingsSanitizationTest extends TestCase {
 	}
 
 	private function get_subject( string $class_name ) {
-		$reflection = new ReflectionClass( $class_name );
-
-		return $reflection->newInstanceWithoutConstructor();
+		return new $class_name();
 	}
 }

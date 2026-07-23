@@ -1,8 +1,9 @@
 <?php
 
+use Darven\ExtraPriceInfo\Admin\ProductOptionsController;
+use Darven\ExtraPriceInfo\Compatibility\LegacyProductSettingsAdapter;
+use Darven\ExtraPriceInfo\Repositories\ProductSettingsRepository;
 use PHPUnit\Framework\TestCase;
-
-require_once DARVEN_EPI_DIR_PATH . 'includes/functions/class-darven-epi-product-options.php';
 
 final class ProductOptionsTest extends TestCase {
 	protected function setUp(): void {
@@ -15,7 +16,7 @@ final class ProductOptionsTest extends TestCase {
 	}
 
 	public function test_registers_the_product_object_save_hook(): void {
-		new Darven_Epi_Product_Options();
+		$this->getSubject()->register();
 
 		$hooks = array_column( $GLOBALS['darven_epi_test_actions'], 'hook' );
 
@@ -28,9 +29,9 @@ final class ProductOptionsTest extends TestCase {
 		$_POST['_darven_epi_is_installment_enabled'] = 'no';
 
 		$product = new WC_Product( '100.00' );
-		$subject = new Darven_Epi_Product_Options();
+		$subject = $this->getSubject();
 
-		$subject->save_extra_prices( $product );
+		$subject->save( $product );
 
 		self::assertSame(
 			array( 'disable_incash' => true, 'disable_installments' => false ),
@@ -43,10 +44,10 @@ final class ProductOptionsTest extends TestCase {
 
 	public function test_normalizes_absent_checkboxes_to_no_without_warnings(): void {
 		$product = new WC_Product( '100.00' );
-		$subject = new Darven_Epi_Product_Options();
+		$subject = $this->getSubject();
 
 		try {
-			$subject->save_extra_prices( $product );
+			$subject->save( $product );
 		} catch ( Throwable $exception ) {
 			self::fail( 'Saving absent checkboxes raised: ' . $exception->getMessage() );
 		}
@@ -64,9 +65,9 @@ final class ProductOptionsTest extends TestCase {
 		$_POST['_darven_epi_is_incash_enabled']      = 'yes';
 
 		$product = new WC_Product( '100.00', 'simple', null, array(), 42 );
-		$subject = new Darven_Epi_Product_Options();
+		$subject = $this->getSubject();
 
-		$subject->save_extra_prices( $product );
+		$subject->save( $product );
 
 		self::assertSame( '', $product->get_meta( '_darven_epi_is_incash_enabled' ) );
 		self::assertSame( array( 'edit_post', 42 ), $GLOBALS['darven_epi_test_capability_check'] );
@@ -77,14 +78,20 @@ final class ProductOptionsTest extends TestCase {
 		$_POST['_darven_epi_is_incash_enabled']    = 'yes';
 
 		$product = new WC_Product( '100.00' );
-		$subject = new Darven_Epi_Product_Options();
+		$subject = $this->getSubject();
 
-		$subject->save_extra_prices( $product );
+		$subject->save( $product );
 
 		self::assertSame( '', $product->get_meta( '_darven_epi_is_incash_enabled' ) );
 		self::assertSame(
 			array( 'valid-nonce', 'woocommerce_save_data' ),
 			$GLOBALS['darven_epi_test_nonce_check']
+		);
+	}
+
+	private function getSubject(): ProductOptionsController {
+		return new ProductOptionsController(
+			new ProductSettingsRepository( new LegacyProductSettingsAdapter() )
 		);
 	}
 }

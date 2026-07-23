@@ -1,8 +1,7 @@
 <?php
 
+use Darven\ExtraPriceInfo\Setup\Lifecycle;
 use PHPUnit\Framework\TestCase;
-
-require_once DARVEN_EPI_DIR_PATH . 'includes/class-darven-activator.php';
 
 final class ActivatorTest extends TestCase {
 	protected function setUp(): void {
@@ -15,9 +14,10 @@ final class ActivatorTest extends TestCase {
 
 	public function test_deactivates_the_main_plugin_when_woocommerce_is_unavailable(): void {
 		$plugin_file = DARVEN_EPI_DIR_PATH . 'darven-extra-price-info.php';
+		Lifecycle::register( $plugin_file );
 
 		try {
-			Darven_Epi_Activator::activate( $plugin_file );
+			Lifecycle::activate();
 			self::fail( 'Activation should stop when WooCommerce is unavailable.' );
 		} catch ( RuntimeException $exception ) {
 			self::assertStringContainsString( 'requires WooCommerce', $exception->getMessage() );
