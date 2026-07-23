@@ -795,7 +795,7 @@ git commit -m "refactor: move price presentation into services" -m "Vault-Author
 - Produces: direct WordPress registrations; new code does not use Darven_Epi_Loader.
 - Consumes: all repositories and services from Tasks 3–7.
 
-- [ ] **Step 1: Write failing hook and admin-route tests**
+- [x] **Step 1: Write failing hook and admin-route tests**
 
 Record actions/filters in tests/bootstrap.php and assert Plugin::boot() registers:
 
@@ -810,7 +810,7 @@ Record actions/filters in tests/bootstrap.php and assert Plugin::boot() register
 
 Assert the price filter priority is 2000 with two accepted arguments. Assert the submenu slug remains darven-epi-admin with capability manage_options.
 
-- [ ] **Step 2: Run bootstrap tests to verify they fail**
+- [x] **Step 2: Run bootstrap tests to verify they fail**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/PluginBootstrapTest.php tests/HookRegistrationTest.php
@@ -818,7 +818,7 @@ Assert the price filter priority is 2000 with two accepted arguments. Assert the
 
 Expected: Darven\ExtraPriceInfo\Setup\Plugin is not found.
 
-- [ ] **Step 3: Implement namespaced setup and current Settings API presenters**
+- [x] **Step 3: Implement namespaced setup and current Settings API presenters**
 
 Plugin::boot() constructs one LegacySettingsAdapter, one SettingsRepository, one ProductSettingsRepository, price services, FinalPriceFormatter, SettingsPage, ProductOptionsController, and asset classes. Register hooks directly:
 
@@ -840,7 +840,7 @@ Replace the main boot with:
 \Darven\ExtraPriceInfo\Setup\Plugin::boot();
 ~~~
 
-- [ ] **Step 4: Verify new boot and full suite**
+- [x] **Step 4: Verify new boot and full suite**
 
 ~~~powershell
 composer dump-autoload --optimize
@@ -850,7 +850,7 @@ composer dump-autoload --optimize
 
 Expected: each required hook registers once and the full suite has no failures/warnings.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Setup src/Admin src/Frontend darven-extra-price-info.php templates/admin/general-settings.php tests/PluginBootstrapTest.php tests/HookRegistrationTest.php
