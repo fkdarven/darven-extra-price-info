@@ -27,7 +27,7 @@ Run from C:\Users\fkdar\Documents\Seox\darven-extra-price-info.
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit --configuration phpunit.xml.dist
 & 'C:\laragon\bin\php\php-8.3.30-Win32-vs16-x64\php.exe' vendor/bin/phpunit --configuration phpunit.xml.dist
-& 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpcs --standard=WordPress src tests
+& 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpcs --standard=phpcs.xml.dist src tests
 git diff --check
 ~~~
 
@@ -893,7 +893,7 @@ git commit -m "refactor: boot plugin through namespaced setup" -m "Vault-Author:
 - Produces: no plugin runtime require chain outside Composer autoloading.
 - Preserves: static CSS/JS files and their public selectors.
 
-- [ ] **Step 1: Write a failing no-legacy-loader test**
+- [x] **Step 1: Write a failing no-legacy-loader test**
 
 ~~~php
 $plugin = file_get_contents( DARVEN_EPI_DIR_PATH . 'darven-extra-price-info.php' );
@@ -905,7 +905,7 @@ self::assertStringContainsString( 'Plugin::boot()', $plugin );
 
 Update every test requiring a deleted class to use the matching namespaced class through Composer.
 
-- [ ] **Step 2: Run it to verify it fails before deletion**
+- [x] **Step 2: Run it to verify it fails before deletion**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/PluginBootstrapTest.php
@@ -913,7 +913,7 @@ Update every test requiring a deleted class to use the matching namespaced class
 
 Expected: the test finds the old require/constructor.
 
-- [ ] **Step 3: Remove only replaced code and update release instructions**
+- [x] **Step 3: Remove only replaced code and update release instructions**
 
 Before deleting, run:
 
@@ -925,7 +925,7 @@ After replacement, remaining matches may only appear in test descriptions or mig
 
 Update README.md and readme.txt to document compatibility preservation and the required composer install --no-dev --prefer-dist --optimize-autoloader release-build command. Do not state that React is part of this release.
 
-- [ ] **Step 4: Run the full verification matrix**
+- [x] **Step 4: Run the full verification matrix**
 
 ~~~powershell
 composer dump-autoload --optimize
@@ -933,7 +933,7 @@ composer dump-autoload --optimize
 & 'C:\laragon\bin\php\php-8.3.30-Win32-vs16-x64\php.exe' vendor/bin/phpunit --configuration phpunit.xml.dist
 $phpFiles = rg --files -g '*.php' . | Where-Object { $_ -notmatch '(^|\\)vendor(\\|$)' }
 foreach ( $file in $phpFiles ) { & 'C:\laragon\bin\php\php-8.3.30-Win32-vs16-x64\php.exe' -l $file; if ( $LASTEXITCODE -ne 0 ) { exit $LASTEXITCODE } }
-& 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpcs --standard=WordPress src tests
+& 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpcs --standard=phpcs.xml.dist src tests
 git diff --check
 ~~~
 
@@ -949,7 +949,7 @@ Expected: both PHPUnit runs exit 0, all PHP files lint, PHPCS reports no violati
 6. YITH dynamic price is used only when its existing compatibility setting is enabled.
 7. Replacing the refactored plugin with the prior release after a save displays the newly saved legacy configuration.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ~~~powershell
 git add -A
