@@ -174,11 +174,42 @@ final class LegacySettingsSyncTest extends TestCase {
 			$GLOBALS['darven_epi_test_options']['darven_epi_option_positions']['darven_epi_single_product_position']
 		);
 		self::assertSame( array(), $GLOBALS['darven_epi_test_settings_errors'] );
-		self::assertSame( 12, count( $GLOBALS['darven_epi_test_update_option_calls'] ) );
+		self::assertSame( 10, count( $GLOBALS['darven_epi_test_update_option_calls'] ) );
+	}
+
+	public function test_registered_general_settings_save_preserves_third_party_values_and_removes_an_unchecked_plugin_field(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array(
+			'darven_epi_incash_is_enabled' => 'darven_epi_incash_is_enabled',
+			'third_party_general_key'       => 'retain',
+		);
+		( new GeneralFields() )->register();
+
+		update_option(
+			'darven_epi_option_general',
+			array(
+				'darven_epi_mode_of_view' => 'popup',
+			)
+		);
+
+		$legacy_general = $GLOBALS['darven_epi_test_options']['darven_epi_option_general'];
+		$canonical      = $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ];
+
+		self::assertArrayHasKey( 'third_party_general_key', $legacy_general );
+		self::assertSame( 'retain', $legacy_general['third_party_general_key'] );
+		self::assertSame( 'popup', $legacy_general['darven_epi_mode_of_view'] );
+		self::assertArrayNotHasKey( 'darven_epi_incash_is_enabled', $legacy_general );
+		self::assertSame( 'popup', $canonical['general']['darven_epi_mode_of_view'] );
+		self::assertArrayNotHasKey( 'darven_epi_incash_is_enabled', $canonical['general'] );
+		self::assertArrayNotHasKey( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_options'] );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_settings_errors'] );
+		self::assertSame(
+			1,
+			count( array_keys( $GLOBALS['darven_epi_test_update_option_calls'], 'darven_epi_option_general', true ) )
+		);
 	}
 
 	public function test_failed_legacy_mirror_keeps_sanitized_return_and_reports_pending_sync(): void {
-		$GLOBALS['darven_epi_test_failing_options'] = array( 'darven_epi_option_positions' );
+		$GLOBALS['darven_epi_test_failing_options'] = array( 'darven_epi_option_general' );
 
 		$sanitized = $this->getSubject( PositionsFields::class )->sanitize(
 			array(
@@ -195,7 +226,7 @@ final class LegacySettingsSyncTest extends TestCase {
 		self::assertSame(
 			array(
 				'pending_sections' => array( 'positions' ),
-				'failed_options'   => array( 'darven_epi_option_positions' ),
+				'failed_options'   => array( 'darven_epi_option_general' ),
 			),
 			$GLOBALS['darven_epi_test_options'][ SettingsRepository::SYNC_STATE_OPTION ]
 		);

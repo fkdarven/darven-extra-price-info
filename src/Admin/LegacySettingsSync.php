@@ -19,9 +19,16 @@ final class LegacySettingsSync {
 		self::$is_syncing = true;
 
 		try {
-			$repository = new SettingsRepository( new LegacySettingsAdapter() );
+			$adapter                 = new LegacySettingsAdapter();
+			$legacy_option_name      = $adapter->getLegacyOptionName( $section );
+			$projected_legacy_values = $adapter->projectSectionToLegacyOption(
+				$section,
+				$sanitized_values,
+				get_option( $legacy_option_name, array() )
+			);
+			$repository              = new SettingsRepository( $adapter );
 
-			if ( ! $repository->saveSection( $section, $sanitized_values ) ) {
+			if ( ! $repository->saveSection( $section, $sanitized_values, $legacy_option_name ) ) {
 				add_settings_error(
 					'darven_epi_option_group',
 					'darven_epi_legacy_sync_failed',
@@ -29,7 +36,7 @@ final class LegacySettingsSync {
 				);
 			}
 
-			return $sanitized_values;
+			return $projected_legacy_values;
 		} finally {
 			self::$is_syncing = false;
 		}

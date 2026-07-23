@@ -39,7 +39,24 @@ final class ProductOptionsTest extends TestCase {
 		);
 		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
+		self::assertSame( 0, $product->get_save_count() );
+	}
+
+	public function test_product_save_hook_prepares_meta_for_the_standard_woocommerce_save(): void {
+		$_POST['_darven_epi_is_incash_enabled']      = 'yes';
+		$_POST['_darven_epi_is_installment_enabled'] = 'no';
+
+		$product = new WC_Product( '100.00' );
+		$subject = $this->getSubject();
+
+		$subject->save( $product );
+		$product->save();
+
 		self::assertSame( 1, $product->get_save_count() );
+		self::assertSame(
+			array( 'disable_incash' => true, 'disable_installments' => false ),
+			$product->get_meta( '_darven_epi_product_settings', true )
+		);
 	}
 
 	public function test_normalizes_absent_checkboxes_to_no_without_warnings(): void {

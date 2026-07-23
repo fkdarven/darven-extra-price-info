@@ -58,7 +58,7 @@ final class ProductSettingsRepositoryTest extends TestCase {
 		);
 		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
-		self::assertSame( 1, $product->get_save_count() );
+		self::assertSame( 0, $product->get_save_count() );
 	}
 
 	private function get_repository(): ProductSettingsRepository {

@@ -30,21 +30,42 @@ final class LegacySettingsAdapter {
 		$projected_options = array();
 
 		foreach ( self::OPTION_BY_SECTION as $section => $option_name ) {
-			$legacy_option = isset( $existing_options[ $option_name ] ) && is_array( $existing_options[ $option_name ] )
-				? $existing_options[ $option_name ]
-				: array();
 			$canonical_section = isset( $settings[ $section ] ) && is_array( $settings[ $section ] )
 				? $settings[ $section ]
 				: array();
 
-			foreach ( $this->getPluginOwnedValues( $canonical_section ) as $key => $value ) {
-				$legacy_option[ $key ] = $value;
-			}
-
-			$projected_options[ $option_name ] = $legacy_option;
+			$projected_options[ $option_name ] = $this->projectSectionToLegacyOption(
+				$section,
+				$canonical_section,
+				$existing_options[ $option_name ] ?? array()
+			);
 		}
 
 		return $projected_options;
+	}
+
+	public function getLegacyOptionName( string $section ): string {
+		if ( ! isset( self::OPTION_BY_SECTION[ $section ] ) ) {
+			throw new \InvalidArgumentException( 'Unknown settings section.' );
+		}
+
+		return self::OPTION_BY_SECTION[ $section ];
+	}
+
+	public function projectSectionToLegacyOption( string $section, array $canonical_section, $existing_option ): array {
+		$legacy_option = is_array( $existing_option ) ? $existing_option : array();
+
+		$this->getLegacyOptionName( $section );
+
+		foreach ( $this->getPluginOwnedValues( $legacy_option ) as $key => $value ) {
+			unset( $legacy_option[ $key ] );
+		}
+
+		foreach ( $this->getPluginOwnedValues( $canonical_section ) as $key => $value ) {
+			$legacy_option[ $key ] = $value;
+		}
+
+		return $legacy_option;
 	}
 
 	private function getPluginOwnedValues( array $legacy_option ): array {

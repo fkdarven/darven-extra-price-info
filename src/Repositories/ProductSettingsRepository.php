@@ -42,7 +42,6 @@ final class ProductSettingsRepository {
 		$product->update_meta_data( self::META_KEY, $canonical_settings );
 		$product->update_meta_data( self::LEGACY_INCASH_META_KEY, $legacy_meta[ self::LEGACY_INCASH_META_KEY ] );
 		$product->update_meta_data( self::LEGACY_INSTALLMENTS_META_KEY, $legacy_meta[ self::LEGACY_INSTALLMENTS_META_KEY ] );
-		$product->save();
 
 		return $canonical_settings === $product->get_meta( self::META_KEY, true )
 			&& $legacy_meta[ self::LEGACY_INCASH_META_KEY ] === $product->get_meta( self::LEGACY_INCASH_META_KEY, true )

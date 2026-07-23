@@ -50,7 +50,7 @@ final class SettingsRepository {
 		return $settings[ $section ];
 	}
 
-	public function saveSection( string $section, array $values ): bool {
+	public function saveSection( string $section, array $values, string $deferred_legacy_option = '' ): bool {
 		$this->assertKnownSection( $section );
 
 		$settings                   = $this->getSettings();
@@ -63,7 +63,8 @@ final class SettingsRepository {
 
 		return $this->persistLegacyOptions(
 			$this->adapter->projectToLegacyOptions( $settings, $this->getLegacyOptions() ),
-			$section
+			$section,
+			$deferred_legacy_option
 		);
 	}
 
@@ -97,10 +98,14 @@ final class SettingsRepository {
 		return get_option( $option_name, null ) === $value;
 	}
 
-	private function persistLegacyOptions( array $legacy_options, string $section ): bool {
+	private function persistLegacyOptions( array $legacy_options, string $section, string $deferred_legacy_option ): bool {
 		$failed_options = array();
 
 		foreach ( $legacy_options as $option_name => $option_value ) {
+			if ( $option_name === $deferred_legacy_option ) {
+				continue;
+			}
+
 			if ( ! $this->persistAndVerify( $option_name, $option_value ) ) {
 				$failed_options[] = $option_name;
 			}
