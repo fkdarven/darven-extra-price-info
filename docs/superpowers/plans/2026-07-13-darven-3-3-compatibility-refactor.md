@@ -710,7 +710,7 @@ git commit -m "refactor: move cash pricing into services" -m "Vault-Author: code
 - Produces: FinalPriceFormatter::filter( string $price_html, $product ): string.
 - Consumes: CashPriceFormatter, ProductPriceResolver, SettingsRepository, and ProductSettingsRepository.
 
-- [ ] **Step 1: Write output compatibility tests**
+- [x] **Step 1: Write output compatibility tests**
 
 Move existing default-installments, custom-table repeatability, popup accessibility, balanced rows, invalid-product, product-override, and markup assertions into namespaced tests. Add all six ordering cases:
 
@@ -727,7 +727,7 @@ array(
 
 Add an InlineStyles test seeded only with legacy display options; assert the current .darven-epi-incash-price selector and configured color are rendered.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/Services/InstallmentPriceFormatterTest.php tests/Services/FinalPriceFormatterTest.php
@@ -735,7 +735,7 @@ Add an InlineStyles test seeded only with legacy display options; assert the cur
 
 Expected: new formatter classes are not found.
 
-- [ ] **Step 3: Move the algorithms without changing markup**
+- [x] **Step 3: Move the algorithms without changing markup**
 
 InstallmentPriceFormatter reads normalized general settings once. Preserve the custom-table calculation exactly so two getPriceTable() calls do not mutate the starting installment.
 
@@ -754,7 +754,7 @@ Use ProductSettingsRepository for overrides and SettingsRepository positions for
 
 InlineStyles reads display through SettingsRepository. The existing partial instantiates it and echoes its CSS; do not change the selector list or add an enqueue path.
 
-- [ ] **Step 4: Run presentation regressions**
+- [x] **Step 4: Run presentation regressions**
 
 ~~~powershell
 & 'C:\laragon\bin\php\php-8.5.7-Win32-vs17-x64\php.exe' vendor/bin/phpunit tests/Services/InstallmentPriceFormatterTest.php tests/Services/FinalPriceFormatterTest.php tests/InstallmentsPriceTest.php tests/FinalPriceTest.php tests/HtmlGeneratorTest.php tests/FrontendAssetsTest.php
@@ -763,7 +763,7 @@ git diff --check
 
 Expected: all current classes/accessibility attributes stay covered; new services have no direct option/meta reads.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ~~~powershell
 git add src/Services/InstallmentPriceFormatter.php src/Services/FinalPriceFormatter.php src/Frontend/InlineStyles.php includes/functions/class-darven-epi-format-installments-price.php includes/functions/class-darven-epi-format-final-price.php public/partials/darven-epi-custom-css.php tests/Services tests/InstallmentsPriceTest.php tests/FinalPriceTest.php
