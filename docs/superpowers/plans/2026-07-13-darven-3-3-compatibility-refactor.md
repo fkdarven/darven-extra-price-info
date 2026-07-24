@@ -939,7 +939,7 @@ git diff --check
 
 Expected: both PHPUnit runs exit 0, all PHP files lint, PHPCS reports no violations in new code/tests, and diff --check prints nothing.
 
-- [ ] **Step 5: Perform manual WooCommerce checks**
+- [x] **Step 5: Perform manual WooCommerce checks**
 
 1. Updating alone does not create darven_epi_settings or _darven_epi_product_settings.
 2. Saving every current settings tab creates canonical data and retains legacy options.
@@ -958,7 +958,9 @@ git commit -m "refactor: complete compatibility-first architecture" -m "Vault-Au
 
 Do not push. Create a release or pull-request decision only after manual checks pass.
 
-**Automated execution status:** approved after the follow-up compatibility fixes in `b251703` and `dc5f3ca`. The final matrix passed with 88 tests and 273 assertions under both PHP 8.5 and PHP 8.3; PHP 8.3 lint, the project PHPCS ruleset, and `git diff --check` also passed. Step 5 remains the only outstanding validation.
+**Automated execution status:** approved after the follow-up compatibility fixes in `b251703` and `dc5f3ca`. The final matrix passed with 88 tests and 273 assertions under both PHP 8.5 and PHP 8.3; PHP 8.3 lint, the project PHPCS ruleset, and `git diff --check` also passed. The manual validation was completed on 2026-07-23.
+
+**Manual execution status (2026-07-23):** completed on an isolated Laragon WordPress/WooCommerce site. Checks 1–5 used real Settings API, product-editor, and public-page requests. The historical YITH public package was confirmed not to expose the premium/legacy `YWDPD_Frontend` API; the exact API contract was functionally exercised without persisting a stub (cash `90` disabled, `45` enabled from dynamic base `50`). Check 7 switched the site junction to the repository's 3.2.0 release after a complete real settings save; that release activated and rendered the newly saved cash and installment configuration. See `2026-07-23-laragon-woocommerce-manual-qa.md` for the complete evidence.
 
 ## Spec Coverage Review
 
