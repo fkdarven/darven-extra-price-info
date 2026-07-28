@@ -3,21 +3,17 @@
 namespace Darven\ExtraPriceInfo\Admin\SettingsFields;
 
 use Darven\ExtraPriceInfo\Admin\LegacySettingsSync;
+use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
+use Darven\ExtraPriceInfo\Compatibility\YithDynamicPricingMode;
+use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
 
 final class CompatibilityFields {
-	/**
-	 * @var array<string,string>
-	 */
-	private $options = array();
-
 	public function register(): void {
 		register_setting( 'darven_epi_option_group', 'darven_epi_option_compatibility', array( $this, 'sanitize' ) );
-		$options       = get_option( 'darven_epi_option_compatibility' );
-		$this->options = is_array( $options ) ? $options : array();
 
 		add_settings_field(
-			'darven_epi_is_yith_dynamic_compatibility_enabled',
-			__( 'Enable YITH Compatibility', 'darven-epi' ),
+			YithDynamicPricingMode::FIELD,
+			__( 'YITH Dynamic Pricing', 'darven-epi' ),
 			array( $this, 'renderYithDynamicCompatibility' ),
 			'darven-epi-admin',
 			'darven_epi_incash_settings_section'
@@ -25,29 +21,30 @@ final class CompatibilityFields {
 	}
 
 	public function renderYithDynamicCompatibility(): void {
-		$field   = 'darven_epi_is_yith_dynamic_compatibility_enabled';
-		$checked = isset( $this->options[ $field ] ) && $field === $this->options[ $field ] ? 'checked' : '';
+		$mode = ( new SettingsRepository( new LegacySettingsAdapter() ) )->getYithDynamicPricingMode();
 
 		printf(
-			'<input type="checkbox" name="darven_epi_option_compatibility[%1$s]" id="%1$s" value="%1$s" %2$s><p class="description">%3$s</p>',
-			esc_attr( $field ),
-			esc_attr( $checked ),
-			esc_html__(
-				'If enabled, the plugin will consider the price defined by YITH WooCommerce Dynamic Pricing and Discounts!',
-				'darven-epi'
-			)
+			'<select name="darven_epi_option_compatibility[%1$s]" id="%1$s"><option value="auto" %2$s>%3$s</option><option value="disabled" %4$s>%5$s</option></select><p class="description">%6$s</p>',
+			esc_attr( YithDynamicPricingMode::FIELD ),
+			YithDynamicPricingMode::AUTO === $mode ? 'selected' : '',
+			esc_html__( 'Automatic (recommended)', 'darven-epi' ),
+			YithDynamicPricingMode::DISABLED === $mode ? 'selected' : '',
+			esc_html__( 'Disabled', 'darven-epi' ),
+			esc_html__( 'Automatic mode uses a valid YITH price when available and otherwise uses WooCommerce pricing.', 'darven-epi' )
 		);
 	}
 
 	public function sanitize( $input ): array {
-		if ( ! is_array( $input ) ) {
-			return LegacySettingsSync::save( 'compatibility', array() );
-		}
+		$value = is_array( $input ) && array_key_exists( YithDynamicPricingMode::FIELD, $input )
+			? sanitize_text_field( $input[ YithDynamicPricingMode::FIELD ] )
+			: '';
+		$mode  = YithDynamicPricingMode::sanitize( $value );
 
-		$field            = 'darven_epi_is_yith_dynamic_compatibility_enabled';
-		$sanitized_values = array();
-		if ( array_key_exists( $field, $input ) && $field === sanitize_text_field( $input[ $field ] ) ) {
-			$sanitized_values[ $field ] = $field;
+		$sanitized_values = array(
+			YithDynamicPricingMode::FIELD => $mode,
+		);
+		if ( YithDynamicPricingMode::AUTO === $mode ) {
+			$sanitized_values[ YithDynamicPricingMode::LEGACY_FIELD ] = YithDynamicPricingMode::LEGACY_FIELD;
 		}
 
 		return LegacySettingsSync::save( 'compatibility', $sanitized_values );

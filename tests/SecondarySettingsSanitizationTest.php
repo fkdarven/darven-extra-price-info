@@ -5,6 +5,19 @@ use Darven\ExtraPriceInfo\Admin\SettingsFields\DisplayFields;
 use Darven\ExtraPriceInfo\Admin\SettingsFields\PositionsFields;
 use PHPUnit\Framework\TestCase;
 
+// phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed
+if ( ! function_exists( 'esc_attr' ) ) {
+	function esc_attr( $value ): string {
+		return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'esc_html__' ) ) {
+	function esc_html__( $text ): string {
+		return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
 final class SecondarySettingsSanitizationTest extends TestCase {
 	protected function tearDown(): void {
 		do_action( 'shutdown' );
@@ -28,29 +41,38 @@ final class SecondarySettingsSanitizationTest extends TestCase {
 		self::assertArrayNotHasKey( 'darven_epi_unknown_position', $result );
 	}
 
-	public function test_compatibility_checkbox_only_accepts_the_expected_checked_value(): void {
-		$subject = $this->get_subject( CompatibilityFields::class );
-
-		$result = $subject->sanitize(
-			array(
-				'darven_epi_is_yith_dynamic_compatibility_enabled' => '1<script>alert(1)</script>',
-				'darven_epi_unknown_option'                       => 'darven_epi_is_yith_dynamic_compatibility_enabled',
-			)
+	public function test_compatibility_mode_saves_auto_and_mirrors_the_legacy_checkbox(): void {
+		$result = $this->get_subject( CompatibilityFields::class )->sanitize(
+			array( 'darven_epi_yith_dynamic_pricing_mode' => 'auto' )
 		);
 
-		self::assertArrayNotHasKey( 'darven_epi_is_yith_dynamic_compatibility_enabled', $result );
-		self::assertArrayNotHasKey( 'darven_epi_unknown_option', $result );
-
-		$result = $subject->sanitize(
-			array(
-				'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
-			)
-		);
-
+		self::assertSame( 'auto', $result['darven_epi_yith_dynamic_pricing_mode'] );
 		self::assertSame(
 			'darven_epi_is_yith_dynamic_compatibility_enabled',
 			$result['darven_epi_is_yith_dynamic_compatibility_enabled']
 		);
+	}
+
+	public function test_compatibility_mode_saves_disabled_without_the_legacy_checkbox(): void {
+		$result = $this->get_subject( CompatibilityFields::class )->sanitize(
+			array( 'darven_epi_yith_dynamic_pricing_mode' => 'disabled' )
+		);
+
+		self::assertSame( 'disabled', $result['darven_epi_yith_dynamic_pricing_mode'] );
+		self::assertArrayNotHasKey( 'darven_epi_is_yith_dynamic_compatibility_enabled', $result );
+	}
+
+	public function test_compatibility_mode_renders_automatic_as_the_default(): void {
+		$GLOBALS['darven_epi_test_options'] = array();
+
+		ob_start();
+		$this->get_subject( CompatibilityFields::class )->renderYithDynamicCompatibility();
+		$output = ob_get_clean();
+
+		self::assertStringContainsString( 'name="darven_epi_option_compatibility[darven_epi_yith_dynamic_pricing_mode]"', $output );
+		self::assertStringContainsString( 'Automatic (recommended)', $output );
+		self::assertStringContainsString( 'Disabled', $output );
+		self::assertStringContainsString( 'value="auto" selected', $output );
 	}
 
 	public function test_color_and_style_settings_validate_hex_colors_and_font_size_options(): void {
