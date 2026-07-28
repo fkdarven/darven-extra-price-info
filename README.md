@@ -11,11 +11,17 @@ Para eventuais bugs ou problemas encontrados no módulo, peço que sejam enviado
 
 A arquitetura interna usa autoload Composer, preservando as opções, metadados e seletores públicos compatíveis com instalações anteriores do plugin.
 
-Para montar o artefato de distribuição, instale somente as dependências de runtime:
+Para montar o artefato de distribuição com as dependências de runtime, execute:
 
 ```sh
-composer install --no-dev --prefer-dist --optimize-autoloader
+php scripts/build-release.php
 ```
+
+O comando gera `dist/darven-extra-price-info-<versão>.zip`, derivando a versão do header do plugin.
+
+O Git é um requisito do builder: ele consulta as regras de ignore para garantir que arquivos locais não entrem no pacote.
+
+No Windows com o Composer PHAR do Laragon, o builder usa o PHP que o iniciou quando ele possui OpenSSL. Caso contrário, procura automaticamente um PHP com OpenSSL em `C:\laragon\bin\php`; para um Composer customizado, defina `COMPOSER_BINARY` explicitamente.
 
 ## Futuras implementações
 
