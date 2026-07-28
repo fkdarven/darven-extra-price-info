@@ -63,3 +63,13 @@ The local site remains available at `http://localhost/darven-epi-qa/` with WooCo
 
 - **PHP 7.4 runtime:** the official PHP 7.4.33 Windows CLI was extracted only under `C:\laragon\tmp` and ran the full PHPUnit suite successfully: `88 tests`, `273 assertions`.
 - **YITH vendor integration:** a real YITH WooCommerce Dynamic Pricing & Discounts Premium `4.29.0` ZIP exposing `YWDPD_Frontend` was installed only on the isolated site. The native rule editor created and activated a 50% global rule: the $100 QA product displayed YITH's $50 price. Darven then displayed $90 with compatibility disabled and $45 with compatibility enabled, exactly matching the expected price source. Compatibility was restored enabled after the test.
+
+## Automatic compatibility smoke test (2026-07-28)
+
+The isolated site used the active 50% global YITH rule for the $100 `Darven EPI QA Simple` product. The Compatibility UI is localized as **YITH Dynamic Pricing** and exposes **Automatic (recommended)** and **Disabled**.
+
+1. **Automatic:** after selecting Automatic and saving, WooCommerce displayed the original `$100` struck through and YITH's `$50` price. Darven displayed `À vista $45.00` and `em até 10x de $5.00 sem juros`, both calculated from the YITH price.
+2. **Disabled:** after selecting Disabled and saving, WooCommerce continued to display `$100` struck through and YITH's `$50` price. Darven displayed `À vista $90.00` and `em até 10x de $10.00 sem juros`, both calculated from the original WooCommerce price.
+3. **Automatic restored:** after selecting Automatic and saving again, Darven returned to `À vista $45.00` and `em até 10x de $5.00 sem juros`.
+
+The final Compatibility setting is **Automatic**. Its UI description confirms that Automatic uses a valid YITH price when available and otherwise uses WooCommerce pricing.

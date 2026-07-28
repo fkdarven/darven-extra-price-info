@@ -20,7 +20,7 @@ Com o plugin ativo, esses preços são exibidos em todas as páginas que contenh
 
 O preço parcelado pode ser definido com ou sem juros, onde existem duas modalidades de juros: incremental e personalizada.
 
-O plugin pode apresentar alguns conflitos com outros plugins de *desconto em massa*, uma vez que ambos manipulam o preço original do produto. Atualmente, o plugin suporta o modo de compatibilidade com o plugin de descontos da YITH, mas, futuramente, será implementado compatibilidade com outros plugins.
+O plugin pode apresentar alguns conflitos com outros plugins de *desconto em massa*, uma vez que ambos manipulam o preço original do produto. O modo de compatibilidade com o YITH WooCommerce Dynamic Pricing and Discounts é automático em novas instalações: quando a integração estiver disponível, o plugin considera o preço dinâmico definido pelo YITH. Instalações anteriores que não tinham a compatibilidade ativada permanecem desativadas até uma escolha explícita. Quando o YITH não estiver disponível, o plugin usa o preço padrão do WooCommerce.
 
 As opções e metadados existentes, bem como as classes CSS e seletores públicos, são preservados para manter a compatibilidade com instalações anteriores.
 
