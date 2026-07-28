@@ -83,7 +83,7 @@ final class LegacySettingsSyncTest extends TestCase {
 		);
 	}
 
-	public function test_compatibility_form_save_creates_canonical_section_after_adding_the_legacy_option(): void {
+	public function test_compatibility_form_save_without_the_new_mode_creates_a_disabled_canonical_section(): void {
 		$subject = $this->getSubject( CompatibilityFields::class );
 		$subject->register();
 		update_option(
@@ -94,10 +94,9 @@ final class LegacySettingsSyncTest extends TestCase {
 		);
 
 		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
-		self::assertSame(
-			'darven_epi_is_yith_dynamic_compatibility_enabled',
-			$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['compatibility']['darven_epi_is_yith_dynamic_compatibility_enabled']
-		);
+		$compatibility = $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['compatibility'];
+		self::assertSame( 'disabled', $compatibility['darven_epi_yith_dynamic_pricing_mode'] );
+		self::assertArrayNotHasKey( 'darven_epi_is_yith_dynamic_compatibility_enabled', $compatibility );
 	}
 
 	public function test_display_form_save_creates_canonical_section_after_adding_the_legacy_option(): void {
@@ -126,13 +125,15 @@ final class LegacySettingsSyncTest extends TestCase {
 		self::assertSame( array(), $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['positions'] );
 	}
 
-	public function test_non_array_compatibility_form_save_creates_empty_canonical_section(): void {
+	public function test_non_array_compatibility_form_save_creates_a_disabled_canonical_section(): void {
 		$subject = $this->getSubject( CompatibilityFields::class );
 		$subject->register();
 		update_option( 'darven_epi_option_compatibility', null );
 
 		self::assertArrayHasKey( SettingsRepository::OPTION_NAME, $GLOBALS['darven_epi_test_options'] );
-		self::assertSame( array(), $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['compatibility'] );
+		$compatibility = $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ]['compatibility'];
+		self::assertSame( 'disabled', $compatibility['darven_epi_yith_dynamic_pricing_mode'] );
+		self::assertArrayNotHasKey( 'darven_epi_is_yith_dynamic_compatibility_enabled', $compatibility );
 	}
 
 	public function test_non_array_display_form_save_creates_empty_canonical_section(): void {
