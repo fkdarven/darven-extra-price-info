@@ -7,12 +7,20 @@ use PHPUnit\Framework\TestCase;
 
 final class DarvenEpiYithFrontendTestDouble {
 	public static $dynamic_price = null;
+	public static $call_count = 0;
+	public static $should_throw = false;
 
 	public static function get_instance() {
 		return new self();
 	}
 
 	public function get_dynamic_price( $price, $product, $quantity ) {
+		self::$call_count++;
+
+		if ( self::$should_throw ) {
+			throw new RuntimeException( 'YITH dynamic pricing failed.' );
+		}
+
 		return self::$dynamic_price;
 	}
 }
@@ -23,6 +31,8 @@ final class ProductPriceResolverTest extends TestCase {
 
 		if ( class_exists( 'YWDPD_Frontend' ) && property_exists( 'YWDPD_Frontend', 'dynamic_price' ) ) {
 			YWDPD_Frontend::$dynamic_price = null;
+			YWDPD_Frontend::$call_count    = 0;
+			YWDPD_Frontend::$should_throw  = false;
 		}
 	}
 
@@ -46,27 +56,63 @@ final class ProductPriceResolverTest extends TestCase {
 	}
 
 	public function test_falls_back_to_the_woocommerce_price_when_yith_is_unavailable(): void {
-		$GLOBALS['darven_epi_test_options']['darven_epi_option_compatibility'] = array(
-			'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
-		);
-
 		self::assertSame( 75.25, $this->getResolver()->getActivePrice( new WC_Product( '75.25' ) ) );
 	}
 
-	public function test_prefers_a_valid_yith_dynamic_price_when_compatibility_is_enabled(): void {
-		if ( ! class_exists( 'YWDPD_Frontend' ) ) {
-			class_alias( DarvenEpiYithFrontendTestDouble::class, 'YWDPD_Frontend' );
-		}
+	public function test_uses_yith_automatically_without_saved_settings_on_a_clean_install(): void {
+		$this->enableYithDoubleWithPrice( '65.50' );
 
-		YWDPD_Frontend::$dynamic_price = '65.50';
-		$GLOBALS['darven_epi_test_options']['darven_epi_option_compatibility'] = array(
-			'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
-		);
+		self::assertSame( 65.50, $this->getResolver()->getActivePrice( new WC_Product( '100.00' ) ) );
+	}
 
-		self::assertSame( 65.50, $this->getResolver()->getActivePrice( new WC_Product( '100.00', 'variable', '89.50' ) ) );
+	public function test_never_calls_yith_when_the_explicit_mode_is_disabled(): void {
+		$this->enableYithDoubleWithPrice( '65.50' );
+		$this->setCanonicalCompatibilityMode( 'disabled' );
+
+		self::assertSame( 100.00, $this->getResolver()->getActivePrice( new WC_Product( '100.00' ) ) );
+		self::assertSame( 0, YWDPD_Frontend::$call_count );
+	}
+
+	public function test_falls_back_when_yith_throws(): void {
+		$this->enableYithDoubleWithPrice( '65.50' );
+		YWDPD_Frontend::$should_throw = true;
+
+		self::assertSame( 100.00, $this->getResolver()->getActivePrice( new WC_Product( '100.00' ) ) );
+	}
+
+	public function test_falls_back_when_yith_returns_an_invalid_dynamic_price(): void {
+		$this->enableYithDoubleWithPrice( 'not-a-price' );
+
+		self::assertSame( 100.00, $this->getResolver()->getActivePrice( new WC_Product( '100.00' ) ) );
+	}
+
+	public function test_accepts_zero_as_a_valid_yith_dynamic_price(): void {
+		$this->enableYithDoubleWithPrice( '0' );
+
+		self::assertSame( 0.0, $this->getResolver()->getActivePrice( new WC_Product( '100.00' ) ) );
 	}
 
 	private function getResolver(): ProductPriceResolver {
 		return new ProductPriceResolver( new SettingsRepository( new LegacySettingsAdapter() ) );
+	}
+
+	private function enableYithDoubleWithPrice( $price ): void {
+		if ( ! class_exists( 'YWDPD_Frontend' ) ) {
+			class_alias( DarvenEpiYithFrontendTestDouble::class, 'YWDPD_Frontend' );
+		}
+
+		YWDPD_Frontend::$dynamic_price = $price;
+	}
+
+	private function setCanonicalCompatibilityMode( string $mode ): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_settings'] = array(
+			'schema_version' => 1,
+			'general'        => array(),
+			'positions'      => array(),
+			'display'        => array(),
+			'compatibility'  => array(
+				'darven_epi_yith_dynamic_pricing_mode' => $mode,
+			),
+		);
 	}
 }

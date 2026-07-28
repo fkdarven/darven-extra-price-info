@@ -2,6 +2,7 @@
 
 namespace Darven\ExtraPriceInfo\Services;
 
+use Darven\ExtraPriceInfo\Compatibility\YithDynamicPricingMode;
 use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
 
 final class ProductPriceResolver {
@@ -15,16 +16,11 @@ final class ProductPriceResolver {
 	}
 
 	public function getActivePrice( \WC_Product $product ): float {
-		$compatibility = $this->settings_repository->getSection( 'compatibility' );
+		if ( YithDynamicPricingMode::AUTO === $this->settings_repository->getYithDynamicPricingMode() ) {
+			$dynamic_price = $this->getYithDynamicPrice( $product );
 
-		if (
-			! empty( $compatibility['darven_epi_is_yith_dynamic_compatibility_enabled'] )
-			&& class_exists( 'YWDPD_Frontend' )
-		) {
-			$dynamic_price = \YWDPD_Frontend::get_instance()->get_dynamic_price( $product->get_price(), $product, 1 );
-
-			if ( is_numeric( $dynamic_price ) ) {
-				return (float) $dynamic_price;
+			if ( null !== $dynamic_price ) {
+				return $dynamic_price;
 			}
 		}
 
@@ -33,5 +29,24 @@ final class ProductPriceResolver {
 		}
 
 		return (float) $product->get_price();
+	}
+
+	private function getYithDynamicPrice( \WC_Product $product ) {
+		if ( ! class_exists( 'YWDPD_Frontend' ) || ! is_callable( array( 'YWDPD_Frontend', 'get_instance' ) ) ) {
+			return null;
+		}
+
+		try {
+			$frontend = \YWDPD_Frontend::get_instance();
+			if ( ! is_object( $frontend ) || ! is_callable( array( $frontend, 'get_dynamic_price' ) ) ) {
+				return null;
+			}
+
+			$dynamic_price = $frontend->get_dynamic_price( $product->get_price(), $product, 1 );
+
+			return is_numeric( $dynamic_price ) ? (float) $dynamic_price : null;
+		} catch ( \Throwable $exception ) {
+			return null;
+		}
 	}
 }
