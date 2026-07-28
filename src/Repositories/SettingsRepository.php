@@ -74,6 +74,14 @@ final class SettingsRepository {
 			? $settings['compatibility']
 			: array();
 
+		$legacy_compatibility = $legacy_options['darven_epi_option_compatibility'];
+
+		if ( ! isset( $compatibility[ YithDynamicPricingMode::FIELD ] )
+			&& is_array( $legacy_compatibility )
+			&& isset( $legacy_compatibility[ YithDynamicPricingMode::LEGACY_FIELD ] ) ) {
+			$compatibility[ YithDynamicPricingMode::LEGACY_FIELD ] = $legacy_compatibility[ YithDynamicPricingMode::LEGACY_FIELD ];
+		}
+
 		return YithDynamicPricingMode::resolve( $compatibility, $has_persisted_darven_settings );
 	}
 

@@ -72,6 +72,34 @@ final class SettingsRepositoryTest extends TestCase {
 		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
 	}
 
+	public function test_reads_the_checked_legacy_value_when_a_valid_canonical_document_has_no_mode(): void {
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = array(
+			'schema_version' => 1,
+			'general'        => array(),
+			'positions'      => array(),
+			'display'        => array(),
+			'compatibility'  => array(),
+		);
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_compatibility'] = array(
+			'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
+		);
+
+		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
+	}
+
+	public function test_keeps_an_invalid_persisted_canonical_document_disabled_without_writing(): void {
+		$invalid_canonical = array(
+			'schema_version' => 1,
+			'general'        => array(),
+		);
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = $invalid_canonical;
+		$before = $GLOBALS['darven_epi_test_options'];
+
+		self::assertSame( 'disabled', $this->getRepository()->getYithDynamicPricingMode() );
+		self::assertSame( $before, $GLOBALS['darven_epi_test_options'] );
+	}
+
 	public function test_explicit_canonical_mode_overrides_legacy_inference(): void {
 		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = array(
 			'schema_version' => 1,
