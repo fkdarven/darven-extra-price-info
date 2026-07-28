@@ -57,9 +57,9 @@
 6. **YITH boundary:** the original public YITH package is permanently closed and exposes `YITH_WC_Dynamic_Pricing_Frontend`, not the premium/legacy `YWDPD_Frontend` API this compatibility setting targets. A single-process functional test of that exact API returned cash `90` with the setting disabled and cash `45` from a dynamic base price of `50` with it enabled. No stub or option change persisted.
 7. **Rollback:** after a complete real General-settings save, the plugin junction was switched to the repository's 3.2.0 release. It activated cleanly and the public product page displayed the newly saved cash and installment strings. The junction was restored to the refactor worktree afterward.
 
-The local site remains available at `http://localhost/darven-epi-qa/` with WooCommerce and the refactor branch active. The temporary YITH archive/plugin and temporary 3.2.0 worktree were removed after verification.
+The local site remains available at `http://localhost/darven-epi-qa/` with WooCommerce and the refactor branch active. The temporary 3.2.0 worktree was removed after verification.
 
 ## Follow-up validation (2026-07-28)
 
 - **PHP 7.4 runtime:** the official PHP 7.4.33 Windows CLI was extracted only under `C:\laragon\tmp` and ran the full PHPUnit suite successfully: `88 tests`, `273 assertions`.
-- **YITH vendor integration:** no licensed YITH archive exposing the required legacy `YWDPD_Frontend` API is available locally. The public historical package was deliberately not reused because it exposes `YITH_WC_Dynamic_Pricing_Frontend` instead. The API contract has functional coverage, but a final vendor smoke test requires that exact licensed ZIP.
+- **YITH vendor integration:** a real YITH WooCommerce Dynamic Pricing & Discounts Premium `4.29.0` ZIP exposing `YWDPD_Frontend` was installed only on the isolated site. The native rule editor created and activated a 50% global rule: the $100 QA product displayed YITH's $50 price. Darven then displayed $90 with compatibility disabled and $45 with compatibility enabled, exactly matching the expected price source. Compatibility was restored enabled after the test.
