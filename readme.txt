@@ -3,7 +3,7 @@ Contributors: fkdarven
 Tags: parcelas, parcelamento, preços, installments, price, woocommerce
 Requires at least: 4.7
 Tested up to: 6.2
-Stable tag: 3.2.0
+Stable tag: 3.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -73,6 +73,11 @@ Os juros na primeira parcela serão aplicados somente a 1 parcela
 4. Produto individual com o preço á vista e com parcelamento ativados
 
 == Changelog ==
+= 3.3.0 =
+    • Refatoração orientada à compatibilidade, preservando configurações e metadados legados.
+    • Resolução automática da integração YITH, com fallback seguro para os preços padrão do WooCommerce.
+    • Mantido o suporte ao PHP 7.4.
+
 = 3.2.0 =
     • Ajuste para retornar classes condicionais de acordo com cada página. Exemplos: single product, home, shop, category
 = 3.1.6 =
