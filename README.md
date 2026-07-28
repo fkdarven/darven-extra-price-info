@@ -19,6 +19,8 @@ php scripts/build-release.php
 
 O comando gera `dist/darven-extra-price-info-<versão>.zip`, derivando a versão do header do plugin.
 
+O Git é um requisito do builder: ele consulta as regras de ignore para garantir que arquivos locais não entrem no pacote.
+
 No Windows com o Composer PHAR do Laragon, o builder usa o PHP que o iniciou quando ele possui OpenSSL. Caso contrário, procura automaticamente um PHP com OpenSSL em `C:\laragon\bin\php`; para um Composer customizado, defina `COMPOSER_BINARY` explicitamente.
 
 ## Futuras implementações

@@ -9,6 +9,7 @@
 // phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.Missing, WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec, WordPress.Security.EscapeOutput, WordPress.WP.AlternativeFunctions
 
 const DARVEN_EPI_RELEASE_SLUG = 'darven-extra-price-info';
+const DARVEN_EPI_RELEASE_ZIP_TIMESTAMP = 315532800;
 
 /**
  * @param string $message Error message.
@@ -311,7 +312,9 @@ function darven_epi_release_is_excluded( $relative_path ): bool {
 		}
 	}
 
-	return in_array( end( $parts ), $files, true ) || darven_epi_release_is_git_ignored( $relative_path );
+	$filename = end( $parts );
+
+	return in_array( $filename, $files, true ) || '~' === substr( $filename, -1 ) || darven_epi_release_is_git_ignored( $relative_path );
 }
 
 /**
@@ -443,6 +446,7 @@ function darven_epi_release_create_zip( $staging_root, $archive_path ): void {
 		new RecursiveDirectoryIterator( $staging_root, FilesystemIterator::SKIP_DOTS ),
 		RecursiveIteratorIterator::LEAVES_ONLY
 	);
+	$files = array();
 
 	foreach ( $iterator as $file ) {
 		if ( ! $file->isFile() ) {
@@ -451,8 +455,19 @@ function darven_epi_release_create_zip( $staging_root, $archive_path ): void {
 
 		$relative_path = substr( $file->getPathname(), strlen( $staging_root ) + 1 );
 		$archive_name  = DARVEN_EPI_RELEASE_SLUG . '/' . str_replace( DIRECTORY_SEPARATOR, '/', $relative_path );
+		$files[ $archive_name ] = $file->getPathname();
+	}
 
-		if ( ! $archive->addFile( $file->getPathname(), $archive_name ) ) {
+	ksort( $files, SORT_STRING );
+
+	foreach ( $files as $archive_name => $file_path ) {
+		if ( ! touch( $file_path, DARVEN_EPI_RELEASE_ZIP_TIMESTAMP ) ) {
+			throw new RuntimeException( 'Unable to normalize archive timestamp: ' . $archive_name );
+		}
+
+		clearstatcache( true, $file_path );
+
+		if ( ! $archive->addFile( $file_path, $archive_name ) ) {
 			throw new RuntimeException( 'Unable to add archive entry: ' . $archive_name );
 		}
 	}

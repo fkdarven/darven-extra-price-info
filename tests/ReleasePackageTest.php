@@ -4,14 +4,19 @@ use PHPUnit\Framework\TestCase;
 
 final class ReleasePackageTest extends TestCase {
 	private $archive_path;
+	private $second_archive_path;
 
 	protected function setUp(): void {
-		$this->archive_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'darven-extra-price-info-release-' . uniqid( '', true ) . '.zip';
+		$archive_prefix            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'darven-extra-price-info-release-' . uniqid( '', true );
+		$this->archive_path        = $archive_prefix . '-first.zip';
+		$this->second_archive_path = $archive_prefix . '-second.zip';
 	}
 
 	protected function tearDown(): void {
-		if ( is_file( $this->archive_path ) ) {
-			unlink( $this->archive_path );
+		foreach ( array( $this->archive_path, $this->second_archive_path ) as $archive_path ) {
+			if ( is_file( $archive_path ) ) {
+				unlink( $archive_path );
+			}
 		}
 	}
 
@@ -42,6 +47,7 @@ final class ReleasePackageTest extends TestCase {
 			'composer.json',
 			'composer.lock',
 			'.phpunit',
+			'.po~',
 		);
 
 		for ( $index = 0; $index < $archive->numFiles; $index++ ) {
@@ -55,6 +61,21 @@ final class ReleasePackageTest extends TestCase {
 		}
 
 		$archive->close();
+	}
+
+	public function test_builds_byte_identical_archives_when_repeated(): void {
+		$first_result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
+
+		self::assertSame( 0, $first_result['status'], $first_result['output'] );
+		self::assertFileExists( $this->archive_path );
+
+		sleep( 3 );
+
+		$second_result = $this->run_builder( '--output=' . escapeshellarg( $this->second_archive_path ) );
+
+		self::assertSame( 0, $second_result['status'], $second_result['output'] );
+		self::assertFileExists( $this->second_archive_path );
+		self::assertSame( hash_file( 'sha256', $this->archive_path ), hash_file( 'sha256', $this->second_archive_path ) );
 	}
 
 	public function test_uses_a_laragon_php_with_openssl_for_the_local_composer_phar_when_php74_has_none(): void {
