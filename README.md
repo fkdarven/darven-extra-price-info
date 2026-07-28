@@ -7,6 +7,16 @@ Fique a vontade para fazer o download dessa versão e realizar testes, mas lembr
 Para eventuais bugs ou problemas encontrados no módulo, peço que sejam enviados para o email contato@darven.wtf, contendo o prefixo DMPI no assunto.
 
 ---
+## Build de release
+
+A arquitetura interna usa autoload Composer, preservando as opções, metadados e seletores públicos compatíveis com instalações anteriores do plugin.
+
+Para montar o artefato de distribuição, instale somente as dependências de runtime:
+
+```sh
+composer install --no-dev --prefer-dist --optimize-autoloader
+```
+
 ## Futuras implementações
 
 Como sou uma desenvolvedora backend, o _layout_ do plugin não é dos mais bonitos, portanto, em futuras atualizações pretendo dar ênfase a aparência da página de configurações e ao _popup_ responsável por exibir as parcelas.

@@ -53,30 +53,40 @@
     box-shadow:0 1px 8px rgba(0,0,0,0.5);
 }
 
-#installments_table{
+.darven-epi-installments-table {
 
     border: none;
 }
-#installments_table tr{
+.darven-epi-installments-table tr {
     column-width: 10px;
 
     border: none;
 
 }
-#installments_table td{
+.darven-epi-installments-table td {
     padding: 2px;
     border: none;
 
 }
 
 
-a.selected {
+.darven-epi-installments-toggle {
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.darven-epi-installments-toggle.selected {
     background-color:#1F75CC;
     color:white;
     z-index:100;
 }
 
-.messagepop {
+.darven-epi-installments-popup {
     background-color:#FFFFFF;
     border: dotted 1px black;
 
@@ -96,7 +106,8 @@ label {
     text-indent: -15px;
 }
 
-.messagepop p, .messagepop.div {
+.darven-epi-installments-popup p,
+.darven-epi-installments-popup.div {
     border-bottom: 1px solid #EFEFEF;
     margin: 8px 0;
     padding-bottom: 8px;

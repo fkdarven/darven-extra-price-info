@@ -3,7 +3,7 @@ Contributors: fkdarven
 Tags: parcelas, parcelamento, preços, installments, price, woocommerce
 Requires at least: 4.7
 Tested up to: 6.2
-Stable tag: 3.1.4
+Stable tag: 3.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,7 +20,13 @@ Com o plugin ativo, esses preços são exibidos em todas as páginas que contenh
 
 O preço parcelado pode ser definido com ou sem juros, onde existem duas modalidades de juros: incremental e personalizada.
 
-O plugin pode apresentar alguns conflitos com outros plugins de *desconto em massa*, uma vez que ambos manipulam o preço original do produto. Atualmente, o plugin suporta o modo de compatibilidade com o plugin de descontos da YITH, mas, futuramente, será implementado compatibilidade com outros plugins.
+O plugin pode apresentar alguns conflitos com outros plugins de *desconto em massa*, uma vez que ambos manipulam o preço original do produto. O modo de compatibilidade com o YITH WooCommerce Dynamic Pricing and Discounts é automático em novas instalações: quando a integração estiver disponível, o plugin considera o preço dinâmico definido pelo YITH. Instalações anteriores que não tinham a compatibilidade ativada permanecem desativadas até uma escolha explícita. Quando o YITH não estiver disponível, o plugin usa o preço padrão do WooCommerce.
+
+As opções e metadados existentes, bem como as classes CSS e seletores públicos, são preservados para manter a compatibilidade com instalações anteriores.
+
+Para gerar o pacote de distribuição, execute:
+
+`composer install --no-dev --prefer-dist --optimize-autoloader`
 
 Guia para configuração do plugin: [Darven MPI Guia de Configuração](https://github.com/fkdarven/darven-extra-price-info/raw/main/darven-epi-manual.pdf)
 
@@ -67,7 +73,14 @@ Os juros na primeira parcela serão aplicados somente a 1 parcela
 4. Produto individual com o preço á vista e com parcelamento ativados
 
 == Changelog ==
-
+= 3.2.0 =
+    • Ajuste para retornar classes condicionais de acordo com cada página. Exemplos: single product, home, shop, category
+= 3.1.6 =
+    • Ajuste para solucionar problemas relacionados a erros no checkout
+= 3.1.5 =
+    • Ajuste para solucionar problemas relacionados a página de configurações de posicionamento
+= 3.1.4 =
+    • Ajuste para solucionar problema onde o plugin estava capturando posts que não eram produtos.
 = 3.1.3 = 
     • Ajustado o posicionamento dos preços á vista e parcelado, para que fiquem logo abaixo ao preço original. 
     • Correção de um bug que estava mostrando os preços em uma ordem diferente da definida nas configurações.
