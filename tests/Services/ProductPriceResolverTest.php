@@ -55,6 +55,10 @@ final class ProductPriceResolverTest extends TestCase {
 		$this->getResolver()->getActivePrice( null );
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
 	public function test_falls_back_to_the_woocommerce_price_when_yith_is_unavailable(): void {
 		self::assertSame( 75.25, $this->getResolver()->getActivePrice( new WC_Product( '75.25' ) ) );
 	}
