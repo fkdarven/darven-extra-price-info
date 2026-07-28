@@ -195,6 +195,55 @@ function darven_epi_release_version( $plugin_file ): string {
 }
 
 /**
+ * @param string $php_binary PHP executable path.
+ * @return bool Whether the PHP executable has OpenSSL enabled.
+ */
+function darven_epi_release_php_has_openssl( $php_binary ): bool {
+	if ( ! is_file( $php_binary ) ) {
+		return false;
+	}
+
+	$command = escapeshellarg( $php_binary ) . ' -r "exit( extension_loaded( \'openssl\' ) ? 0 : 1 );" 2>&1';
+	$output  = array();
+	$status  = 1;
+
+	exec( $command, $output, $status );
+
+	return 0 === $status;
+}
+
+/**
+ * @return string PHP executable path suitable for the local Composer PHAR.
+ */
+function darven_epi_release_composer_php_binary(): string {
+	if ( darven_epi_release_php_has_openssl( PHP_BINARY ) ) {
+		return PHP_BINARY;
+	}
+
+	$laragon_php_root      = 'C:\\laragon\\bin\\php';
+	$laragon_php_root_real = realpath( $laragon_php_root );
+	$candidates            = glob( $laragon_php_root . '\\*\\php.exe' );
+
+	if ( false !== $laragon_php_root_real && false !== $candidates ) {
+		sort( $candidates, SORT_STRING );
+
+		foreach ( $candidates as $candidate ) {
+			$candidate_real = realpath( $candidate );
+
+			if ( false === $candidate_real || ! darven_epi_release_is_within_path( $candidate_real, $laragon_php_root_real ) ) {
+				continue;
+			}
+
+			if ( darven_epi_release_php_has_openssl( $candidate_real ) ) {
+				return $candidate_real;
+			}
+		}
+	}
+
+	throw new RuntimeException( 'The local Laragon Composer PHAR requires a PHP executable with OpenSSL. Enable OpenSSL for PHP_BINARY, set COMPOSER_BINARY, or install a Laragon PHP under C:\\laragon\\bin\\php with OpenSSL enabled.' );
+}
+
+/**
  * @return string Composer command prefix.
  */
 function darven_epi_release_composer_command(): string {
@@ -205,7 +254,7 @@ function darven_epi_release_composer_command(): string {
 	}
 
 	if ( '\\' === DIRECTORY_SEPARATOR && is_file( 'C:\\laragon\\bin\\composer\\composer.phar' ) ) {
-		return escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( 'C:\\laragon\\bin\\composer\\composer.phar' );
+		return escapeshellarg( darven_epi_release_composer_php_binary() ) . ' ' . escapeshellarg( 'C:\\laragon\\bin\\composer\\composer.phar' );
 	}
 
 	return 'composer';

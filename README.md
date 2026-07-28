@@ -19,6 +19,8 @@ php scripts/build-release.php
 
 O comando gera `dist/darven-extra-price-info-<versão>.zip`, derivando a versão do header do plugin.
 
+No Windows com o Composer PHAR do Laragon, o builder usa o PHP que o iniciou quando ele possui OpenSSL. Caso contrário, procura automaticamente um PHP com OpenSSL em `C:\laragon\bin\php`; para um Composer customizado, defina `COMPOSER_BINARY` explicitamente.
+
 ## Futuras implementações
 
 Como sou uma desenvolvedora backend, o _layout_ do plugin não é dos mais bonitos, portanto, em futuras atualizações pretendo dar ênfase a aparência da página de configurações e ao _popup_ responsável por exibir as parcelas.
