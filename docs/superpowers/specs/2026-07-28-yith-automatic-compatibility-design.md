@@ -9,10 +9,10 @@ Make YITH Dynamic Pricing detection automatic for new Darven installations while
 Store an explicit canonical compatibility mode in the existing `compatibility` section:
 
 ```php
-'yith_dynamic_pricing_mode' => 'auto' | 'disabled'
+'darven_epi_yith_dynamic_pricing_mode' => 'auto' | 'disabled'
 ```
 
-The old `darven_epi_is_yith_dynamic_compatibility_enabled` value remains supported and is still projected to the legacy option during the one-release dual-write window:
+The mode keeps the `darven_epi_` prefix so the existing dual-write adapter mirrors it safely. The old `darven_epi_is_yith_dynamic_compatibility_enabled` value remains supported and is still projected to the legacy option during the one-release dual-write window:
 
 | Effective mode | Legacy checkbox value |
 | --- | --- |
