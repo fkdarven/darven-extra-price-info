@@ -134,11 +134,48 @@ function darven_epi_release_validate_archive_destination( $archive_path, $reposi
 		throw new RuntimeException( 'Release output must be a regular ZIP file path.' );
 	}
 
-	if ( darven_epi_release_is_within_path( $archive_path, $repository_root ) ) {
-		$distribution_root = $repository_root . DIRECTORY_SEPARATOR . 'dist';
+	$distribution_root = $repository_root . DIRECTORY_SEPARATOR . 'dist';
+	$is_distribution_output = darven_epi_release_is_within_path( $archive_path, $distribution_root );
 
-		if ( ! darven_epi_release_is_within_path( $archive_path, $distribution_root ) ) {
-			throw new RuntimeException( 'Release output inside the repository root is allowed only under dist/.' );
+	if ( darven_epi_release_is_within_path( $archive_path, $repository_root ) && ! $is_distribution_output ) {
+		throw new RuntimeException( 'Release output inside the repository root is allowed only under dist/.' );
+	}
+
+	$existing_parent = dirname( $archive_path );
+
+	while ( ! file_exists( $existing_parent ) && ! is_link( $existing_parent ) ) {
+		$parent_path = dirname( $existing_parent );
+
+		if ( $parent_path === $existing_parent ) {
+			throw new RuntimeException( 'Unable to resolve the release output parent directory.' );
+		}
+
+		$existing_parent = $parent_path;
+	}
+
+	$parent_real_path = realpath( $existing_parent );
+
+	if ( false === $parent_real_path ) {
+		throw new RuntimeException( 'Unable to resolve the release output parent directory.' );
+	}
+
+	if ( darven_epi_release_is_within_path( $parent_real_path, $repository_root ) ) {
+		$distribution_real_path = realpath( $distribution_root );
+
+		if ( ! $is_distribution_output ) {
+			throw new RuntimeException( 'Release output parent resolves inside the repository root.' );
+		}
+
+		if ( false === $distribution_real_path ) {
+			if ( darven_epi_release_normalize_path( $parent_real_path ) !== darven_epi_release_normalize_path( $repository_root ) ) {
+				throw new RuntimeException( 'Release output parent resolves inside the repository root outside dist/.' );
+			}
+
+			return;
+		}
+
+		if ( darven_epi_release_normalize_path( $distribution_real_path ) !== darven_epi_release_normalize_path( $distribution_root ) || ! darven_epi_release_is_within_path( $parent_real_path, $distribution_real_path ) ) {
+			throw new RuntimeException( 'Release output parent resolves inside the repository root outside dist/.' );
 		}
 	}
 }

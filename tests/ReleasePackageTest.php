@@ -141,6 +141,48 @@ final class ReleasePackageTest extends TestCase {
 		self::assertFileDoesNotExist( $source_output );
 	}
 
+	public function test_rejects_external_output_parents_that_resolve_inside_the_repository(): void {
+		$junction_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'darven-extra-price-info-output-link-' . uniqid( '', true );
+		$source_output = DARVEN_EPI_DIR_PATH . 'release-package-parent-junction.zip';
+		$is_junction   = false;
+
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Windows may require elevation to create a symbolic link; the junction fallback is intentional.
+		if ( ! function_exists( 'symlink' ) || ! @symlink( DARVEN_EPI_DIR_PATH, $junction_path ) ) {
+			if ( '\\' === DIRECTORY_SEPARATOR ) {
+				$junction_command = 'cmd /c mklink /J ' . escapeshellarg( $junction_path ) . ' ' . escapeshellarg( DARVEN_EPI_DIR_PATH ) . ' 2>&1';
+				$junction_output  = array();
+				$junction_status  = 0;
+
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec -- Windows junctions cover hosts where symlinks require elevation.
+				exec( $junction_command, $junction_output, $junction_status );
+				$is_junction = 0 === $junction_status;
+			}
+
+			if ( ! $is_junction ) {
+				self::markTestSkipped( 'Creating symlinks or Windows junctions is not supported by this test environment.' );
+			}
+		}
+
+		try {
+			$result      = $this->run_builder( '--output=' . escapeshellarg( $junction_path . DIRECTORY_SEPARATOR . basename( $source_output ) ) );
+			$was_written = is_file( $source_output );
+		} finally {
+			if ( is_file( $source_output ) ) {
+				unlink( $source_output );
+			}
+
+			if ( $is_junction && is_dir( $junction_path ) ) {
+				rmdir( $junction_path );
+			} elseif ( is_link( $junction_path ) || is_file( $junction_path ) ) {
+				unlink( $junction_path );
+			}
+		}
+
+		self::assertNotSame( 0, $result['status'] );
+		self::assertStringContainsString( 'resolves inside the repository root', $result['output'] );
+		self::assertFalse( $was_written );
+	}
+
 	private function run_builder( $arguments ): array {
 		$builder = DARVEN_EPI_DIR_PATH . 'scripts' . DIRECTORY_SEPARATOR . 'build-release.php';
 		$command = escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $builder ) . ' ' . $arguments . ' 2>&1';
