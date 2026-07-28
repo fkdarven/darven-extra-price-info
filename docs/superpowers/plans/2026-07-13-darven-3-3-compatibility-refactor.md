@@ -962,6 +962,8 @@ Do not push. Create a release or pull-request decision only after manual checks 
 
 **Manual execution status (2026-07-23):** completed on an isolated Laragon WordPress/WooCommerce site. Checks 1–5 used real Settings API, product-editor, and public-page requests. The historical YITH public package was confirmed not to expose the premium/legacy `YWDPD_Frontend` API; the exact API contract was functionally exercised without persisting a stub (cash `90` disabled, `45` enabled from dynamic base `50`). Check 7 switched the site junction to the repository's 3.2.0 release after a complete real settings save; that release activated and rendered the newly saved cash and installment configuration. See `2026-07-23-laragon-woocommerce-manual-qa.md` for the complete evidence.
 
+**Follow-up validation (2026-07-28):** the complete PHPUnit suite passed under the official PHP 7.4.33 Windows runtime (`88 tests`, `273 assertions`). The remaining YITH vendor smoke test cannot be executed until a licensed YITH package that exposes `YWDPD_Frontend` is supplied. No such package exists in the local Laragon, Downloads, or project directories; the public historical package exposes a different class and is not a valid substitute.
+
 ## Spec Coverage Review
 
 - PHP 7.4: global constraints and Task 9 dual-PHP verification.

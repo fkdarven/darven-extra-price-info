@@ -58,3 +58,8 @@
 7. **Rollback:** after a complete real General-settings save, the plugin junction was switched to the repository's 3.2.0 release. It activated cleanly and the public product page displayed the newly saved cash and installment strings. The junction was restored to the refactor worktree afterward.
 
 The local site remains available at `http://localhost/darven-epi-qa/` with WooCommerce and the refactor branch active. The temporary YITH archive/plugin and temporary 3.2.0 worktree were removed after verification.
+
+## Follow-up validation (2026-07-28)
+
+- **PHP 7.4 runtime:** the official PHP 7.4.33 Windows CLI was extracted only under `C:\laragon\tmp` and ran the full PHPUnit suite successfully: `88 tests`, `273 assertions`.
+- **YITH vendor integration:** no licensed YITH archive exposing the required legacy `YWDPD_Frontend` API is available locally. The public historical package was deliberately not reused because it exposes `YITH_WC_Dynamic_Pricing_Frontend` instead. The API contract has functional coverage, but a final vendor smoke test requires that exact licensed ZIP.
