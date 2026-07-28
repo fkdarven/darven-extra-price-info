@@ -16,15 +16,9 @@ final class ReleasePackageTest extends TestCase {
 	}
 
 	public function test_builds_a_runtime_only_distribution_archive(): void {
-		$builder = DARVEN_EPI_DIR_PATH . 'scripts' . DIRECTORY_SEPARATOR . 'build-release.php';
-		$command = escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $builder ) . ' --output=' . escapeshellarg( $this->archive_path ) . ' 2>&1';
-		$output  = array();
-		$status  = 0;
+		$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
 
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec -- The integration test invokes the CLI builder.
-		exec( $command, $output, $status );
-
-		self::assertSame( 0, $status, implode( "\n", $output ) );
+		self::assertSame( 0, $result['status'], $result['output'] );
 		self::assertFileExists( $this->archive_path );
 
 		$archive = new ZipArchive();
@@ -61,5 +55,104 @@ final class ReleasePackageTest extends TestCase {
 		}
 
 		$archive->close();
+	}
+
+	public function test_fails_when_git_ignore_check_cannot_run(): void {
+		$original_path = getenv( 'PATH' );
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- The child builder must observe a missing Git command.
+		putenv( 'PATH=' );
+
+		try {
+			$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
+		} finally {
+			if ( false === $original_path ) {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore the process environment after the child process exits.
+				putenv( 'PATH' );
+			} else {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore the process environment after the child process exits.
+				putenv( 'PATH=' . $original_path );
+			}
+		}
+
+		self::assertNotSame( 0, $result['status'] );
+		self::assertStringContainsString( 'Git ignore check failed', $result['output'] );
+		self::assertFileDoesNotExist( $this->archive_path );
+	}
+
+	public function test_rejects_runtime_symlinks_that_point_outside_the_repository(): void {
+		$outside_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'darven-extra-price-info-outside-' . uniqid( '', true );
+		$link_path    = DARVEN_EPI_DIR_PATH . 'public' . DIRECTORY_SEPARATOR . 'release-package-outside-link';
+		$is_junction  = false;
+
+		mkdir( $outside_path );
+		file_put_contents( $outside_path . DIRECTORY_SEPARATOR . 'outside.php', '<?php echo "outside";' );
+
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Windows may require elevation to create a symbolic link; the junction fallback is intentional.
+		if ( ! function_exists( 'symlink' ) || ! @symlink( $outside_path, $link_path ) ) {
+			if ( '\\' === DIRECTORY_SEPARATOR ) {
+				$junction_command = 'cmd /c mklink /J ' . escapeshellarg( $link_path ) . ' ' . escapeshellarg( $outside_path ) . ' 2>&1';
+				$junction_output  = array();
+				$junction_status  = 0;
+
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec -- Windows junctions cover hosts where symlinks require elevation.
+				exec( $junction_command, $junction_output, $junction_status );
+				$is_junction = 0 === $junction_status;
+			}
+
+			if ( ! $is_junction ) {
+				unlink( $outside_path . DIRECTORY_SEPARATOR . 'outside.php' );
+				rmdir( $outside_path );
+				self::markTestSkipped( 'Creating symlinks or Windows junctions is not supported by this test environment.' );
+			}
+		}
+
+		try {
+			$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
+		} finally {
+			if ( $is_junction && is_dir( $link_path ) ) {
+				rmdir( $link_path );
+			} elseif ( is_link( $link_path ) || is_file( $link_path ) ) {
+				unlink( $link_path );
+			}
+
+			unlink( $outside_path . DIRECTORY_SEPARATOR . 'outside.php' );
+			rmdir( $outside_path );
+		}
+
+		self::assertNotSame( 0, $result['status'] );
+		self::assertStringContainsString( 'symbolic link', $result['output'] );
+		self::assertFileDoesNotExist( $this->archive_path );
+	}
+
+	public function test_rejects_output_paths_inside_the_repository_outside_dist(): void {
+		$source_output = DARVEN_EPI_DIR_PATH . 'release-package-output-safety.zip';
+
+		try {
+			$result = $this->run_builder( '--output=' . escapeshellarg( $source_output ) );
+		} finally {
+			if ( is_file( $source_output ) ) {
+				unlink( $source_output );
+			}
+		}
+
+		self::assertNotSame( 0, $result['status'] );
+		self::assertStringContainsString( 'inside the repository root', $result['output'] );
+		self::assertFileDoesNotExist( $source_output );
+	}
+
+	private function run_builder( $arguments ): array {
+		$builder = DARVEN_EPI_DIR_PATH . 'scripts' . DIRECTORY_SEPARATOR . 'build-release.php';
+		$command = escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $builder ) . ' ' . $arguments . ' 2>&1';
+		$output  = array();
+		$status  = 0;
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec -- The integration test invokes the CLI builder.
+		exec( $command, $output, $status );
+
+		return array(
+			'output' => implode( "\n", $output ),
+			'status' => $status,
+		);
 	}
 }
