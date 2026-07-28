@@ -3,6 +3,7 @@
 namespace Darven\ExtraPriceInfo\Repositories;
 
 use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
+use Darven\ExtraPriceInfo\Compatibility\YithDynamicPricingMode;
 use InvalidArgumentException;
 
 final class SettingsRepository {
@@ -48,6 +49,32 @@ final class SettingsRepository {
 		$settings = $this->getSettings();
 
 		return $settings[ $section ];
+	}
+
+	public function getYithDynamicPricingMode(): string {
+		$canonical                     = get_option( self::OPTION_NAME, null );
+		$has_persisted_darven_settings = null !== $canonical;
+		$legacy_options                 = array();
+
+		foreach ( self::LEGACY_OPTION_NAMES as $option_name ) {
+			$legacy_option = get_option( $option_name, null );
+
+			if ( null !== $legacy_option ) {
+				$has_persisted_darven_settings = true;
+			}
+
+			$legacy_options[ $option_name ] = null === $legacy_option ? array() : $legacy_option;
+		}
+
+		$settings = $this->isCanonicalDocument( $canonical )
+			? $canonical
+			: $this->adapter->fromLegacyOptions( $legacy_options );
+
+		$compatibility = isset( $settings['compatibility'] ) && is_array( $settings['compatibility'] )
+			? $settings['compatibility']
+			: array();
+
+		return YithDynamicPricingMode::resolve( $compatibility, $has_persisted_darven_settings );
 	}
 
 	public function saveSection( string $section, array $values, string $deferred_legacy_option = '' ): bool {

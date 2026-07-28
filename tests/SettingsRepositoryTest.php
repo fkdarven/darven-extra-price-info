@@ -52,6 +52,38 @@ final class SettingsRepositoryTest extends TestCase {
 		self::assertSame( 'third', $settings['positions']['darven_epi_single_product_position'] );
 	}
 
+	public function test_defaults_to_automatic_without_any_persisted_darven_settings(): void {
+		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_options'] );
+	}
+
+	public function test_keeps_an_existing_unchecked_installation_disabled(): void {
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+
+		self::assertSame( 'disabled', $this->getRepository()->getYithDynamicPricingMode() );
+	}
+
+	public function test_maps_the_existing_checked_legacy_value_to_automatic(): void {
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_compatibility'] = array(
+			'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
+		);
+
+		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
+	}
+
+	public function test_explicit_canonical_mode_overrides_legacy_inference(): void {
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = array(
+			'schema_version' => 1,
+			'general'        => array(),
+			'positions'      => array(),
+			'display'        => array(),
+			'compatibility'  => array( 'darven_epi_yith_dynamic_pricing_mode' => 'disabled' ),
+		);
+
+		self::assertSame( 'disabled', $this->getRepository()->getYithDynamicPricingMode() );
+	}
+
 	public function test_saves_a_section_to_canonical_and_legacy_options(): void {
 		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
 		$GLOBALS['darven_epi_test_options'][ SettingsRepository::SYNC_STATE_OPTION ] = array(

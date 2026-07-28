@@ -63,6 +63,28 @@ final class LegacySettingsAdapterTest extends TestCase {
 		self::assertSame( 'retain', $result['darven_epi_option_compatibility']['third_party_compatibility_key'] );
 	}
 
+	public function test_projects_both_yith_compatibility_mode_and_legacy_checkbox(): void {
+		$adapter = new LegacySettingsAdapter();
+		$result  = $adapter->projectToLegacyOptions(
+			array(
+				'compatibility' => array(
+					'darven_epi_yith_dynamic_pricing_mode' => 'auto',
+					'darven_epi_is_yith_dynamic_compatibility_enabled' => 'darven_epi_is_yith_dynamic_compatibility_enabled',
+				),
+			),
+			$this->get_legacy_options()
+		);
+
+		self::assertSame(
+			'auto',
+			$result['darven_epi_option_compatibility']['darven_epi_yith_dynamic_pricing_mode']
+		);
+		self::assertSame(
+			'darven_epi_is_yith_dynamic_compatibility_enabled',
+			$result['darven_epi_option_compatibility']['darven_epi_is_yith_dynamic_compatibility_enabled']
+		);
+	}
+
 	public function test_does_not_project_third_party_values_from_canonical_sections(): void {
 		$adapter = new LegacySettingsAdapter();
 		$result  = $adapter->projectToLegacyOptions(
