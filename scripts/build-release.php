@@ -586,7 +586,6 @@ try {
 		$runtime_paths = array(
 			'admin',
 			'i18n',
-			'includes',
 			'languages',
 			'public',
 			'src',
