@@ -1,6 +1,6 @@
-=== Plugin Name ===
+=== Darven Múltiplos Preços Informativos ===
 Contributors: fkdarven
-Tags: parcelas, parcelamento, preços, installments, price, woocommerce
+Tags: parcelas, parcelamento, preços, preço à vista, preço parcelado
 Requires at least: 4.7
 Tested up to: 7.0
 Stable tag: 3.3.1
