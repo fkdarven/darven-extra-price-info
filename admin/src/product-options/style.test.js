@@ -44,9 +44,9 @@ const inheritedWooCommerceProperties = [
 const legendArtifacts = styleArtifacts.map( ( artifact ) => ( {
 	...artifact,
 	scopeSelector:
-		/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options\s+fieldset\s+legend\s*\{/,
+		/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options\s+fieldset\s+legend(?:\s*\{|,)/,
 	legendRule:
-		/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options\s+fieldset\s+legend\s*\{([\s\S]*?)\}/,
+		/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options\s+fieldset\s+legend(?:\s*\{([^}]*)\}|,[^{]*\{([^}]*)\})/,
 } ) );
 
 describe( 'product options styles', () => {
@@ -69,11 +69,14 @@ describe( 'product options styles', () => {
 		( artifact ) => {
 			const stylesheet = fs.readFileSync( artifact.path, 'utf8' );
 			const legendRule = stylesheet.match( artifact.legendRule );
+			const legendDeclarations = legendRule
+				? legendRule[ 1 ] || legendRule[ 2 ]
+				: '';
 
 			expect( stylesheet ).toMatch( artifact.scopeSelector );
 			expect( legendRule ).not.toBeNull();
 			inheritedWooCommerceProperties.forEach( ( property ) => {
-				expect( legendRule[ 1 ] ).toMatch( property );
+				expect( legendDeclarations ).toMatch( property );
 			} );
 		}
 	);
