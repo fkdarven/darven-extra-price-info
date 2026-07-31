@@ -56,7 +56,7 @@ describe( 'product options styles', () => {
 			const stylesheet = fs.readFileSync( artifact.path, 'utf8' );
 
 			expect( stylesheet ).toMatch(
-				/\.darven-precos-parcelados-product-options\s*\{[^}]*padding\s*:\s*80px\s+12px\s+12px(?:\s*;|\s*})/
+				/\.darven-precos-parcelados-product-options\s*\{[^}]*padding\s*:\s*112px\s+12px\s+12px(?:\s*;|\s*})/
 			);
 		}
 	);
