@@ -51,6 +51,17 @@ const legendArtifacts = styleArtifacts.map( ( artifact ) => ( {
 
 describe( 'product options styles', () => {
 	it.each( styleArtifacts )(
+		'reserves space below the sticky product header in the $name',
+		( artifact ) => {
+			const stylesheet = fs.readFileSync( artifact.path, 'utf8' );
+
+			expect( stylesheet ).toMatch(
+				/\.darven-precos-parcelados-product-options\s*\{[^}]*padding\s*:\s*80px\s+12px\s+12px(?:\s*;|\s*})/
+			);
+		}
+	);
+
+	it.each( styleArtifacts )(
 		'keeps toggle labels inside the component in the $name',
 		( artifact ) => {
 			const stylesheet = fs.readFileSync( artifact.path, 'utf8' );
