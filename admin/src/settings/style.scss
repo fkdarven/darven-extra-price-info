@@ -1,1 +1,45 @@
+.darven-precos-parcelados-admin {
+	box-sizing: border-box;
+	max-width: 960px;
+	padding: 24px 20px 48px 0;
 
+	&--loading {
+		display: flex;
+		min-height: 180px;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.components-notice {
+		margin: 0 0 16px;
+	}
+
+	.components-tab-panel__tabs {
+		margin: 24px 0 0;
+		border-bottom: 1px solid #c3c4c7;
+	}
+
+	.components-tab-panel__tabs-item {
+
+		&.is-active {
+			box-shadow: inset 0 -3px #2271b1;
+		}
+	}
+
+	.components-panel {
+		margin-bottom: 20px;
+		border-top: 0;
+	}
+
+	.components-base-control,
+	.components-toggle-control {
+		max-width: 640px;
+		margin-bottom: 18px;
+	}
+
+	.components-text-control__input[type="color"] {
+		width: 96px;
+		height: 40px;
+		padding: 3px;
+	}
+}

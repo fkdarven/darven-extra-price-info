@@ -1,19 +1,14 @@
 <?php
 
-use Darven\ExtraPriceInfo\Admin\SettingsFields\GeneralFields;
 use Darven\ExtraPriceInfo\Repositories\SettingsSanitizer;
 use PHPUnit\Framework\TestCase;
 
 final class GeneralSettingsSanitizationTest extends TestCase {
-	protected function tearDown(): void {
-		do_action( 'shutdown' );
-	}
-
 	public function test_sanitizes_general_options_according_to_field_types(): void {
-		$subject = $this->get_subject();
+		$subject = new SettingsSanitizer();
 
-		$result = $subject->sanitize(
-			array(
+		$result = $subject->sanitizeSection(
+			'general', array(
 				'darven_epi_incash_is_enabled'                         => 'yes<script>alert(1)</script>',
 				'darven_epi_installments_is_enabled'                   => 'darven_epi_installments_is_enabled',
 				'darven_epi_installments_interest_fee_is_table_enabled' => '1',
@@ -50,10 +45,10 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 	}
 
 	public function test_allows_limited_markup_only_for_general_text_fields(): void {
-		$subject = $this->get_subject();
+		$subject = new SettingsSanitizer();
 
-		$result = $subject->sanitize(
-			array(
+		$result = $subject->sanitizeSection(
+			'general', array(
 				'darven_epi_incash_prefix'        => 'Pay <b>now</b><script>alert(1)</script>',
 				'darven_epi_installments_suffix'  => '<em>sem juros</em><iframe src="https://example.com"></iframe>',
 				'darven_epi_popup_text'           => '<a href="https://example.com">ver parcelas</a><img src=x>',
@@ -68,9 +63,5 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 		self::assertStringContainsString( '<a href="https://example.com">ver parcelas</a>', $result['darven_epi_popup_text'] );
 		self::assertStringNotContainsString( '<img', $result['darven_epi_popup_text'] );
 		self::assertSame( '10', $result['darven_epi_value_of_incash_discount'] );
-	}
-
-	private function get_subject(): GeneralFields {
-		return new GeneralFields();
 	}
 }

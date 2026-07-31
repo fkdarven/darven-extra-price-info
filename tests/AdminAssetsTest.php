@@ -1,6 +1,7 @@
 <?php
 
 use Darven\ExtraPriceInfo\Admin\Assets;
+use Darven\ExtraPriceInfo\Setup\Plugin;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/Support/AdminAssetsDoubles.php';
@@ -53,12 +54,18 @@ final class AdminAssetsTest extends TestCase {
 		self::assertSame( array(), $GLOBALS['darven_epi_test_enqueued_styles'] );
 	}
 
-	public function test_serializes_mutable_interest_fee_javascript_values(): void {
-		$fields = file_get_contents( DARVEN_EPI_DIR_PATH . 'src/Admin/SettingsFields/GeneralFields.php' );
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_boot_does_not_register_or_load_the_legacy_settings_api(): void {
+		$GLOBALS['darven_epi_test_actions'] = array();
+		$GLOBALS['darven_epi_test_settings_sanitizers'] = array();
 
-		self::assertIsString( $fields );
-		self::assertStringContainsString( 'let customized_values = <?php echo wp_json_encode(', $fields );
-		self::assertStringContainsString( 'let max_install = <?php echo wp_json_encode(', $fields );
-		self::assertStringContainsString( 'let first_install = <?php echo wp_json_encode(', $fields );
+		Plugin::boot();
+
+		self::assertNotContains( 'admin_init', array_column( $GLOBALS['darven_epi_test_actions'], 'hook' ) );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_settings_sanitizers'] );
+		self::assertFalse( class_exists( 'Darven\\ExtraPriceInfo\\Admin\\LegacySettingsSync', false ) );
 	}
 }

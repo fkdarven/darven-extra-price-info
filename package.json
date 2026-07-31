@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "test": "wp-scripts test-unit-js",
     "build:settings": "wp-scripts build --webpack-src-dir=admin/src/settings --output-path=build/settings",
     "build:product-options": "wp-scripts build --webpack-src-dir=admin/src/product-options --output-path=build/product-options",
     "build:admin": "npm run build:settings && npm run build:product-options",

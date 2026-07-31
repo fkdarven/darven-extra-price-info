@@ -1,0 +1,46 @@
+{
+  "general": [
+    "darven_epi_incash_is_enabled",
+    "darven_epi_installments_is_enabled",
+    "darven_epi_installments_interest_fee_is_table_enabled",
+    "darven_epi_type_of_discount",
+    "darven_epi_mode_of_view",
+    "darven_epi_minimum_installments_value",
+    "darven_epi_installments_interest_fee",
+    "darven_epi_installments_interest_fee_first_install",
+    "darven_epi_minimum_incash_value",
+    "darven_epi_value_of_incash_discount",
+    "darven_epi_max_installments",
+    "darven_epi_installments_interest_fee_from",
+    "darven_epi_installments_prefix",
+    "darven_epi_installments_suffix",
+    "darven_epi_incash_suffix",
+    "darven_epi_incash_prefix",
+    "darven_epi_popup_text",
+    "darven_epi_installments_interest_fee_table"
+  ],
+  "display": [
+    "darven_epi_color_of_installments_install",
+    "darven_epi_color_of_installments_prefix",
+    "darven_epi_color_of_installments_suffix",
+    "darven_epi_color_of_installments_price",
+    "darven_epi_color_of_incash_prefix",
+    "darven_epi_color_of_incash_suffix",
+    "darven_epi_color_of_incash_price",
+    "darven_epi_font_size_of_incash_price",
+    "darven_epi_font_size_of_incash_suffix",
+    "darven_epi_font_size_of_incash_prefix",
+    "darven_epi_font_size_of_installments_price",
+    "darven_epi_font_size_of_installments_suffix",
+    "darven_epi_font_size_of_installments_prefix",
+    "darven_epi_font_size_of_installments_install"
+  ],
+  "positions": [
+    "darven_epi_others_product_position",
+    "darven_epi_single_product_position",
+    "darven_epi_catalog_product_position"
+  ],
+  "compatibility": [
+    "darven_epi_yith_dynamic_pricing_mode"
+  ]
+}
