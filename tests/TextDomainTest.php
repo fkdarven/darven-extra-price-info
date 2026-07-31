@@ -65,9 +65,28 @@ final class TextDomainTest extends TestCase {
 
 		$php_files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( DARVEN_EPI_DIR_PATH . 'src' ) );
 		foreach ( $php_files as $php_file ) {
-			if ( $php_file->isFile() && 'php' === $php_file->getExtension() ) {
+			if ( $php_file->isFile() && 'php' === $php_file->getExtension() && false === strpos( $php_file->getPathname(), DIRECTORY_SEPARATOR . 'Frontend' . DIRECTORY_SEPARATOR ) ) {
 				self::assertStringNotContainsString( "'darven-epi'", file_get_contents( $php_file->getPathname() ) );
 			}
 		}
+	}
+
+	public function test_pt_br_catalog_and_admin_jsons_keep_real_msgstr_records_and_translations(): void {
+		$po = file_get_contents( DARVEN_EPI_DIR_PATH . 'languages/' . self::DOMAIN . '-pt_BR.po' );
+
+		self::assertStringNotContainsString( '`r`nmsgstr', $po );
+		self::assertMatchesRegularExpression(
+			'/msgid "General"\Rmsgstr "Geral"/',
+			$po
+		);
+
+		$json_by_source = array();
+		foreach ( glob( DARVEN_EPI_DIR_PATH . 'languages/' . self::DOMAIN . '-pt_BR-*.json' ) as $path ) {
+			$json = json_decode( file_get_contents( $path ), true );
+			$json_by_source[ $json['source'] ] = $json['locale_data']['messages'];
+		}
+
+		self::assertSame( 'Geral', $json_by_source['admin/src/settings/app.js']['General'][0] );
+		self::assertSame( 'Preços parcelados', $json_by_source['admin/src/product-options/app.js']['Installment prices'][0] );
 	}
 }

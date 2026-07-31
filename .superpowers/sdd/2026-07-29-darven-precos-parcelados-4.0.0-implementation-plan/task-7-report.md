@@ -66,3 +66,25 @@ The generated JSON filenames are content hashes and may change whenever the
 extracted strings change; tests intentionally match the expected hash pattern
 instead of pinning a hash. The Sass deprecation warning originates from the
 project's current loader/toolchain and was not altered by this task.
+
+## Review fix round 1
+
+The initial PO population command used a single-quoted PowerShell replacement
+value containing `` `r`n ``. In a single-quoted PowerShell string those
+characters are literal, so translated entries became one invalid gettext line
+instead of a `msgid` line followed by a `msgstr` line. WP-CLI consequently
+treated the malformed combined text as the source key and emitted JSON files
+with empty translation maps.
+
+The regression test now rejects the literal sequence, asserts a real newline
+between `msgid "General"` and `msgstr "Geral"`, and reads the generated JSON
+for both `admin/src/settings/app.js` and `admin/src/product-options/app.js`.
+The PO was corrected by replacing that literal token with
+`[Environment]::NewLine`, then the MO and JSON artifacts were regenerated with
+Laragon WP-CLI.
+
+RED: `TextDomainTest` failed with the malformed PO and empty JSON values.
+GREEN: `TextDomainTest` passed (4 tests, 31 assertions). The full Task 7
+focused set passed (12 tests, 1275 assertions, 1 platform-specific skip),
+including the release-package check. The local fix commit follows this report
+update and carries `Vault-Author: codex`; no push was made.
