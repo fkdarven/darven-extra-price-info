@@ -29,6 +29,7 @@ final class PluginBootstrapTest extends TestCase {
 			'plugins_loaded',
 			'admin_enqueue_scripts',
 			'wp_enqueue_scripts',
+			'rest_api_init',
 			'woocommerce_product_options_general_product_data',
 			'woocommerce_admin_process_product_object',
 		) as $hook ) {
@@ -61,5 +62,23 @@ final class PluginBootstrapTest extends TestCase {
 				array_flip( array( 'parent_slug', 'capability', 'menu_slug' ) )
 			)
 		);
+	}
+
+	public function test_admin_page_renders_only_the_settings_react_mount_point(): void {
+		Plugin::boot();
+		$menu_action = array_values(
+			array_filter(
+				$GLOBALS['darven_epi_test_actions'], static function ( array $registration ): bool {
+					return 'admin_menu' === $registration['hook'];
+				}
+			)
+		)[0];
+		call_user_func( $menu_action['callback'] );
+
+		ob_start();
+		call_user_func( $GLOBALS['darven_epi_test_submenu_pages'][0]['callback'] );
+		$output = ob_get_clean();
+
+		self::assertSame( '<div id="darven-precos-parcelados-settings-root"></div>', $output );
 	}
 }

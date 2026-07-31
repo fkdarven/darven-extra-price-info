@@ -14,6 +14,11 @@ $GLOBALS['darven_epi_test_option_reads'] = array();
 $GLOBALS['darven_epi_test_settings_sanitizers'] = array();
 $GLOBALS['darven_epi_test_update_option_calls'] = array();
 $GLOBALS['darven_epi_test_update_option_depth'] = 0;
+$GLOBALS['darven_epi_test_rest_routes'] = array();
+$GLOBALS['darven_epi_test_products'] = array();
+$GLOBALS['darven_epi_test_localized_scripts'] = array();
+$GLOBALS['darven_epi_test_enqueued_media'] = 0;
+$GLOBALS['darven_epi_test_screen'] = null;
 
 function get_option( $name, $default = false ) {
 	$GLOBALS['darven_epi_test_option_reads'][] = $name;
@@ -168,6 +173,112 @@ function add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, 
 		'menu_slug'   => $menu_slug,
 		'callback'    => $callback,
 	);
+}
+
+function register_rest_route( $namespace, $route, $args ): void {
+	$GLOBALS['darven_epi_test_rest_routes'][] = array(
+		'namespace' => $namespace,
+		'route'     => $route,
+		'args'      => $args,
+	);
+}
+
+class WP_REST_Request {
+	private $params;
+	private $json_params;
+
+	public function __construct( array $params = array(), $json_params = array() ) {
+		$this->params      = $params;
+		$this->json_params = $json_params;
+	}
+
+	public function get_param( $key ) {
+		return $this->params[ $key ] ?? null;
+	}
+
+	public function get_json_params() {
+		return $this->json_params;
+	}
+}
+
+class WP_REST_Response {
+	private $data;
+	private $status;
+
+	public function __construct( $data, $status = 200 ) {
+		$this->data   = $data;
+		$this->status = $status;
+	}
+
+	public function get_data() {
+		return $this->data;
+	}
+
+	public function get_status(): int {
+		return $this->status;
+	}
+}
+
+class WP_Error {
+	private $code;
+	private $message;
+	private $data;
+
+	public function __construct( $code = '', $message = '', $data = null ) {
+		$this->code    = $code;
+		$this->message = $message;
+		$this->data    = $data;
+	}
+
+	public function get_error_code(): string {
+		return $this->code;
+	}
+
+	public function get_error_data() {
+		return $this->data;
+	}
+}
+
+function rest_ensure_response( $response ): WP_REST_Response {
+	return $response instanceof WP_REST_Response ? $response : new WP_REST_Response( $response );
+}
+
+function wp_create_nonce( $action ): string {
+	$GLOBALS['darven_epi_test_nonce_action'] = $action;
+
+	return 'test-rest-nonce';
+}
+
+function wp_localize_script( $handle, $object_name, $data ): void {
+	$GLOBALS['darven_epi_test_localized_scripts'][] = array(
+		'handle'      => $handle,
+		'object_name' => $object_name,
+		'data'        => $data,
+	);
+}
+
+function wp_enqueue_media(): void {
+	$GLOBALS['darven_epi_test_enqueued_media']++;
+}
+
+function get_current_screen() {
+	return $GLOBALS['darven_epi_test_screen'];
+}
+
+function wc_get_product( $product_id ) {
+	return $GLOBALS['darven_epi_test_products'][ (int) $product_id ] ?? false;
+}
+
+function rest_url( $path = '' ): string {
+	return 'https://example.test/wp-json/' . ltrim( $path, '/' );
+}
+
+function absint( $value ): int {
+	return abs( (int) $value );
+}
+
+function esc_attr( $value ): string {
+	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
 }
 
 class WC_Product {

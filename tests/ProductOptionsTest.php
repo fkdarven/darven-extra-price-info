@@ -24,6 +24,19 @@ final class ProductOptionsTest extends TestCase {
 		self::assertNotContains( 'woocommerce_process_product_meta', $hooks );
 	}
 
+	public function test_renders_only_the_react_mount_point_for_the_current_product(): void {
+		$GLOBALS['post'] = (object) array( 'ID' => 42 );
+
+		ob_start();
+		$this->getSubject()->renderFields();
+		$output = ob_get_clean();
+
+		self::assertSame(
+			'<div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div>', $output
+		);
+		self::assertStringNotContainsString( '_darven_epi_is_incash_enabled', $output );
+	}
+
 	public function test_projects_checked_and_unchecked_product_options(): void {
 		$_POST['_darven_epi_is_incash_enabled']      = 'yes';
 		$_POST['_darven_epi_is_installment_enabled'] = 'no';

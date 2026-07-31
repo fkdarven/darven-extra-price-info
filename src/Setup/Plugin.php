@@ -4,7 +4,8 @@ namespace Darven\ExtraPriceInfo\Setup;
 
 use Darven\ExtraPriceInfo\Admin\Assets as AdminAssets;
 use Darven\ExtraPriceInfo\Admin\ProductOptionsController;
-use Darven\ExtraPriceInfo\Admin\SettingsPage;
+use Darven\ExtraPriceInfo\Admin\ReactPage;
+use Darven\ExtraPriceInfo\Admin\SettingsRestController;
 use Darven\ExtraPriceInfo\Compatibility\LegacyProductSettingsAdapter;
 use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
 use Darven\ExtraPriceInfo\Frontend\Assets as FrontendAssets;
@@ -31,7 +32,8 @@ final class Plugin {
 			$settings,
 			$product_settings
 		);
-		$settings_page     = new SettingsPage();
+		$settings_page     = new ReactPage();
+		$settings_rest     = new SettingsRestController( $settings, $product_settings );
 		$product_options   = new ProductOptionsController( $product_settings );
 		$admin_assets      = new AdminAssets();
 		$frontend_assets   = new FrontendAssets();
@@ -43,6 +45,7 @@ final class Plugin {
 		add_action( 'plugins_loaded', array( $text_domain_loader, 'load' ) );
 
 		$settings_page->register();
+		add_action( 'rest_api_init', array( $settings_rest, 'register' ) );
 		$product_options->register();
 	}
 }

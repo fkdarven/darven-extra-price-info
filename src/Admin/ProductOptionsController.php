@@ -26,24 +26,12 @@ final class ProductOptionsController {
 	}
 
 	public function renderFields(): void {
-		echo '<div class="product_custom_field">';
-		woocommerce_wp_checkbox(
-			array(
-				'id'          => '_darven_epi_is_incash_enabled',
-				'placeholder' => '',
-				'label'       => __( 'Disable in cash price for this product', 'woocommerce' ),
-				'type'        => 'boolean',
-			)
+		global $post;
+
+		$product_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
+		printf(
+			'<div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div>', esc_attr( (string) $product_id )
 		);
-		woocommerce_wp_checkbox(
-			array(
-				'id'          => '_darven_epi_is_installment_enabled',
-				'placeholder' => '',
-				'label'       => __( 'Disable installments price for this product', 'woocommerce' ),
-				'type'        => 'boolean',
-			)
-		);
-		echo '</div>';
 	}
 
 	public function save( \WC_Product $product ): void {
