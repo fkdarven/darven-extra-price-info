@@ -30,7 +30,10 @@ jest.mock(
 );
 
 jest.mock( '@wordpress/i18n', () => ( {
-	__: ( text ) => text,
+	__: ( text ) =>
+		'Darven Preços Parcelados' === text
+			? 'Translated brand must not render'
+			: text,
 } ) );
 
 const settingsDocument = {
@@ -168,6 +171,19 @@ describe( 'SettingsApp', () => {
 		expect(
 			container.querySelector( '[role="alert"]' ).textContent
 		).toContain( 'REST indisponível' );
+	} );
+
+	it( 'renders the canonical brand name as a non-translatable heading', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+
+		await flushPromises();
+
+		expect( container.querySelector( 'h1' ).textContent ).toBe(
+			'Darven Preços Parcelados'
+		);
 	} );
 
 	it( 'edits one field in every tab and PUTs the entire document', async () => {

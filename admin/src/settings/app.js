@@ -158,7 +158,7 @@ class SettingsApp extends Component {
 
 		return (
 			<div className="darven-precos-parcelados-admin">
-				<h1>{ __( 'Darven Installment Prices', 'darven-multiplos-precos-informativos' ) }</h1>
+				<h1>Darven Preços Parcelados</h1>
 				{ this.renderNotice( {
 					status: 'info',
 					message: __(
