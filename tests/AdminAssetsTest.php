@@ -27,7 +27,8 @@ final class AdminAssetsTest extends TestCase {
 		self::assertContains( 'wp-components', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
 		self::assertContains( 'wp-element', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
 		self::assertContains( 'wp-i18n', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
-		self::assertSame( 'ae57b074a727a6e06e48', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['ver'] );
+		$asset = require DARVEN_EPI_DIR_PATH . 'build/settings/index.asset.php';
+		self::assertSame( $asset['version'], $GLOBALS['darven_epi_test_enqueued_scripts'][0]['ver'] );
 		self::assertSame( 'https://example.test/wp-json/darven-precos-parcelados/v1/', $GLOBALS['darven_epi_test_localized_scripts'][0]['data']['restUrl'] );
 		self::assertSame( 'test-rest-nonce', $GLOBALS['darven_epi_test_localized_scripts'][0]['data']['nonce'] );
 	}

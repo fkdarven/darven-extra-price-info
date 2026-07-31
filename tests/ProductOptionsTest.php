@@ -70,8 +70,18 @@ final class ProductOptionsTest extends TestCase {
 		);
 	}
 
-	public function test_normalizes_absent_checkboxes_to_no_without_warnings(): void {
-		$product = new WC_Product( '100.00' );
+	public function test_does_not_reset_existing_product_settings_when_no_fallback_fields_are_submitted(): void {
+		$product = new WC_Product(
+			'100.00', 'simple', null, array(
+				'_darven_epi_product_settings' => array(
+					'schema_version'       => 1,
+					'disable_incash'       => true,
+					'disable_installments' => true,
+				),
+				'_darven_epi_is_incash_enabled' => 'yes',
+				'_darven_epi_is_installment_enabled' => 'yes',
+			)
+		);
 		$subject = $this->getSubject();
 
 		try {
@@ -80,11 +90,11 @@ final class ProductOptionsTest extends TestCase {
 			self::fail( 'Saving absent checkboxes raised: ' . $exception->getMessage() );
 		}
 
-		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_incash_enabled' ) );
-		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled' ) );
 		self::assertSame(
-			array( 'schema_version' => 1, 'disable_incash' => false, 'disable_installments' => false ), $product->get_meta( '_darven_epi_product_settings', true )
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => true ), $product->get_meta( '_darven_epi_product_settings', true )
 		);
+		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
+		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
 	}
 
 	public function test_does_not_update_product_without_edit_permission(): void {

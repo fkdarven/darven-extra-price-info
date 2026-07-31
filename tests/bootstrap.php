@@ -15,6 +15,7 @@ $GLOBALS['darven_epi_test_settings_sanitizers'] = array();
 $GLOBALS['darven_epi_test_update_option_calls'] = array();
 $GLOBALS['darven_epi_test_update_option_depth'] = 0;
 $GLOBALS['darven_epi_test_rest_routes'] = array();
+$GLOBALS['darven_epi_test_rest_dispatch_log'] = array();
 $GLOBALS['darven_epi_test_products'] = array();
 $GLOBALS['darven_epi_test_localized_scripts'] = array();
 $GLOBALS['darven_epi_test_enqueued_media'] = 0;
@@ -237,10 +238,52 @@ class WP_Error {
 	public function get_error_data() {
 		return $this->data;
 	}
+
+	public function get_error_message(): string {
+		return $this->message;
+	}
 }
 
 function rest_ensure_response( $response ): WP_REST_Response {
+	if ( $response instanceof WP_Error ) {
+		$error_data = $response->get_error_data();
+		$status     = is_array( $error_data ) && isset( $error_data['status'] ) ? $error_data['status'] : 500;
+
+		return new WP_REST_Response(
+			array(
+				'code'    => $response->get_error_code(),
+				'message' => $response->get_error_message(),
+				'data'    => $error_data,
+			),
+			$status
+		);
+	}
+
 	return $response instanceof WP_REST_Response ? $response : new WP_REST_Response( $response );
+}
+
+function darven_epi_test_dispatch_rest_request( $namespace, $method, $path, WP_REST_Request $request ): WP_REST_Response {
+	foreach ( $GLOBALS['darven_epi_test_rest_routes'] as $route ) {
+		if ( $namespace !== $route['namespace'] || $method !== $route['args']['methods'] ) {
+			continue;
+		}
+
+		if ( 1 !== preg_match( '#^' . $route['route'] . '$#', $path ) ) {
+			continue;
+		}
+
+		$GLOBALS['darven_epi_test_rest_dispatch_log'][] = 'permission';
+		$permission = call_user_func( $route['args']['permission_callback'], $request );
+		if ( true !== $permission ) {
+			return rest_ensure_response( $permission );
+		}
+
+		$GLOBALS['darven_epi_test_rest_dispatch_log'][] = 'callback';
+
+		return rest_ensure_response( call_user_func( $route['args']['callback'], $request ) );
+	}
+
+	return new WP_REST_Response( array( 'code' => 'rest_no_route' ), 404 );
 }
 
 function wp_create_nonce( $action ): string {

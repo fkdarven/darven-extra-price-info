@@ -77,7 +77,12 @@ final class SettingsRestController {
 	 * @return bool|\WP_Error
 	 */
 	public function canEditProduct( \WP_REST_Request $request ) {
-		if ( current_user_can( 'edit_post', absint( $request->get_param( 'id' ) ) ) ) {
+		$product_id = absint( $request->get_param( 'id' ) );
+		if ( ! wc_get_product( $product_id ) ) {
+			return true;
+		}
+
+		if ( current_user_can( 'edit_post', $product_id ) ) {
 			return true;
 		}
 

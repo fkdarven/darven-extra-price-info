@@ -13,8 +13,10 @@ final class SettingsRestControllerTest extends TestCase {
 		$GLOBALS['darven_epi_test_failing_options'] = array();
 		$GLOBALS['darven_epi_test_option_reads'] = array();
 		$GLOBALS['darven_epi_test_rest_routes'] = array();
+		$GLOBALS['darven_epi_test_rest_dispatch_log'] = array();
 		$GLOBALS['darven_epi_test_products'] = array();
 		$GLOBALS['darven_epi_test_current_user_can'] = true;
+		unset( $GLOBALS['darven_epi_test_capability_check'] );
 	}
 
 	public function test_registers_the_four_authorized_routes_under_the_v1_namespace(): void {
@@ -38,6 +40,49 @@ final class SettingsRestControllerTest extends TestCase {
 		self::assertInstanceOf( WP_Error::class, $result );
 		self::assertSame( 'darven_epi_forbidden', $result->get_error_code() );
 		self::assertSame( array(), $GLOBALS['darven_epi_test_option_reads'] );
+	}
+
+	public function test_rest_dispatch_runs_permission_before_the_settings_callback_and_preserves_the_error_status(): void {
+		$GLOBALS['darven_epi_test_current_user_can'] = false;
+		$this->getSubject()->register();
+
+		$response = darven_epi_test_dispatch_rest_request(
+			'darven-precos-parcelados/v1', 'GET', '/settings', new WP_REST_Request()
+		);
+
+		self::assertSame( 403, $response->get_status() );
+		self::assertSame( 'darven_epi_forbidden', $response->get_data()['code'] );
+		self::assertSame( array( 'permission' ), $GLOBALS['darven_epi_test_rest_dispatch_log'] );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_option_reads'] );
+	}
+
+	public function test_rest_dispatch_returns_not_found_for_an_unknown_product_before_capability_mapping(): void {
+		$GLOBALS['darven_epi_test_current_user_can'] = false;
+		$this->getSubject()->register();
+
+		$response = darven_epi_test_dispatch_rest_request(
+			'darven-precos-parcelados/v1', 'GET', '/products/404/settings', new WP_REST_Request( array( 'id' => 404 ) )
+		);
+
+		self::assertSame( 404, $response->get_status() );
+		self::assertSame( 'darven_epi_product_not_found', $response->get_data()['code'] );
+		self::assertSame( array( 'permission', 'callback' ), $GLOBALS['darven_epi_test_rest_dispatch_log'] );
+		self::assertArrayNotHasKey( 'darven_epi_test_capability_check', $GLOBALS );
+	}
+
+	public function test_rest_dispatch_keeps_unauthorized_existing_products_out_of_handlers(): void {
+		$GLOBALS['darven_epi_test_current_user_can'] = false;
+		$GLOBALS['darven_epi_test_products'][42] = new WC_Product( '100.00', 'simple', null, array(), 42 );
+		$this->getSubject()->register();
+
+		$response = darven_epi_test_dispatch_rest_request(
+			'darven-precos-parcelados/v1', 'GET', '/products/42/settings', new WP_REST_Request( array( 'id' => 42 ) )
+		);
+
+		self::assertSame( 403, $response->get_status() );
+		self::assertSame( 'darven_epi_forbidden', $response->get_data()['code'] );
+		self::assertSame( array( 'permission' ), $GLOBALS['darven_epi_test_rest_dispatch_log'] );
+		self::assertSame( array( 'edit_post', 42 ), $GLOBALS['darven_epi_test_capability_check'] );
 	}
 
 	public function test_get_settings_normalizes_legacy_storage_without_writing_it(): void {

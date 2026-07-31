@@ -35,16 +35,21 @@ final class ProductOptionsController {
 	}
 
 	public function save( \WC_Product $product ): void {
+		if ( ! array_key_exists( '_darven_epi_is_incash_enabled', $_POST )
+			&& ! array_key_exists( '_darven_epi_is_installment_enabled', $_POST ) ) {
+			return;
+		}
+
 		if ( ! current_user_can( 'edit_post', $product->get_id() ) ) {
 			return;
-		}
-		if ( ! isset( $_POST['woocommerce_meta_nonce'] ) ) {
-			return;
-		}
+	}
+	if ( ! isset( $_POST['woocommerce_meta_nonce'] ) ) {
+		return;
+	}
 		$nonce = sanitize_text_field( wp_unslash( $_POST['woocommerce_meta_nonce'] ) );
-		if ( ! wp_verify_nonce( $nonce, 'woocommerce_save_data' ) ) {
-			return;
-		}
+	if ( ! wp_verify_nonce( $nonce, 'woocommerce_save_data' ) ) {
+		return;
+	}
 
 		$incash_value = isset( $_POST['_darven_epi_is_incash_enabled'] ) && is_string( $_POST['_darven_epi_is_incash_enabled'] )
 			? sanitize_text_field( wp_unslash( $_POST['_darven_epi_is_incash_enabled'] ) )
