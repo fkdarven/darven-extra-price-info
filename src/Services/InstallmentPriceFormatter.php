@@ -56,7 +56,9 @@ final class InstallmentPriceFormatter {
 			'installments'
 		);
 
-		if ( 'popup' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' ) ) {
+		$mode = (string) ( $this->general_settings['darven_epi_mode_of_view'] ?? '' );
+
+		if ( 'popup' === $mode ) {
 			$statement = $prefix
 				. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
 				. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_table[1] ) ) . '</span>'
@@ -64,26 +66,20 @@ final class InstallmentPriceFormatter {
 
 			return $this->markup_builder->div(
 				'installments-price-statement darven-epi-installments-price-statement',
-				$statement,
+				$statement . $this->getPopupMarkup( $price_table[0] ),
 				'installments'
 			);
 		}
 
-		if ( 'nofee' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' ) ) {
+		if ( 'nofee' === $mode ) {
 			$statement = $prefix
 				. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
 				. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $installment_price ) ) . '</span>'
 				. $suffix;
-			$popup_content = '<div class="messagepop pop darven-epi-installments-popup" aria-hidden="true">'
-				. $price_table[0]
-				. '</div>';
-			$popup_toggle = '<button type="button" class="darven-epi-installments-toggle" aria-expanded="false">'
-				. (string) ( $this->general_settings['darven_epi_popup_text'] ?? '' )
-				. '</button>';
 
 			return $this->markup_builder->div(
 				'installments-price-statement darven-epi-installments-price-statement',
-				$statement . $popup_content . $popup_toggle,
+				$statement . $this->getPopupMarkup( $price_table[0] ),
 				'installments'
 			);
 		}
@@ -98,6 +94,62 @@ final class InstallmentPriceFormatter {
 			$statement,
 			'installments'
 		);
+	}
+
+	private function getPopupMarkup( string $price_table ): string {
+		$instance_id = $this->getPopupInstanceId();
+		$dialog_id   = $instance_id . '-dialog';
+		$title_id    = $instance_id . '-title';
+		$popup_text  = wp_kses(
+			(string) ( $this->general_settings['darven_epi_popup_text'] ?? '' ),
+			array(
+				'br'   => array(),
+				'b'    => array(),
+				'em'   => array(),
+				'i'    => array(),
+				'span' => array(
+					'class' => array(),
+					'style' => array(),
+				),
+			)
+		);
+		$popup_label = trim(
+			html_entity_decode( wp_strip_all_tags( $popup_text ), ENT_QUOTES | ENT_HTML5, 'UTF-8' )
+		);
+
+		if ( '' === $popup_label ) {
+			$popup_label = __( 'View installment options', 'darven-epi' );
+			$popup_text  = esc_html( $popup_label );
+		}
+
+		$title       = esc_html( __( 'Installment options', 'darven-epi' ) );
+		$close_label = esc_attr( __( 'Close installment options', 'darven-epi' ) );
+
+		$popup = '<div id="' . esc_attr( $dialog_id )
+			. '" class="messagepop pop darven-epi-installments-popup" hidden aria-hidden="true"'
+			. ' role="dialog" aria-modal="true" aria-labelledby="' . esc_attr( $title_id ) . '">'
+			. '<div class="darven-epi-installments-backdrop" aria-hidden="true"></div>'
+			. '<div class="darven-epi-installments-dialog" role="document">'
+			. '<h2 id="' . esc_attr( $title_id )
+			. '" class="screen-reader-text darven-epi-installments-title">' . $title . '</h2>'
+			. '<button type="button" class="darven-epi-installments-close" aria-label="' . $close_label . '">'
+			. '<span aria-hidden="true">&times;</span>'
+			. '</button>'
+			. '<div class="darven-epi-installments-table-wrap">' . $price_table . '</div>'
+			. '</div>'
+			. '</div>';
+		$toggle = '<button type="button" class="darven-epi-installments-toggle" aria-expanded="false" aria-controls="'
+			. esc_attr( $dialog_id ) . '" aria-label="' . esc_attr( $popup_label ) . '">' . $popup_text . '</button>';
+
+		return $popup . $toggle;
+	}
+
+	private function getPopupInstanceId(): string {
+		if ( function_exists( 'wp_unique_id' ) ) {
+			return wp_unique_id( 'darven-epi-installments-' );
+		}
+
+		return uniqid( 'darven-epi-installments-' );
 	}
 
 	public function getPriceTable( float $price ): array {

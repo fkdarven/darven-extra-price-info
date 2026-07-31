@@ -61,7 +61,7 @@ final class InstallmentPriceFormatterTest extends TestCase {
 		self::assertSame( $first_result, $second_result );
 	}
 
-	public function test_popup_markup_uses_repeatable_classes_and_accessible_attributes(): void {
+	public function test_nofee_popup_preserves_legacy_component_classes(): void {
 		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
 			$this->getDefaultGeneralSettings(),
 			array(
@@ -73,14 +73,12 @@ final class InstallmentPriceFormatterTest extends TestCase {
 
 		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
 
-		self::assertStringNotContainsString( ' id=', $result );
+		self::assertStringContainsString( 'installments-price-statement darven-epi-installments-price-statement', $result );
+		self::assertStringContainsString( 'messagepop pop darven-epi-installments-popup', $result );
+		self::assertStringContainsString( 'installments_table darven-epi-installments-table', $result );
 		self::assertStringContainsString( 'darven-epi-installments-table', $result );
 		self::assertStringContainsString( 'darven-epi-installments-popup', $result );
-		self::assertStringContainsString(
-			'<button type="button" class="darven-epi-installments-toggle" aria-expanded="false">',
-			$result
-		);
-		self::assertStringContainsString( 'aria-hidden="true"', $result );
+		self::assertStringContainsString( 'class="darven-epi-installments-toggle"', $result );
 	}
 
 	public function test_installments_table_has_balanced_rows(): void {

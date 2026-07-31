@@ -86,24 +86,91 @@
     z-index:100;
 }
 
-.darven-epi-installments-popup {
-    background-color:#FFFFFF;
-    border: dotted 1px black;
-
-    cursor:default;
-    display:none;
-    margin-top: 15px;
-    position:absolute;
-    text-align:left;
-    z-index:50;
-    padding: 25px 25px 20px;
+.darven-epi-installments-toggle:focus-visible {
+	outline: 3px solid #1f75cc;
+	outline-offset: 3px;
 }
 
-label {
-    display: block;
-    margin-bottom: 3px;
-    padding-left: 15px;
-    text-indent: -15px;
+.darven-epi-installments-popup {
+	align-items: center;
+	cursor: default;
+	display: grid;
+	inset: 0;
+	justify-items: center;
+	padding: 20px;
+	position: fixed;
+	text-align: left;
+	z-index: 99999999;
+}
+
+.darven-epi-installments-popup[hidden] {
+	display: none;
+}
+
+.darven-epi-installments-backdrop {
+	background: rgba(0, 0, 0, 0.58);
+	cursor: pointer;
+	inset: 0;
+	position: absolute;
+}
+
+.darven-epi-installments-dialog {
+	animation: darven-epi-popup-in 160ms ease-out;
+	background-color: #fff;
+	border: 1px solid #d7d7d7;
+	border-radius: 8px;
+	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+	box-sizing: border-box;
+	max-height: calc(100vh - 40px);
+	max-width: 520px;
+	overflow: hidden;
+	padding: 48px 24px 24px;
+	position: relative;
+	width: 100%;
+	z-index: 1;
+}
+
+.darven-epi-installments-close {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	border-radius: 4px;
+	color: inherit;
+	cursor: pointer;
+	display: flex;
+	font: inherit;
+	font-size: 28px;
+	height: 40px;
+	justify-content: center;
+	padding: 0;
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	width: 40px;
+}
+
+.darven-epi-installments-close:focus-visible {
+	outline: 3px solid #1f75cc;
+	outline-offset: 3px;
+}
+
+.darven-epi-installments-table-wrap {
+	max-height: calc(100vh - 136px);
+	overflow: auto;
+	overscroll-behavior: contain;
+}
+
+.darven-epi-installments-title {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal;
 }
 
 .darven-epi-installments-popup p,
@@ -111,4 +178,41 @@ label {
     border-bottom: 1px solid #EFEFEF;
     margin: 8px 0;
     padding-bottom: 8px;
+}
+
+@keyframes darven-epi-popup-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 480px) {
+
+	.darven-epi-installments-popup {
+		padding: 12px;
+	}
+
+	.darven-epi-installments-dialog {
+		max-height: calc(100vh - 24px);
+		padding: 48px 16px 16px;
+	}
+
+	.darven-epi-installments-table-wrap {
+		max-height: calc(100vh - 112px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.darven-epi-installments-dialog {
+		animation: none;
+		scroll-behavior: auto;
+	}
 }

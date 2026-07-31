@@ -324,6 +324,16 @@ function esc_attr( $value ): string {
 	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
 }
 
+function esc_html( $value ): string {
+	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+}
+
+function wp_unique_id( $prefix = '' ): string {
+	$GLOBALS['darven_epi_test_unique_id'] = ( $GLOBALS['darven_epi_test_unique_id'] ?? 0 ) + 1;
+
+	return (string) $prefix . $GLOBALS['darven_epi_test_unique_id'];
+}
+
 class WC_Product {
 	private $id;
 	private $meta;
