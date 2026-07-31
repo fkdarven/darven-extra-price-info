@@ -63,6 +63,10 @@ final class AdminAssetsTest extends TestCase {
 			self::assertNotContains( $unsupported_dependency, $product_asset['dependencies'] );
 		}
 		self::assertContains( 'wp-element', $settings_asset['dependencies'] );
+		self::assertContains( 'wp-api-fetch', $product_asset['dependencies'] );
+		self::assertContains( 'wp-components', $product_asset['dependencies'] );
+		self::assertContains( 'wp-element', $product_asset['dependencies'] );
+		self::assertContains( 'wp-i18n', $product_asset['dependencies'] );
 	}
 
 	/**

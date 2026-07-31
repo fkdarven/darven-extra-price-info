@@ -1,1 +1,33 @@
+.darven-precos-parcelados-product-options {
+	box-sizing: border-box;
+	padding: 12px;
 
+	&--loading {
+		display: flex;
+		min-height: 72px;
+		align-items: center;
+		justify-content: center;
+	}
+
+	h4 {
+		margin: 0 0 12px;
+	}
+
+	fieldset {
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+
+	.components-notice {
+		margin: 0 0 12px;
+	}
+
+	&__saving {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 8px;
+	}
+}
