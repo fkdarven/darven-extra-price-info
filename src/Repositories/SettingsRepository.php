@@ -104,7 +104,7 @@ final class SettingsRepository {
 		$settings             = $this->getNormalizedSettings();
 		$settings[ $section ] = $values;
 
-		return $this->saveDocumentInternal( $settings, array( $section ), $deferred_legacy_option );
+		return $this->saveDocumentInternal( $settings, array( $section ), $deferred_legacy_option, array( $section ) );
 	}
 
 	/**
@@ -122,12 +122,14 @@ final class SettingsRepository {
 		return $this->saveDocumentInternal( $document, $sections, '' );
 	}
 
-	private function saveDocumentInternal( array $document, array $submitted_sections, string $deferred_legacy_option ): bool {
+	private function saveDocumentInternal( array $document, array $submitted_sections, string $deferred_legacy_option, array $replaced_sections = array() ): bool {
 		$settings = $this->getNormalizedSettings();
 
 		foreach ( self::SECTION_NAMES as $section ) {
 			if ( isset( $document[ $section ] ) && is_array( $document[ $section ] ) ) {
-				$settings[ $section ] = array_merge( $settings[ $section ], $document[ $section ] );
+				$settings[ $section ] = in_array( $section, $replaced_sections, true )
+					? $document[ $section ]
+					: array_merge( $settings[ $section ], $document[ $section ] );
 			}
 		}
 

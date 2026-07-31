@@ -221,6 +221,34 @@ final class LegacySettingsSyncTest extends TestCase {
 		self::assertSame( array(), $GLOBALS['darven_epi_test_actions'] );
 	}
 
+	public function test_registered_general_settings_save_removes_an_unchecked_plugin_field_from_an_existing_v2_document(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array(
+			'darven_epi_incash_is_enabled' => 'darven_epi_incash_is_enabled',
+			'third_party_general_key'       => 'retain',
+		);
+		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = array(
+			'schema_version' => 2,
+			'general'        => array(
+				'darven_epi_incash_is_enabled' => 'darven_epi_incash_is_enabled',
+			),
+			'positions'      => array(),
+			'display'        => array(),
+			'compatibility'  => array(),
+		);
+		( new GeneralFields() )->register();
+
+		update_option(
+			'darven_epi_option_general', array( 'darven_epi_mode_of_view' => 'popup' )
+		);
+
+		$legacy_general = $GLOBALS['darven_epi_test_options']['darven_epi_option_general'];
+		$canonical      = $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ];
+
+		self::assertArrayNotHasKey( 'darven_epi_incash_is_enabled', $legacy_general );
+		self::assertArrayNotHasKey( 'darven_epi_incash_is_enabled', $canonical['general'] );
+		self::assertSame( 'popup', $canonical['general']['darven_epi_mode_of_view'] );
+	}
+
 	public function test_unchanged_active_legacy_option_synchronizes_without_a_second_active_write(): void {
 		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array(
 			'darven_epi_mode_of_view' => 'popup',

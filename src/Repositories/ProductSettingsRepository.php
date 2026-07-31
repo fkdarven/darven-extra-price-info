@@ -33,10 +33,15 @@ final class ProductSettingsRepository {
 	}
 
 	public function save( \WC_Product $product, array $settings ): bool {
+		$current_settings = $this->getSettings( $product );
 		$canonical_settings = array(
 			'schema_version'       => 1,
-			'disable_incash'       => true === ( $settings['disable_incash'] ?? false ),
-			'disable_installments' => true === ( $settings['disable_installments'] ?? false ),
+			'disable_incash'       => array_key_exists( 'disable_incash', $settings )
+				? true === $settings['disable_incash']
+				: $current_settings['disable_incash'],
+			'disable_installments' => array_key_exists( 'disable_installments', $settings )
+				? true === $settings['disable_installments']
+				: $current_settings['disable_installments'],
 		);
 		$legacy_meta = $this->adapter->projectToLegacyMeta( $canonical_settings );
 

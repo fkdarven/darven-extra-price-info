@@ -61,6 +61,29 @@ final class ProductSettingsRepositoryTest extends TestCase {
 		self::assertSame( 0, $product->get_save_count() );
 	}
 
+	public function test_save_preserves_existing_flags_that_are_not_in_a_partial_payload(): void {
+		$product = new WC_Product(
+			'100.00', 'simple', null, array(
+				ProductSettingsRepository::META_KEY              => array(
+					'schema_version'       => 1,
+					'disable_incash'       => false,
+					'disable_installments' => true,
+				),
+				'_darven_epi_is_incash_enabled'                  => 'no',
+				'_darven_epi_is_installment_enabled'             => 'yes',
+			)
+		);
+
+		$result = $this->get_repository()->save( $product, array( 'disable_incash' => true ) );
+
+		self::assertTrue( $result );
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => true ), $product->get_meta( ProductSettingsRepository::META_KEY, true )
+		);
+		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
+		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
+	}
+
 	private function get_repository(): ProductSettingsRepository {
 		return new ProductSettingsRepository( new LegacyProductSettingsAdapter() );
 	}
