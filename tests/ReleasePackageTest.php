@@ -21,6 +21,14 @@ final class ReleasePackageTest extends TestCase {
 	}
 
 	public function test_builds_a_runtime_only_distribution_archive(): void {
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'docs/brand/darven-precos-parcelados-logo.svg' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'docs/brand/darven-precos-parcelados-banner.svg' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/icon.svg' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/icon-128x128.png' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/icon-256x256.png' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/banner-772x250.png' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/banner-1544x500.png' );
+
 		$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
 
 		self::assertSame( 0, $result['status'], $result['output'] );
@@ -53,6 +61,8 @@ final class ReleasePackageTest extends TestCase {
 		self::assertNotEmpty( $translation_json );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/tests/bootstrap.php' ) );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/.superpowers/release-3.3.0-plan.md' ) );
+		self::assertFalse( $archive->locateName( 'darven-extra-price-info/docs/brand/darven-precos-parcelados-logo.svg' ) );
+		self::assertFalse( $archive->locateName( 'darven-extra-price-info/wordpress-org-assets/icon.svg' ) );
 
 		$forbidden_segments = array(
 			'.git/',
@@ -63,6 +73,7 @@ final class ReleasePackageTest extends TestCase {
 			'.worktrees/',
 			'dist/',
 			'docs/',
+			'wordpress-org-assets/',
 			'tests/',
 			'node_modules/',
 			'admin/src/',
@@ -135,6 +146,34 @@ final class ReleasePackageTest extends TestCase {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore the process environment after the child builder exits.
 			putenv( 'PATH=' . $original_path );
 
+			if ( false === $original_composer ) {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore an unset Composer override.
+				putenv( 'COMPOSER_BINARY' );
+			} else {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore the explicit Composer override.
+				putenv( 'COMPOSER_BINARY=' . $original_composer );
+			}
+		}
+
+		self::assertSame( 0, $result['status'], $result['output'] );
+		self::assertFileExists( $this->archive_path );
+	}
+
+	public function test_executes_a_composer_phar_override_with_php(): void {
+		$composer_phar = 'C:\\laragon\\bin\\composer\\composer.phar';
+
+		if ( ! is_file( $composer_phar ) ) {
+			self::markTestSkipped( 'The local Composer PHAR is not available.' );
+		}
+
+		$original_composer = getenv( 'COMPOSER_BINARY' );
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Exercise the documented Composer override in the child builder.
+		putenv( 'COMPOSER_BINARY=' . $composer_phar );
+
+		try {
+			$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
+		} finally {
 			if ( false === $original_composer ) {
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore an unset Composer override.
 				putenv( 'COMPOSER_BINARY' );

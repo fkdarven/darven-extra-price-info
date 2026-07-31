@@ -251,6 +251,10 @@ function darven_epi_release_composer_command(): string {
 	$composer = getenv( 'COMPOSER_BINARY' );
 
 	if ( false !== $composer && '' !== $composer ) {
+		if ( is_file( $composer ) && 'phar' === strtolower( pathinfo( $composer, PATHINFO_EXTENSION ) ) ) {
+			return escapeshellarg( darven_epi_release_composer_php_binary() ) . ' ' . escapeshellarg( $composer );
+		}
+
 		return escapeshellarg( $composer );
 	}
 

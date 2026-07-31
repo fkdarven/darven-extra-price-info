@@ -1,9 +1,9 @@
 <?php
 /*
- * Plugin Name: Darven Múltiplos Preços Informativos
+ * Plugin Name: Darven Preços Parcelados
  * @package darven-extra-price-info
  * Plugin URI: wordpress.org/plugins/darven-multiplos-precos-informativos/
- * Description: This plugin is used to show multiple prices for a product. Incash and installments price.
+ * Description: Exibe preços à vista e parcelados no WooCommerce. Anteriormente: Darven Múltiplos Preços Informativos.
  * Version: 4.0.0
  * Author: Leticia Moreira
  * Author URI: https://darven.wtf

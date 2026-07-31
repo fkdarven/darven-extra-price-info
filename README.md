@@ -1,4 +1,6 @@
-# Darven Multiplos Preços Informativos
+# Darven Preços Parcelados
+
+Anteriormente: Darven Múltiplos Preços Informativos.
 
 Esse é o repositório do plugin WordPress DMPI. A versão aqui não necessariamente corresponde a que está no WordPress, visto que, primeiro atualizo aqui e posteriormente lá.
 

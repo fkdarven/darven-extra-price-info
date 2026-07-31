@@ -10,8 +10,8 @@ final class ReactPage {
 	public function addMenuPage(): void {
 		add_submenu_page(
 			'woocommerce',
-			__( 'Darven Installment Prices', 'darven-multiplos-precos-informativos' ),
-			__( 'Darven Installment Prices', 'darven-multiplos-precos-informativos' ),
+			__( 'Darven Preços Parcelados', 'darven-multiplos-precos-informativos' ),
+			__( 'Darven Preços Parcelados', 'darven-multiplos-precos-informativos' ),
 			'manage_options',
 			'darven-epi-admin',
 			array( $this, 'renderPage' )

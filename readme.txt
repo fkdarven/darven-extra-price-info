@@ -1,4 +1,4 @@
-=== Darven Múltiplos Preços Informativos ===
+=== Darven Preços Parcelados ===
 Contributors: fkdarven
 Tags: parcelas, parcelamento, preços, preço à vista, preço parcelado
 Requires at least: 5.0
@@ -11,6 +11,8 @@ Language: pt_BR, en_US
 Requires WooCommerce
 
 Mostra múltiplos preços em um produto. Preço á vista e com parcelamento (preço parcelado).
+
+Anteriormente: Darven Múltiplos Preços Informativos.
 
 == Description ==
 
@@ -74,6 +76,7 @@ Os juros na primeira parcela serão aplicados somente a 1 parcela
 
 == Changelog ==
 = 4.0.0 =
+    • Nova identidade pública: Darven Preços Parcelados. Anteriormente: Darven Múltiplos Preços Informativos.
     • Preparada a infraestrutura de ativos administrativos separados para configurações e opções de produto.
 
 = 3.3.1 =
