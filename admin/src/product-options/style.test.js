@@ -5,8 +5,10 @@ const styleArtifacts = [
 	{
 		name: 'SCSS source',
 		path: path.join( __dirname, 'style.scss' ),
-		scopeSelector: /\.darven-precos-parcelados-product-options\s*\{/,
-		labelRule: /&__field\s*\{[\s\S]*?label\s*\{([\s\S]*?)\n\t\t\}/,
+		scopeSelector:
+			/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options__field\s+label\s*\{/,
+		labelRule:
+			/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options__field\s+label\s*\{([\s\S]*?)\}/,
 	},
 	{
 		name: 'distributed LTR stylesheet',
@@ -15,9 +17,9 @@ const styleArtifacts = [
 			'../../../build/product-options/style-index.css'
 		),
 		scopeSelector:
-			/\.darven-precos-parcelados-product-options__field\s+label\s*\{/,
+			/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options__field\s+label\s*\{/,
 		labelRule:
-			/\.darven-precos-parcelados-product-options__field\s+label\s*\{([^}]*)\}/,
+			/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options__field\s+label\s*\{([^}]*)\}/,
 	},
 	{
 		name: 'distributed RTL stylesheet',
@@ -26,9 +28,9 @@ const styleArtifacts = [
 			'../../../build/product-options/style-index-rtl.css'
 		),
 		scopeSelector:
-			/\.darven-precos-parcelados-product-options__field\s+label\s*\{/,
+			/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options__field\s+label\s*\{/,
 		labelRule:
-			/\.darven-precos-parcelados-product-options__field\s+label\s*\{([^}]*)\}/,
+			/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options__field\s+label\s*\{([^}]*)\}/,
 	},
 ];
 
