@@ -30,6 +30,12 @@ final class ReleasePackageTest extends TestCase {
 		self::assertTrue( $archive->open( $this->archive_path ) );
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/darven-extra-price-info.php' ) );
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/vendor/autoload.php' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/settings/index.js' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/settings/index.asset.php' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/settings/style-index.css' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/index.js' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/index.asset.php' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/style-index.css' ) );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/tests/bootstrap.php' ) );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/.superpowers/release-3.3.0-plan.md' ) );
 
@@ -43,6 +49,8 @@ final class ReleasePackageTest extends TestCase {
 			'dist/',
 			'docs/',
 			'tests/',
+			'node_modules/',
+			'admin/src/',
 			'vendor/bin/',
 			'composer.json',
 			'composer.lock',

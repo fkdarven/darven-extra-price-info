@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "build:settings": "wp-scripts build --webpack-src-dir=admin/src/settings --output-path=build/settings",
+    "build:product-options": "wp-scripts build --webpack-src-dir=admin/src/product-options --output-path=build/product-options",
+    "build:admin": "npm run build:settings && npm run build:product-options",
+    "start:settings": "wp-scripts start --webpack-src-dir=admin/src/settings --output-path=build/settings",
+    "start:product-options": "wp-scripts start --webpack-src-dir=admin/src/product-options --output-path=build/product-options",
+    "i18n:pot": "wp i18n make-pot . languages/darven-multiplos-precos-informativos.pot --domain=darven-multiplos-precos-informativos --exclude=node_modules,build,vendor",
+    "i18n:json": "wp i18n make-json languages --no-purge"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.0.0"
+  }
+}

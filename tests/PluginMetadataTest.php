@@ -13,7 +13,8 @@ final class PluginMetadataTest extends TestCase {
 		);
 
 		self::assertIsString( $plugin_headers );
-		self::assertMatchesRegularExpression( '/^[ \t*#@]*Requires PHP:\s*7\.4\s*$/mi', $plugin_headers );
+		self::assertMatchesRegularExpression( '/^[ \t*#@]*Requires at least:\s*5\.0\s*$/mi', $plugin_headers );
+		self::assertMatchesRegularExpression( '/^[ \t*#@]*Requires PHP:\s*8\.0\s*$/mi', $plugin_headers );
 		self::assertMatchesRegularExpression( '/^[ \t*#@]*Requires Plugins:\s*woocommerce\s*$/mi', $plugin_headers );
 	}
 }

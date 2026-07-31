@@ -4,3 +4,4 @@
 /.worktrees/
 /.superpowers/
 /dist/
+/node_modules/
