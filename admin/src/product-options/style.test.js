@@ -41,6 +41,14 @@ const inheritedWooCommerceProperties = [
 	/box-sizing\s*:\s*border-box(?:\s*;|\s*$)/,
 ];
 
+const legendArtifacts = styleArtifacts.map( ( artifact ) => ( {
+	...artifact,
+	scopeSelector:
+		/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options\s+fieldset\s+legend\s*\{/,
+	legendRule:
+		/#darven-precos-parcelados-product-options-panel\s+\.darven-precos-parcelados-product-options\s+fieldset\s+legend\s*\{([\s\S]*?)\}/,
+} ) );
+
 describe( 'product options styles', () => {
 	it.each( styleArtifacts )(
 		'keeps toggle labels inside the component in the $name',
@@ -52,6 +60,20 @@ describe( 'product options styles', () => {
 			expect( labelRule ).not.toBeNull();
 			inheritedWooCommerceProperties.forEach( ( property ) => {
 				expect( labelRule[ 1 ] ).toMatch( property );
+			} );
+		}
+	);
+
+	it.each( legendArtifacts )(
+		'keeps fieldset legends inside the component in the $name',
+		( artifact ) => {
+			const stylesheet = fs.readFileSync( artifact.path, 'utf8' );
+			const legendRule = stylesheet.match( artifact.legendRule );
+
+			expect( stylesheet ).toMatch( artifact.scopeSelector );
+			expect( legendRule ).not.toBeNull();
+			inheritedWooCommerceProperties.forEach( ( property ) => {
+				expect( legendRule[ 1 ] ).toMatch( property );
 			} );
 		}
 	);
