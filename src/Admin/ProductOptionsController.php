@@ -75,7 +75,7 @@ final class ProductOptionsController {
 			'disable_installments' => 'yes' === $installments_value,
 		);
 
-		$this->repository->save( $product, $settings );
+		$this->repository->save( $product, $settings, false );
 	}
 
 }

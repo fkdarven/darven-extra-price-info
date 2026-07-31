@@ -323,7 +323,7 @@ function darven_epi_release_is_excluded( $relative_path ): bool {
 
 	$filename = end( $parts );
 
-	return in_array( $filename, $files, true ) || '~' === substr( $filename, -1 ) || darven_epi_release_is_git_ignored( $relative_path );
+	return 1 === preg_match( '/\.test\.js$/', $filename ) || in_array( $filename, $files, true ) || '~' === substr( $filename, -1 ) || darven_epi_release_is_git_ignored( $relative_path );
 }
 
 /**
@@ -531,6 +531,10 @@ function darven_epi_release_validate_zip( $archive_path ): void {
 		if ( 0 !== strpos( $name, DARVEN_EPI_RELEASE_SLUG . '/' ) ) {
 			$archive->close();
 			throw new RuntimeException( 'Archive entry has an invalid root: ' . $name );
+		}
+		if ( 1 === preg_match( '/\.test\.js$/', $name ) ) {
+			$archive->close();
+			throw new RuntimeException( 'Archive contains JavaScript test: ' . $name );
 		}
 
 		foreach ( $forbidden as $segment ) {

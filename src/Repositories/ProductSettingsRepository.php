@@ -32,7 +32,7 @@ final class ProductSettingsRepository {
 		);
 	}
 
-	public function save( \WC_Product $product, array $settings ): bool {
+	public function save( \WC_Product $product, array $settings, bool $persist = true ): bool {
 		$current_settings = $this->getSettings( $product );
 		$canonical_settings = array(
 			'schema_version'       => 1,
@@ -48,6 +48,9 @@ final class ProductSettingsRepository {
 		$product->update_meta_data( self::META_KEY, $canonical_settings );
 		$product->update_meta_data( self::LEGACY_INCASH_META_KEY, $legacy_meta[ self::LEGACY_INCASH_META_KEY ] );
 		$product->update_meta_data( self::LEGACY_INSTALLMENTS_META_KEY, $legacy_meta[ self::LEGACY_INSTALLMENTS_META_KEY ] );
+		if ( $persist ) {
+			$product->save();
+		}
 
 		return $canonical_settings === $product->get_meta( self::META_KEY, true )
 			&& $legacy_meta[ self::LEGACY_INCASH_META_KEY ] === $product->get_meta( self::LEGACY_INCASH_META_KEY, true )

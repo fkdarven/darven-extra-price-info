@@ -89,6 +89,7 @@ final class ReleasePackageTest extends TestCase {
 			$name = $archive->getNameIndex( $index );
 
 			self::assertStringStartsWith( 'darven-extra-price-info/', $name );
+			self::assertSame( 0, preg_match( '/\.test\.js$/', $name ), 'Release archive contains a JavaScript test: ' . $name );
 
 			foreach ( $forbidden_segments as $segment ) {
 				self::assertStringNotContainsString( $segment, $name );

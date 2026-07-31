@@ -204,7 +204,7 @@ describe( 'SettingsApp', () => {
 		);
 		click(
 			Array.from( container.querySelectorAll( 'button' ) ).find(
-				( button ) => 'Visual' === button.textContent
+				( button ) => 'Display' === button.textContent
 			)
 		);
 		change(
