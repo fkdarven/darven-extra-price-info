@@ -25,6 +25,10 @@
 		margin-bottom: 16px;
 
 		label {
+			float: none;
+			margin: 0;
+			width: auto;
+			box-sizing: border-box;
 			display: flex;
 			align-items: flex-start;
 			gap: 8px;
