@@ -118,12 +118,12 @@ final class InstallmentPriceFormatter {
 		);
 
 		if ( '' === $popup_label ) {
-			$popup_label = __( 'View installment options', 'darven-epi' );
+		$popup_label = __( 'View installment options', 'darven-multiplos-precos-informativos' );
 			$popup_text  = esc_html( $popup_label );
 		}
 
-		$title       = esc_html( __( 'Installment options', 'darven-epi' ) );
-		$close_label = esc_attr( __( 'Close installment options', 'darven-epi' ) );
+		$title       = esc_html( __( 'Installment options', 'darven-multiplos-precos-informativos' ) );
+		$close_label = esc_attr( __( 'Close installment options', 'darven-multiplos-precos-informativos' ) );
 
 		$popup = '<div id="' . esc_attr( $dialog_id )
 			. '" class="messagepop pop darven-epi-installments-popup" hidden aria-hidden="true"'

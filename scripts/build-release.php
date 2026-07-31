@@ -302,6 +302,7 @@ function darven_epi_release_is_excluded( $relative_path ): bool {
 		'.worktrees',
 		'dist',
 		'docs',
+		'node_modules',
 		'tests',
 		'vendor',
 	);

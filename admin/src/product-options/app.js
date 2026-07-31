@@ -56,7 +56,7 @@ class ProductOptionsApp extends Component {
 							error,
 							__(
 								'The product options could not be loaded.',
-								'darven-epi'
+								'darven-multiplos-precos-informativos'
 							)
 						),
 					} );
@@ -86,7 +86,7 @@ class ProductOptionsApp extends Component {
 					settings,
 					notice: {
 						status: 'success',
-						message: __( 'Product options saved.', 'darven-epi' ),
+						message: __( 'Product options saved.', 'darven-multiplos-precos-informativos' ),
 					},
 				} );
 			}
@@ -99,7 +99,7 @@ class ProductOptionsApp extends Component {
 							error,
 							__(
 								'The product options could not be saved.',
-								'darven-epi'
+								'darven-multiplos-precos-informativos'
 							)
 						),
 						canRetry: true,
@@ -136,7 +136,7 @@ class ProductOptionsApp extends Component {
 						<p>
 							{ __(
 								'The selected change has not been saved yet.',
-								'darven-epi'
+								'darven-multiplos-precos-informativos'
 							) }
 						</p>
 						<button
@@ -145,7 +145,7 @@ class ProductOptionsApp extends Component {
 							disabled={ this.state.isSaving }
 							onClick={ this.retrySave }
 						>
-							{ __( 'Retry save', 'darven-epi' ) }
+							{ __( 'Retry save', 'darven-multiplos-precos-informativos' ) }
 						</button>
 					</div>
 				) }
@@ -188,7 +188,7 @@ class ProductOptionsApp extends Component {
 						status: 'info',
 						message: __(
 							'Save the product before editing Darven options.',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						),
 					} ) }
 				</div>
@@ -203,7 +203,7 @@ class ProductOptionsApp extends Component {
 						role="progressbar"
 						aria-label={ __(
 							'Loading product options…',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						) }
 					/>
 				</div>
@@ -226,28 +226,28 @@ class ProductOptionsApp extends Component {
 				{ notice && this.renderNotice( notice ) }
 				<fieldset disabled={ isSaving }>
 					<legend>
-						{ __( 'Installment prices', 'darven-epi' ) }
+						{ __( 'Installment prices', 'darven-multiplos-precos-informativos' ) }
 					</legend>
 					{ this.renderToggle(
 						'disable_incash',
 						__(
 							'Disable cash price for this product',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						),
 						__(
 							'Hides the cash price only for the current product.',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						)
 					) }
 					{ this.renderToggle(
 						'disable_installments',
 						__(
 							'Disable installment price for this product',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						),
 						__(
 							'Hides the installment price only for the current product.',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						)
 					) }
 				</fieldset>
@@ -257,7 +257,7 @@ class ProductOptionsApp extends Component {
 						aria-live="polite"
 					>
 						<span className="darven-precos-parcelados-product-options__spinner" />
-						<span>{ __( 'Saving…', 'darven-epi' ) }</span>
+						<span>{ __( 'Saving…', 'darven-multiplos-precos-informativos' ) }</span>
 					</div>
 				) }
 			</div>

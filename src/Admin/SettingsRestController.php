@@ -101,7 +101,7 @@ final class SettingsRestController {
 		if ( ! is_array( $document ) ) {
 			return new \WP_Error(
 				'darven_epi_invalid_settings',
-				__( 'The settings payload must be an object.', 'darven-epi' ),
+				__( 'The settings payload must be an object.', 'darven-multiplos-precos-informativos' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -109,7 +109,7 @@ final class SettingsRestController {
 		if ( ! $this->settings_repository->saveDocument( $document ) ) {
 			return new \WP_Error(
 				'darven_epi_settings_save_failed',
-				__( 'The settings could not be saved.', 'darven-epi' ),
+				__( 'The settings could not be saved.', 'darven-multiplos-precos-informativos' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -137,7 +137,7 @@ final class SettingsRestController {
 		if ( ! is_array( $settings ) ) {
 			return new \WP_Error(
 				'darven_epi_invalid_product_settings',
-				__( 'The product settings payload must be an object.', 'darven-epi' ),
+				__( 'The product settings payload must be an object.', 'darven-multiplos-precos-informativos' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -150,7 +150,7 @@ final class SettingsRestController {
 		if ( ! $this->product_settings_repository->save( $product, $settings ) ) {
 			return new \WP_Error(
 				'darven_epi_product_settings_save_failed',
-				__( 'The product settings could not be saved.', 'darven-epi' ),
+				__( 'The product settings could not be saved.', 'darven-multiplos-precos-informativos' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -169,7 +169,7 @@ final class SettingsRestController {
 
 		return new \WP_Error(
 			'darven_epi_product_not_found',
-			__( 'The requested product was not found.', 'darven-epi' ),
+			__( 'The requested product was not found.', 'darven-multiplos-precos-informativos' ),
 			array( 'status' => 404 )
 		);
 	}
@@ -177,7 +177,7 @@ final class SettingsRestController {
 	private function forbiddenError(): \WP_Error {
 		return new \WP_Error(
 			'darven_epi_forbidden',
-			__( 'You are not allowed to manage these settings.', 'darven-epi' ),
+			__( 'You are not allowed to manage these settings.', 'darven-multiplos-precos-informativos' ),
 			array( 'status' => 403 )
 		);
 	}

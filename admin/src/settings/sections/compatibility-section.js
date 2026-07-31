@@ -17,11 +17,11 @@ class CompatibilitySection extends Component {
 			<div className="darven-precos-parcelados-admin__section">
 				<fieldset className="darven-precos-parcelados-admin__group">
 					<legend>
-						{ __( 'YITH Dynamic Pricing', 'darven-epi' ) }
+						{ __( 'YITH Dynamic Pricing', 'darven-multiplos-precos-informativos' ) }
 					</legend>
 					<div className="darven-precos-parcelados-admin__field">
 						<label htmlFor={ modeField }>
-							{ __( 'Compatibility mode', 'darven-epi' ) }
+							{ __( 'Compatibility mode', 'darven-multiplos-precos-informativos' ) }
 						</label>
 						<select
 							id={ modeField }
@@ -34,11 +34,11 @@ class CompatibilitySection extends Component {
 							<option value="auto">
 								{ __(
 									'Automatic (recommended)',
-									'darven-epi'
+									'darven-multiplos-precos-informativos'
 								) }
 							</option>
 							<option value="disabled">
-								{ __( 'Disabled', 'darven-epi' ) }
+								{ __( 'Disabled', 'darven-multiplos-precos-informativos' ) }
 							</option>
 						</select>
 					</div>
@@ -48,7 +48,7 @@ class CompatibilitySection extends Component {
 					>
 						{ __(
 							'Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing.',
-							'darven-epi'
+							'darven-multiplos-precos-informativos'
 						) }
 					</div>
 				</fieldset>

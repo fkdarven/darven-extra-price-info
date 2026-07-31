@@ -1,0 +1,303 @@
+# Copyright (C) 2026 Leticia Moreira
+# This file is distributed under the same license as the Darven Múltiplos Preços Informativos plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Darven Múltiplos Preços Informativos 4.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/4.0.0-darven-precos-parcelados\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-31T11:18:38-03:00\n"
+"PO-Revision-Date: 2026-07-31 00:00+0000\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: darven-multiplos-precos-informativos\n"
+
+#. Plugin Name of the plugin
+#: darven-extra-price-info.php
+msgid "Darven Múltiplos Preços Informativos"`r`nmsgstr "Darven Múltiplos Preços Informativos"
+
+#. Plugin URI of the plugin
+#: darven-extra-price-info.php
+msgid "wordpress.org/plugins/darven-multiplos-precos-informativos/"
+msgstr ""
+
+#. Description of the plugin
+#: darven-extra-price-info.php
+msgid "This plugin is used to show multiple prices for a product. Incash and installments price."
+msgstr ""
+
+#. Author of the plugin
+#: darven-extra-price-info.php
+msgid "Leticia Moreira"
+msgstr ""
+
+#. Author URI of the plugin
+#: darven-extra-price-info.php
+msgid "https://darven.wtf"
+msgstr ""
+
+#: admin/src/product-options/app.js:57
+msgid "The product options could not be loaded."`r`nmsgstr "Não foi possível carregar as opções do produto."
+
+#: admin/src/product-options/app.js:89
+msgid "Product options saved."`r`nmsgstr "Opções do produto salvas."
+
+#: admin/src/product-options/app.js:100
+msgid "The product options could not be saved."`r`nmsgstr "Não foi possível salvar as opções do produto."
+
+#: admin/src/product-options/app.js:137
+msgid "The selected change has not been saved yet."`r`nmsgstr "A alteração selecionada ainda não foi salva."
+
+#: admin/src/product-options/app.js:148
+msgid "Retry save"`r`nmsgstr "Tentar salvar novamente"
+
+#: admin/src/product-options/app.js:189
+msgid "Save the product before editing Darven options."`r`nmsgstr "Salve o produto antes de editar as opções do Darven."
+
+#: admin/src/product-options/app.js:204
+msgid "Loading product options…"`r`nmsgstr "Carregando opções do produto…"
+
+#: admin/src/product-options/app.js:229
+msgid "Installment prices"`r`nmsgstr "Preços parcelados"
+
+#: admin/src/product-options/app.js:233
+msgid "Disable cash price for this product"`r`nmsgstr "Desativar o preço à vista para este produto"
+
+#: admin/src/product-options/app.js:237
+msgid "Hides the cash price only for the current product."`r`nmsgstr "Oculta o preço à vista apenas para este produto."
+
+#: admin/src/product-options/app.js:244
+msgid "Disable installment price for this product"`r`nmsgstr "Desativar o preço parcelado para este produto"
+
+#: admin/src/product-options/app.js:248
+msgid "Hides the installment price only for the current product."`r`nmsgstr "Oculta o preço parcelado apenas para este produto."
+
+#: admin/src/product-options/app.js:260
+#: admin/src/settings/app.js:212
+msgid "Saving…"`r`nmsgstr "Salvando…"
+
+#: admin/src/settings/app.js:16
+msgid "General"`r`nmsgstr "Geral"
+
+#: admin/src/settings/app.js:17
+msgid "Display"`r`nmsgstr "Exibição"
+
+#: admin/src/settings/app.js:18
+msgid "Positions"`r`nmsgstr "Posições"
+
+#: admin/src/settings/app.js:19
+msgid "Compatibility"`r`nmsgstr "Compatibilidade"
+
+#: admin/src/settings/app.js:50
+msgid "The settings could not be loaded."`r`nmsgstr "Não foi possível carregar as configurações."
+
+#: admin/src/settings/app.js:92
+msgid "Settings saved."`r`nmsgstr "Configurações salvas."
+
+#: admin/src/settings/app.js:103
+msgid "The settings could not be saved."`r`nmsgstr "Não foi possível salvar as configurações."
+
+#: admin/src/settings/app.js:138
+msgid "Loading settings…"`r`nmsgstr "Carregando configurações…"
+
+#: admin/src/settings/app.js:161
+msgid "Darven Installment Prices"`r`nmsgstr "Darven Preços Parcelados"
+
+#: admin/src/settings/app.js:164
+msgid "Saving here also keeps the legacy settings synchronized for compatibility."`r`nmsgstr "Salvar aqui também mantém as configurações legadas sincronizadas para compatibilidade."
+
+#: admin/src/settings/app.js:173
+msgid "Settings sections"`r`nmsgstr "Seções de configurações"
+
+#: admin/src/settings/app.js:213
+msgid "Save settings"`r`nmsgstr "Salvar configurações"
+
+#: admin/src/settings/sections/compatibility-section.js:20
+msgid "YITH Dynamic Pricing"
+msgstr ""
+
+#: admin/src/settings/sections/compatibility-section.js:24
+msgid "Compatibility mode"`r`nmsgstr "Modo de compatibilidade"
+
+#: admin/src/settings/sections/compatibility-section.js:35
+msgid "Automatic (recommended)"`r`nmsgstr "Automático (recomendado)"
+
+#: admin/src/settings/sections/compatibility-section.js:41
+msgid "Disabled"`r`nmsgstr "Desativado"
+
+#: admin/src/settings/sections/compatibility-section.js:49
+msgid "Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing."
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:10
+msgid "Cash price color"`r`nmsgstr "Cor do preço à vista"
+
+#: admin/src/settings/sections/display-section.js:14
+msgid "Cash suffix color"`r`nmsgstr "Cor do sufixo do preço à vista"
+
+#: admin/src/settings/sections/display-section.js:18
+msgid "Cash prefix color"`r`nmsgstr "Cor do prefixo do preço à vista"
+
+#: admin/src/settings/sections/display-section.js:22
+msgid "Installment price color"`r`nmsgstr "Cor do preço parcelado"
+
+#: admin/src/settings/sections/display-section.js:26
+msgid "Installment suffix color"`r`nmsgstr "Cor do sufixo do parcelamento"
+
+#: admin/src/settings/sections/display-section.js:30
+msgid "Installment prefix color"`r`nmsgstr "Cor do prefixo do parcelamento"
+
+#: admin/src/settings/sections/display-section.js:34
+msgid "Installment number color"`r`nmsgstr "Cor do número da parcela"
+
+#: admin/src/settings/sections/display-section.js:41
+msgid "Cash price font size"`r`nmsgstr "Tamanho da fonte do preço à vista"
+
+#: admin/src/settings/sections/display-section.js:45
+msgid "Cash suffix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:49
+msgid "Cash prefix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:53
+msgid "Installment price font size"`r`nmsgstr "Tamanho da fonte do preço parcelado"
+
+#: admin/src/settings/sections/display-section.js:57
+msgid "Installment suffix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:61
+msgid "Installment prefix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:65
+msgid "Installment number font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:89
+msgid "Colors"`r`nmsgstr "Cores"
+
+#: admin/src/settings/sections/display-section.js:112
+msgid "Font sizes"`r`nmsgstr "Tamanhos de fonte"
+
+#: admin/src/settings/sections/general-section.js:11
+msgid "Enable cash discount"`r`nmsgstr "Ativar desconto à vista"
+
+#: admin/src/settings/sections/general-section.js:16
+msgid "Discount type"`r`nmsgstr "Tipo de desconto"
+
+#: admin/src/settings/sections/general-section.js:18
+msgid "Percent"`r`nmsgstr "Porcentagem"
+
+#: admin/src/settings/sections/general-section.js:19
+msgid "Fixed"`r`nmsgstr "Fixo"
+
+#: admin/src/settings/sections/general-section.js:24
+msgid "Discount value"`r`nmsgstr "Valor do desconto"
+
+#: admin/src/settings/sections/general-section.js:28
+msgid "Minimum price for the discount"`r`nmsgstr "Preço mínimo para o desconto"
+
+#: admin/src/settings/sections/general-section.js:32
+msgid "Cash price prefix"`r`nmsgstr "Prefixo do preço à vista"
+
+#: admin/src/settings/sections/general-section.js:36
+msgid "Cash price suffix"`r`nmsgstr "Sufixo do preço à vista"
+
+#: admin/src/settings/sections/general-section.js:44
+msgid "Enable installments"`r`nmsgstr "Ativar parcelamento"
+
+#: admin/src/settings/sections/general-section.js:49
+msgid "Display mode"`r`nmsgstr "Modo de exibição"
+
+#: admin/src/settings/sections/general-section.js:52
+#: admin/src/settings/sections/general-section.js:71
+msgid "Maximum installments"`r`nmsgstr "Máximo de parcelas"
+
+#: admin/src/settings/sections/general-section.js:56
+msgid "Maximum installments with popup"`r`nmsgstr "Máximo de parcelas com pop-up"
+
+#: admin/src/settings/sections/general-section.js:60
+msgid "Without interest with popup"`r`nmsgstr "Sem juros com pop-up"
+
+#: admin/src/settings/sections/general-section.js:67
+msgid "Minimum price for installments"`r`nmsgstr "Preço mínimo para parcelamento"
+
+#: admin/src/settings/sections/general-section.js:75
+msgid "Installments prefix"`r`nmsgstr "Prefixo do parcelamento"
+
+#: admin/src/settings/sections/general-section.js:79
+msgid "Installments suffix"`r`nmsgstr "Sufixo do parcelamento"
+
+#: admin/src/settings/sections/general-section.js:84
+msgid "Popup text"`r`nmsgstr "Texto do pop-up"
+
+#: admin/src/settings/sections/general-section.js:88
+msgid "Interest starts at installment"`r`nmsgstr "Os juros começam na parcela"
+
+#: admin/src/settings/sections/general-section.js:92
+msgid "First interest fee (%)"`r`nmsgstr "Primeira taxa de juros (%)"
+
+#: admin/src/settings/sections/general-section.js:96
+msgid "Incremental interest fee (%)"`r`nmsgstr "Taxa de juros incremental (%)"
+
+#: admin/src/settings/sections/general-section.js:104
+msgid "Use customized interest fees"`r`nmsgstr "Usar taxas de juros personalizadas"
+
+#: admin/src/settings/sections/general-section.js:105
+msgid "When enabled, only the values in the table below are considered."`r`nmsgstr "Quando ativado, apenas os valores da tabela abaixo são considerados."
+
+#: admin/src/settings/sections/general-section.js:113
+msgid "Interest fees by installment"`r`nmsgstr "Taxas de juros por parcela"
+
+#: admin/src/settings/sections/general-section.js:114
+msgid "Separate each percentage with a vertical bar, for example: 8,25|9,50|10,12."`r`nmsgstr "Separe cada porcentagem com uma barra vertical, por exemplo: 8,25|9,50|10,12."
+
+#: admin/src/settings/sections/general-section.js:223
+msgid "Cash price"`r`nmsgstr "Preço à vista"
+
+#: admin/src/settings/sections/general-section.js:227
+msgid "Installments"`r`nmsgstr "Parcelamento"
+
+#: admin/src/settings/sections/general-section.js:231
+msgid "Interest fee table"`r`nmsgstr "Tabela de taxas de juros"
+
+#: admin/src/settings/sections/positions-section.js:10
+msgid "Original price, cash price, installments price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:17
+msgid "Original price, installments price, cash price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:24
+msgid "Cash price, original price, installments price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:31
+msgid "Cash price, installments price, original price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:38
+msgid "Installments price, original price, cash price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:45
+msgid "Installments price, cash price, original price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:55
+msgid "Position on the single product page"`r`nmsgstr "Posição na página de produto"
+
+#: admin/src/settings/sections/positions-section.js:59
+msgid "Position on catalog pages"`r`nmsgstr "Posição nas páginas de catálogo"
+
+#: admin/src/settings/sections/positions-section.js:63
+msgid "Position on other pages"`r`nmsgstr "Posição em outras páginas"
+
+#: admin/src/settings/sections/positions-section.js:75
+msgid "Statement positions"`r`nmsgstr "Posições das informações de preço"

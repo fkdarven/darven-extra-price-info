@@ -8,32 +8,32 @@ const cashFields = [
 	{
 		name: 'darven_epi_incash_is_enabled',
 		type: 'checkbox',
-		label: __( 'Enable cash discount', 'darven-epi' ),
+		label: __( 'Enable cash discount', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_type_of_discount',
 		type: 'select',
-		label: __( 'Discount type', 'darven-epi' ),
+		label: __( 'Discount type', 'darven-multiplos-precos-informativos' ),
 		options: [
-			{ label: __( 'Percent', 'darven-epi' ), value: 'percent' },
-			{ label: __( 'Fixed', 'darven-epi' ), value: 'fixed' },
+			{ label: __( 'Percent', 'darven-multiplos-precos-informativos' ), value: 'percent' },
+			{ label: __( 'Fixed', 'darven-multiplos-precos-informativos' ), value: 'fixed' },
 		],
 	},
 	{
 		name: 'darven_epi_value_of_incash_discount',
-		label: __( 'Discount value', 'darven-epi' ),
+		label: __( 'Discount value', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_minimum_incash_value',
-		label: __( 'Minimum price for the discount', 'darven-epi' ),
+		label: __( 'Minimum price for the discount', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_incash_prefix',
-		label: __( 'Cash price prefix', 'darven-epi' ),
+		label: __( 'Cash price prefix', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_incash_suffix',
-		label: __( 'Cash price suffix', 'darven-epi' ),
+		label: __( 'Cash price suffix', 'darven-multiplos-precos-informativos' ),
 	},
 ];
 
@@ -41,59 +41,59 @@ const installmentFields = [
 	{
 		name: 'darven_epi_installments_is_enabled',
 		type: 'checkbox',
-		label: __( 'Enable installments', 'darven-epi' ),
+		label: __( 'Enable installments', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_mode_of_view',
 		type: 'select',
-		label: __( 'Display mode', 'darven-epi' ),
+		label: __( 'Display mode', 'darven-multiplos-precos-informativos' ),
 		options: [
 			{
-				label: __( 'Maximum installments', 'darven-epi' ),
+				label: __( 'Maximum installments', 'darven-multiplos-precos-informativos' ),
 				value: 'default',
 			},
 			{
-				label: __( 'Maximum installments with popup', 'darven-epi' ),
+				label: __( 'Maximum installments with popup', 'darven-multiplos-precos-informativos' ),
 				value: 'popup',
 			},
 			{
-				label: __( 'Without interest with popup', 'darven-epi' ),
+				label: __( 'Without interest with popup', 'darven-multiplos-precos-informativos' ),
 				value: 'nofee',
 			},
 		],
 	},
 	{
 		name: 'darven_epi_minimum_installments_value',
-		label: __( 'Minimum price for installments', 'darven-epi' ),
+		label: __( 'Minimum price for installments', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_max_installments',
-		label: __( 'Maximum installments', 'darven-epi' ),
+		label: __( 'Maximum installments', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_installments_prefix',
-		label: __( 'Installments prefix', 'darven-epi' ),
+		label: __( 'Installments prefix', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_installments_suffix',
-		label: __( 'Installments suffix', 'darven-epi' ),
+		label: __( 'Installments suffix', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_popup_text',
 		type: 'textarea',
-		label: __( 'Popup text', 'darven-epi' ),
+		label: __( 'Popup text', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_installments_interest_fee_from',
-		label: __( 'Interest starts at installment', 'darven-epi' ),
+		label: __( 'Interest starts at installment', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_installments_interest_fee_first_install',
-		label: __( 'First interest fee (%)', 'darven-epi' ),
+		label: __( 'First interest fee (%)', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_installments_interest_fee',
-		label: __( 'Incremental interest fee (%)', 'darven-epi' ),
+		label: __( 'Incremental interest fee (%)', 'darven-multiplos-precos-informativos' ),
 	},
 ];
 
@@ -101,19 +101,19 @@ const tableFields = [
 	{
 		name: 'darven_epi_installments_interest_fee_is_table_enabled',
 		type: 'checkbox',
-		label: __( 'Use customized interest fees', 'darven-epi' ),
+		label: __( 'Use customized interest fees', 'darven-multiplos-precos-informativos' ),
 		help: __(
 			'When enabled, only the values in the table below are considered.',
-			'darven-epi'
+			'darven-multiplos-precos-informativos'
 		),
 	},
 	{
 		name: 'darven_epi_installments_interest_fee_table',
 		type: 'textarea',
-		label: __( 'Interest fees by installment', 'darven-epi' ),
+		label: __( 'Interest fees by installment', 'darven-multiplos-precos-informativos' ),
 		help: __(
 			'Separate each percentage with a vertical bar, for example: 8,25|9,50|10,12.',
-			'darven-epi'
+			'darven-multiplos-precos-informativos'
 		),
 	},
 ];
@@ -220,15 +220,15 @@ class GeneralSection extends Component {
 		return (
 			<div className="darven-precos-parcelados-admin__section">
 				{ this.renderGroup(
-					__( 'Cash price', 'darven-epi' ),
+					__( 'Cash price', 'darven-multiplos-precos-informativos' ),
 					cashFields
 				) }
 				{ this.renderGroup(
-					__( 'Installments', 'darven-epi' ),
+					__( 'Installments', 'darven-multiplos-precos-informativos' ),
 					installmentFields
 				) }
 				{ this.renderGroup(
-					__( 'Interest fee table', 'darven-epi' ),
+					__( 'Interest fee table', 'darven-multiplos-precos-informativos' ),
 					tableFields
 				) }
 			</div>

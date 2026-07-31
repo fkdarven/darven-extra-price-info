@@ -53,7 +53,7 @@ final class Assets {
 		wp_enqueue_script( $handle, $url . 'index.js', $deps, $version, true );
 		wp_localize_script( $handle, $object_name, $config );
 		if ( function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( $handle, 'darven-epi', DARVEN_EPI_DIR_PATH . 'languages' );
+			wp_set_script_translations( $handle, 'darven-multiplos-precos-informativos', DARVEN_EPI_DIR_PATH . 'languages' );
 		}
 	}
 

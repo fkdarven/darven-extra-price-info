@@ -146,7 +146,7 @@ describe( 'ProductOptionsApp', () => {
 
 		const calls = require( '@wordpress/i18n' ).__.mock.calls;
 		expect( calls.length ).toBeGreaterThan( 0 );
-		expect( calls.every( ( call ) => 'darven-epi' === call[ 1 ] ) ).toBe(
+		expect( calls.every( ( call ) => 'darven-multiplos-precos-informativos' === call[ 1 ] ) ).toBe(
 			true
 		);
 	} );

@@ -2,6 +2,7 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'DARVEN_EPI_DIR_PATH', dirname( __DIR__ ) . '/' );
+define( 'DARVEN_EPI_LANGUAGE_DOMAIN', 'darven-multiplos-precos-informativos' );
 
 require_once DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
 
@@ -20,6 +21,7 @@ $GLOBALS['darven_epi_test_products'] = array();
 $GLOBALS['darven_epi_test_localized_scripts'] = array();
 $GLOBALS['darven_epi_test_enqueued_media'] = 0;
 $GLOBALS['darven_epi_test_screen'] = null;
+$GLOBALS['darven_epi_test_loaded_textdomains'] = array();
 
 function get_option( $name, $default = false ) {
 	$GLOBALS['darven_epi_test_option_reads'][] = $name;
@@ -469,6 +471,15 @@ function plugin_basename( $plugin_file ): string {
 	$GLOBALS['darven_epi_test_plugin_basename_input'] = $plugin_file;
 
 	return basename( $plugin_file );
+}
+
+function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ): bool {
+	$GLOBALS['darven_epi_test_loaded_textdomains'][] = array(
+		'domain' => $domain,
+		'path'   => $plugin_rel_path,
+	);
+
+	return true;
 }
 
 function deactivate_plugins( $plugin ): void {

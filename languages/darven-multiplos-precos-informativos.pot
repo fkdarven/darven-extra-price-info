@@ -1,0 +1,413 @@
+# Copyright (C) 2026 Leticia Moreira
+# This file is distributed under the same license as the Darven Múltiplos Preços Informativos plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Darven Múltiplos Preços Informativos 4.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/4.0.0-darven-precos-parcelados\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-31T11:21:32-03:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: darven-multiplos-precos-informativos\n"
+
+#. Plugin Name of the plugin
+#: darven-extra-price-info.php
+msgid "Darven Múltiplos Preços Informativos"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: darven-extra-price-info.php
+msgid "wordpress.org/plugins/darven-multiplos-precos-informativos/"
+msgstr ""
+
+#. Description of the plugin
+#: darven-extra-price-info.php
+msgid "This plugin is used to show multiple prices for a product. Incash and installments price."
+msgstr ""
+
+#. Author of the plugin
+#: darven-extra-price-info.php
+msgid "Leticia Moreira"
+msgstr ""
+
+#. Author URI of the plugin
+#: darven-extra-price-info.php
+msgid "https://darven.wtf"
+msgstr ""
+
+#: src/Admin/ProductOptionsController.php:32
+msgid "Darven"
+msgstr ""
+
+#: src/Admin/ReactPage.php:13
+#: src/Admin/ReactPage.php:14
+#: admin/src/settings/app.js:161
+msgid "Darven Installment Prices"
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:104
+msgid "The settings payload must be an object."
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:112
+#: admin/src/settings/app.js:103
+msgid "The settings could not be saved."
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:140
+msgid "The product settings payload must be an object."
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:153
+msgid "The product settings could not be saved."
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:172
+msgid "The requested product was not found."
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:180
+msgid "You are not allowed to manage these settings."
+msgstr ""
+
+#: src/Services/InstallmentPriceFormatter.php:121
+msgid "View installment options"
+msgstr ""
+
+#: src/Services/InstallmentPriceFormatter.php:125
+msgid "Installment options"
+msgstr ""
+
+#: src/Services/InstallmentPriceFormatter.php:126
+msgid "Close installment options"
+msgstr ""
+
+#: admin/src/product-options/app.js:57
+msgid "The product options could not be loaded."
+msgstr ""
+
+#: admin/src/product-options/app.js:89
+msgid "Product options saved."
+msgstr ""
+
+#: admin/src/product-options/app.js:100
+msgid "The product options could not be saved."
+msgstr ""
+
+#: admin/src/product-options/app.js:137
+msgid "The selected change has not been saved yet."
+msgstr ""
+
+#: admin/src/product-options/app.js:148
+msgid "Retry save"
+msgstr ""
+
+#: admin/src/product-options/app.js:189
+msgid "Save the product before editing Darven options."
+msgstr ""
+
+#: admin/src/product-options/app.js:204
+msgid "Loading product options…"
+msgstr ""
+
+#: admin/src/product-options/app.js:229
+msgid "Installment prices"
+msgstr ""
+
+#: admin/src/product-options/app.js:233
+msgid "Disable cash price for this product"
+msgstr ""
+
+#: admin/src/product-options/app.js:237
+msgid "Hides the cash price only for the current product."
+msgstr ""
+
+#: admin/src/product-options/app.js:244
+msgid "Disable installment price for this product"
+msgstr ""
+
+#: admin/src/product-options/app.js:248
+msgid "Hides the installment price only for the current product."
+msgstr ""
+
+#: admin/src/product-options/app.js:260
+#: admin/src/settings/app.js:212
+msgid "Saving…"
+msgstr ""
+
+#: admin/src/settings/app.js:16
+msgid "General"
+msgstr ""
+
+#: admin/src/settings/app.js:17
+msgid "Display"
+msgstr ""
+
+#: admin/src/settings/app.js:18
+msgid "Positions"
+msgstr ""
+
+#: admin/src/settings/app.js:19
+msgid "Compatibility"
+msgstr ""
+
+#: admin/src/settings/app.js:50
+msgid "The settings could not be loaded."
+msgstr ""
+
+#: admin/src/settings/app.js:92
+msgid "Settings saved."
+msgstr ""
+
+#: admin/src/settings/app.js:138
+msgid "Loading settings…"
+msgstr ""
+
+#: admin/src/settings/app.js:164
+msgid "Saving here also keeps the legacy settings synchronized for compatibility."
+msgstr ""
+
+#: admin/src/settings/app.js:173
+msgid "Settings sections"
+msgstr ""
+
+#: admin/src/settings/app.js:213
+msgid "Save settings"
+msgstr ""
+
+#: admin/src/settings/sections/compatibility-section.js:20
+msgid "YITH Dynamic Pricing"
+msgstr ""
+
+#: admin/src/settings/sections/compatibility-section.js:24
+msgid "Compatibility mode"
+msgstr ""
+
+#: admin/src/settings/sections/compatibility-section.js:35
+msgid "Automatic (recommended)"
+msgstr ""
+
+#: admin/src/settings/sections/compatibility-section.js:41
+msgid "Disabled"
+msgstr ""
+
+#: admin/src/settings/sections/compatibility-section.js:49
+msgid "Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing."
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:10
+msgid "Cash price color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:14
+msgid "Cash suffix color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:18
+msgid "Cash prefix color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:22
+msgid "Installment price color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:26
+msgid "Installment suffix color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:30
+msgid "Installment prefix color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:34
+msgid "Installment number color"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:41
+msgid "Cash price font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:45
+msgid "Cash suffix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:49
+msgid "Cash prefix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:53
+msgid "Installment price font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:57
+msgid "Installment suffix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:61
+msgid "Installment prefix font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:65
+msgid "Installment number font size"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:89
+msgid "Colors"
+msgstr ""
+
+#: admin/src/settings/sections/display-section.js:112
+msgid "Font sizes"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:11
+msgid "Enable cash discount"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:16
+msgid "Discount type"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:18
+msgid "Percent"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:19
+msgid "Fixed"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:24
+msgid "Discount value"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:28
+msgid "Minimum price for the discount"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:32
+msgid "Cash price prefix"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:36
+msgid "Cash price suffix"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:44
+msgid "Enable installments"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:49
+msgid "Display mode"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:52
+#: admin/src/settings/sections/general-section.js:71
+msgid "Maximum installments"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:56
+msgid "Maximum installments with popup"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:60
+msgid "Without interest with popup"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:67
+msgid "Minimum price for installments"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:75
+msgid "Installments prefix"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:79
+msgid "Installments suffix"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:84
+msgid "Popup text"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:88
+msgid "Interest starts at installment"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:92
+msgid "First interest fee (%)"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:96
+msgid "Incremental interest fee (%)"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:104
+msgid "Use customized interest fees"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:105
+msgid "When enabled, only the values in the table below are considered."
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:113
+msgid "Interest fees by installment"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:114
+msgid "Separate each percentage with a vertical bar, for example: 8,25|9,50|10,12."
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:223
+msgid "Cash price"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:227
+msgid "Installments"
+msgstr ""
+
+#: admin/src/settings/sections/general-section.js:231
+msgid "Interest fee table"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:10
+msgid "Original price, cash price, installments price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:17
+msgid "Original price, installments price, cash price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:24
+msgid "Cash price, original price, installments price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:31
+msgid "Cash price, installments price, original price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:38
+msgid "Installments price, original price, cash price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:45
+msgid "Installments price, cash price, original price"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:55
+msgid "Position on the single product page"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:59
+msgid "Position on catalog pages"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:63
+msgid "Position on other pages"
+msgstr ""
+
+#: admin/src/settings/sections/positions-section.js:75
+msgid "Statement positions"
+msgstr ""

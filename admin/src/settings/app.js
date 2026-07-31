@@ -13,10 +13,10 @@ import GeneralSection from './sections/general-section';
 import PositionsSection from './sections/positions-section';
 
 const tabs = [
-	{ name: 'general', title: __( 'General', 'darven-epi' ) },
-	{ name: 'display', title: __( 'Visual', 'darven-epi' ) },
-	{ name: 'positions', title: __( 'Positions', 'darven-epi' ) },
-	{ name: 'compatibility', title: __( 'Compatibility', 'darven-epi' ) },
+	{ name: 'general', title: __( 'General', 'darven-multiplos-precos-informativos' ) },
+	{ name: 'display', title: __( 'Display', 'darven-multiplos-precos-informativos' ) },
+	{ name: 'positions', title: __( 'Positions', 'darven-multiplos-precos-informativos' ) },
+	{ name: 'compatibility', title: __( 'Compatibility', 'darven-multiplos-precos-informativos' ) },
 ];
 
 const sections = {
@@ -49,7 +49,7 @@ class SettingsApp extends Component {
 							error,
 							__(
 								'The settings could not be loaded.',
-								'darven-epi'
+								'darven-multiplos-precos-informativos'
 							)
 						),
 					} );
@@ -89,7 +89,7 @@ class SettingsApp extends Component {
 					document,
 					notice: {
 						status: 'success',
-						message: __( 'Settings saved.', 'darven-epi' ),
+						message: __( 'Settings saved.', 'darven-multiplos-precos-informativos' ),
 					},
 				} );
 			}
@@ -102,7 +102,7 @@ class SettingsApp extends Component {
 							error,
 							__(
 								'The settings could not be saved.',
-								'darven-epi'
+								'darven-multiplos-precos-informativos'
 							)
 						),
 					},
@@ -135,7 +135,7 @@ class SettingsApp extends Component {
 					<span
 						className="darven-precos-parcelados-admin__spinner"
 						role="progressbar"
-						aria-label={ __( 'Loading settings…', 'darven-epi' ) }
+						aria-label={ __( 'Loading settings…', 'darven-multiplos-precos-informativos' ) }
 					/>
 				</div>
 			);
@@ -158,19 +158,19 @@ class SettingsApp extends Component {
 
 		return (
 			<div className="darven-precos-parcelados-admin">
-				<h1>{ __( 'Darven Preços Parcelados', 'darven-epi' ) }</h1>
+				<h1>{ __( 'Darven Installment Prices', 'darven-multiplos-precos-informativos' ) }</h1>
 				{ this.renderNotice( {
 					status: 'info',
 					message: __(
 						'Saving here also keeps the legacy settings synchronized for compatibility.',
-						'darven-epi'
+						'darven-multiplos-precos-informativos'
 					),
 				} ) }
 				{ notice && this.renderNotice( notice ) }
 				<div
 					className="darven-precos-parcelados-admin__tabs"
 					role="tablist"
-					aria-label={ __( 'Settings sections', 'darven-epi' ) }
+					aria-label={ __( 'Settings sections', 'darven-multiplos-precos-informativos' ) }
 				>
 					{ tabs.map( ( tab ) => (
 						<button
@@ -209,8 +209,8 @@ class SettingsApp extends Component {
 					onClick={ this.save }
 				>
 					{ isSaving
-						? __( 'Saving…', 'darven-epi' )
-						: __( 'Save settings', 'darven-epi' ) }
+						? __( 'Saving…', 'darven-multiplos-precos-informativos' )
+						: __( 'Save settings', 'darven-multiplos-precos-informativos' ) }
 				</button>
 			</div>
 		);

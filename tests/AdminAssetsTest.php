@@ -37,7 +37,7 @@ final class AdminAssetsTest extends TestCase {
 		self::assertSame(
 			array(
 				'handle' => 'darven-precos-parcelados-settings',
-				'domain' => 'darven-epi',
+				'domain' => 'darven-multiplos-precos-informativos',
 				'path'   => DARVEN_EPI_DIR_PATH . 'languages',
 			), $GLOBALS['darven_epi_test_script_translations'][0]
 		);
@@ -54,7 +54,7 @@ final class AdminAssetsTest extends TestCase {
 		self::assertSame( 1, $GLOBALS['darven_epi_test_enqueued_media'] );
 		self::assertNotEmpty( $GLOBALS['darven_epi_test_script_translations'] );
 		self::assertSame( 'darven-precos-parcelados-product-options', $GLOBALS['darven_epi_test_script_translations'][0]['handle'] );
-		self::assertSame( 'darven-epi', $GLOBALS['darven_epi_test_script_translations'][0]['domain'] );
+		self::assertSame( 'darven-multiplos-precos-informativos', $GLOBALS['darven_epi_test_script_translations'][0]['domain'] );
 	}
 
 	public function test_does_not_enqueue_react_assets_on_unrelated_admin_screens(): void {

@@ -29,7 +29,7 @@ final class ProductOptionsController {
 
 	public function addTab( array $tabs ): array {
 		$tabs['darven-precos-parcelados'] = array(
-			'label'  => __( 'Darven', 'darven-epi' ),
+			'label'  => __( 'Darven', 'darven-multiplos-precos-informativos' ),
 			'target' => 'darven-precos-parcelados-product-options-panel',
 			'class'  => array(),
 		);

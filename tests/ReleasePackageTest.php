@@ -36,6 +36,21 @@ final class ReleasePackageTest extends TestCase {
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/index.js' ) );
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/index.asset.php' ) );
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/style-index.css' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos.pot' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR.po' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR.mo' ) );
+		$translation_json = array_filter(
+			array_map(
+				static function ( $index ) use ( $archive ) {
+					return $archive->getNameIndex( $index );
+				},
+				range( 0, $archive->numFiles - 1 )
+			),
+			static function ( $name ) {
+				return 1 === preg_match( '#^darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR-[a-f0-9]{32}\\.json$#', $name );
+			}
+		);
+		self::assertNotEmpty( $translation_json );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/tests/bootstrap.php' ) );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/.superpowers/release-3.3.0-plan.md' ) );
 
@@ -51,6 +66,7 @@ final class ReleasePackageTest extends TestCase {
 			'tests/',
 			'node_modules/',
 			'admin/src/',
+			'node_modules/',
 			'vendor/bin/',
 			'composer.json',
 			'composer.lock',
