@@ -12,7 +12,8 @@ export const useSettingsStore = ( apiClient ) => {
 	useEffect( () => {
 		let active = true;
 
-		apiClient.loadSettings()
+		apiClient
+			.loadSettings()
 			.then( ( settings ) => {
 				if ( active ) {
 					setDocument( settings );
@@ -20,7 +21,15 @@ export const useSettingsStore = ( apiClient ) => {
 			} )
 			.catch( ( error ) => {
 				if ( active ) {
-					setLoadError( normalizeRestError( error, __( 'The settings could not be loaded.', 'darven-epi' ) ) );
+					setLoadError(
+						normalizeRestError(
+							error,
+							__(
+								'The settings could not be loaded.',
+								'darven-epi'
+							)
+						)
+					);
 				}
 			} );
 
@@ -47,11 +56,17 @@ export const useSettingsStore = ( apiClient ) => {
 		try {
 			const saved = await apiClient.saveSettings( document );
 			setDocument( saved );
-			setNotice( { status: 'success', message: __( 'Settings saved.', 'darven-epi' ) } );
+			setNotice( {
+				status: 'success',
+				message: __( 'Settings saved.', 'darven-epi' ),
+			} );
 		} catch ( error ) {
 			setNotice( {
 				status: 'error',
-				message: normalizeRestError( error, __( 'The settings could not be saved.', 'darven-epi' ) ),
+				message: normalizeRestError(
+					error,
+					__( 'The settings could not be saved.', 'darven-epi' )
+				),
 			} );
 		} finally {
 			setIsSaving( false );

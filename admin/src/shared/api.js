@@ -1,6 +1,7 @@
 import apiFetch from '@wordpress/api-fetch';
 
-const trimTrailingSlash = ( value ) => String( value || '' ).replace( /\/+$/, '' );
+const trimTrailingSlash = ( value ) =>
+	String( value || '' ).replace( /\/+$/, '' );
 
 export const normalizeRestError = ( error, fallback ) => {
 	if ( error && 'string' === typeof error.message && error.message.trim() ) {
@@ -19,6 +20,7 @@ export const createSettingsApi = ( config, fetch = apiFetch ) => {
 
 	return {
 		loadSettings: () => fetch( { url } ),
-		saveSettings: ( document ) => fetch( { url, method: 'PUT', data: document } ),
+		saveSettings: ( document ) =>
+			fetch( { url, method: 'PUT', data: document } ),
 	};
 };

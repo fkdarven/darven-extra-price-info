@@ -54,6 +54,17 @@ final class AdminAssetsTest extends TestCase {
 		self::assertSame( array(), $GLOBALS['darven_epi_test_enqueued_styles'] );
 	}
 
+	public function test_admin_bundle_manifests_remain_compatible_with_wordpress_5(): void {
+		$settings_asset = require DARVEN_EPI_DIR_PATH . 'build/settings/index.asset.php';
+		$product_asset  = require DARVEN_EPI_DIR_PATH . 'build/product-options/index.asset.php';
+
+		foreach ( array( 'react', 'react-dom', 'react-jsx-runtime' ) as $unsupported_dependency ) {
+			self::assertNotContains( $unsupported_dependency, $settings_asset['dependencies'] );
+			self::assertNotContains( $unsupported_dependency, $product_asset['dependencies'] );
+		}
+		self::assertContains( 'wp-element', $settings_asset['dependencies'] );
+	}
+
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled

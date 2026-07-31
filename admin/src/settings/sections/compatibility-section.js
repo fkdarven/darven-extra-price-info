@@ -1,4 +1,6 @@
+/* @jsx createElement */
 import { Notice, Panel, PanelBody, SelectControl } from '@wordpress/components';
+import { createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import fields from '../../shared/settings-fields.json';
@@ -10,19 +12,31 @@ if ( ! fields.compatibility.includes( modeField ) ) {
 
 const CompatibilitySection = ( { settings, onChange } ) => (
 	<Panel>
-		<PanelBody title={ __( 'YITH Dynamic Pricing', 'darven-epi' ) } initialOpen>
+		<PanelBody
+			title={ __( 'YITH Dynamic Pricing', 'darven-epi' ) }
+			initialOpen
+		>
 			<SelectControl
 				name={ modeField }
 				label={ __( 'Compatibility mode', 'darven-epi' ) }
 				value={ settings[ modeField ] || 'auto' }
 				options={ [
-					{ label: __( 'Automatic (recommended)', 'darven-epi' ), value: 'auto' },
-					{ label: __( 'Disabled', 'darven-epi' ), value: 'disabled' },
+					{
+						label: __( 'Automatic (recommended)', 'darven-epi' ),
+						value: 'auto',
+					},
+					{
+						label: __( 'Disabled', 'darven-epi' ),
+						value: 'disabled',
+					},
 				] }
 				onChange={ ( next ) => onChange( modeField, next ) }
 			/>
 			<Notice status="info" isDismissible={ false }>
-				{ __( 'Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing.', 'darven-epi' ) }
+				{ __(
+					'Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing.',
+					'darven-epi'
+				) }
 			</Notice>
 		</PanelBody>
 	</Panel>

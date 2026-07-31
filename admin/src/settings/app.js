@@ -1,4 +1,6 @@
+/* @jsx createElement */
 import { Button, Notice, Spinner, TabPanel } from '@wordpress/components';
+import { createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { useSettingsStore } from '../shared/settings-store';
@@ -25,13 +27,19 @@ const SettingsApp = ( { apiClient } ) => {
 	const store = useSettingsStore( apiClient );
 
 	if ( store.isLoading ) {
-		return <div className="darven-precos-parcelados-admin darven-precos-parcelados-admin--loading"><Spinner /></div>;
+		return (
+			<div className="darven-precos-parcelados-admin darven-precos-parcelados-admin--loading">
+				<Spinner />
+			</div>
+		);
 	}
 
 	if ( store.loadError ) {
 		return (
 			<div className="darven-precos-parcelados-admin">
-				<Notice status="error" isDismissible={ false }>{ store.loadError }</Notice>
+				<Notice status="error" isDismissible={ false }>
+					{ store.loadError }
+				</Notice>
 			</div>
 		);
 	}
@@ -40,10 +48,15 @@ const SettingsApp = ( { apiClient } ) => {
 		<div className="darven-precos-parcelados-admin">
 			<h1>{ __( 'Darven Preços Parcelados', 'darven-epi' ) }</h1>
 			<Notice status="info" isDismissible={ false }>
-				{ __( 'Saving here also keeps the legacy settings synchronized for compatibility.', 'darven-epi' ) }
+				{ __(
+					'Saving here also keeps the legacy settings synchronized for compatibility.',
+					'darven-epi'
+				) }
 			</Notice>
 			{ store.notice && (
-				<Notice status={ store.notice.status } isDismissible={ false }>{ store.notice.message }</Notice>
+				<Notice status={ store.notice.status } isDismissible={ false }>
+					{ store.notice.message }
+				</Notice>
 			) }
 			<TabPanel tabs={ tabs }>
 				{ ( tab ) => {
@@ -51,13 +64,22 @@ const SettingsApp = ( { apiClient } ) => {
 					return (
 						<Section
 							settings={ store.document[ tab.name ] || {} }
-							onChange={ ( field, value ) => store.updateField( tab.name, field, value ) }
+							onChange={ ( field, value ) =>
+								store.updateField( tab.name, field, value )
+							}
 						/>
 					);
 				} }
 			</TabPanel>
-			<Button variant="primary" isBusy={ store.isSaving } disabled={ store.isSaving } onClick={ store.save }>
-				{ store.isSaving ? __( 'Saving…', 'darven-epi' ) : __( 'Save settings', 'darven-epi' ) }
+			<Button
+				variant="primary"
+				isBusy={ store.isSaving }
+				disabled={ store.isSaving }
+				onClick={ store.save }
+			>
+				{ store.isSaving
+					? __( 'Saving…', 'darven-epi' )
+					: __( 'Save settings', 'darven-epi' ) }
 			</Button>
 		</div>
 	);
