@@ -1,11 +1,5 @@
 /* @jsx createElement */
-import {
-	Panel,
-	PanelBody,
-	SelectControl,
-	TextControl,
-} from '@wordpress/components';
-import { createElement } from '@wordpress/element';
+import { Component, createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import fields from '../../shared/settings-fields.json';
@@ -85,33 +79,69 @@ const assertField = ( name ) => {
 	return name;
 };
 
-const DisplaySection = ( { settings, onChange } ) => (
-	<Panel>
-		<PanelBody title={ __( 'Colors', 'darven-epi' ) } initialOpen>
-			{ colorFields.map( ( [ name, label ] ) => (
-				<TextControl
-					key={ name }
-					name={ assertField( name ) }
-					type="color"
-					label={ label }
-					value={ settings[ name ] || '#000000' }
-					onChange={ ( next ) => onChange( name, next ) }
-				/>
-			) ) }
-		</PanelBody>
-		<PanelBody title={ __( 'Font sizes', 'darven-epi' ) } initialOpen>
-			{ fontFields.map( ( [ name, label ] ) => (
-				<SelectControl
-					key={ name }
-					name={ assertField( name ) }
-					label={ label }
-					value={ settings[ name ] || '1.0' }
-					options={ fontOptions }
-					onChange={ ( next ) => onChange( name, next ) }
-				/>
-			) ) }
-		</PanelBody>
-	</Panel>
-);
+class DisplaySection extends Component {
+	render() {
+		const { settings, onChange } = this.props;
+
+		return (
+			<div className="darven-precos-parcelados-admin__section">
+				<fieldset className="darven-precos-parcelados-admin__group">
+					<legend>{ __( 'Colors', 'darven-epi' ) }</legend>
+					{ colorFields.map( ( [ rawName, label ] ) => {
+						const name = assertField( rawName );
+						return (
+							<div
+								className="darven-precos-parcelados-admin__field"
+								key={ name }
+							>
+								<label htmlFor={ name }>{ label }</label>
+								<input
+									id={ name }
+									name={ name }
+									type="color"
+									value={ settings[ name ] || '#000000' }
+									onChange={ ( event ) =>
+										onChange( name, event.target.value )
+									}
+								/>
+							</div>
+						);
+					} ) }
+				</fieldset>
+				<fieldset className="darven-precos-parcelados-admin__group">
+					<legend>{ __( 'Font sizes', 'darven-epi' ) }</legend>
+					{ fontFields.map( ( [ rawName, label ] ) => {
+						const name = assertField( rawName );
+						return (
+							<div
+								className="darven-precos-parcelados-admin__field"
+								key={ name }
+							>
+								<label htmlFor={ name }>{ label }</label>
+								<select
+									id={ name }
+									name={ name }
+									value={ settings[ name ] || '1.0' }
+									onChange={ ( event ) =>
+										onChange( name, event.target.value )
+									}
+								>
+									{ fontOptions.map( ( option ) => (
+										<option
+											key={ option.value }
+											value={ option.value }
+										>
+											{ option.label }
+										</option>
+									) ) }
+								</select>
+							</div>
+						);
+					} ) }
+				</fieldset>
+			</div>
+		);
+	}
+}
 
 export default DisplaySection;

@@ -44,14 +44,17 @@ final class Assets {
 		$asset = $this->getAssetMetadata( $bundle );
 		$url   = plugin_dir_url( DARVEN_EPI_DIR_PATH . 'darven-extra-price-info.php' ) . 'build/' . $bundle . '/';
 		$deps  = isset( $asset['dependencies'] ) && is_array( $asset['dependencies'] ) ? $asset['dependencies'] : array();
-		$deps  = array_values( array_unique( array_merge( $deps, array( 'wp-api-fetch', 'wp-components', 'wp-element', 'wp-i18n' ) ) ) );
+		$deps  = array_values( array_unique( array_merge( $deps, array( 'wp-api-fetch', 'wp-element', 'wp-i18n' ) ) ) );
 		$version = isset( $asset['version'] ) && is_string( $asset['version'] )
 			? $asset['version']
 			: ( defined( 'DARVEN_EPI_VERSION' ) ? DARVEN_EPI_VERSION : '1.0.0' );
 
-		wp_enqueue_style( $handle, $url . 'style-index.css', array( 'wp-components' ), $version, 'all' );
+		wp_enqueue_style( $handle, $url . 'style-index.css', array(), $version, 'all' );
 		wp_enqueue_script( $handle, $url . 'index.js', $deps, $version, true );
 		wp_localize_script( $handle, $object_name, $config );
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( $handle, 'darven-epi', DARVEN_EPI_DIR_PATH . 'languages' );
+		}
 	}
 
 	private function getAssetMetadata( string $bundle ): array {

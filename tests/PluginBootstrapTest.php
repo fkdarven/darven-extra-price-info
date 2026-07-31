@@ -30,11 +30,15 @@ final class PluginBootstrapTest extends TestCase {
 			'admin_enqueue_scripts',
 			'wp_enqueue_scripts',
 			'rest_api_init',
-			'woocommerce_product_options_general_product_data',
+			'woocommerce_product_data_panels',
 			'woocommerce_admin_process_product_object',
 		) as $hook ) {
 			self::assertSame( 1, count( array_keys( $hooks, $hook, true ) ), $hook . ' should register once.' );
 		}
+
+		$filters = array_column( $GLOBALS['darven_epi_test_filters'], 'hook' );
+		self::assertSame( 1, count( array_keys( $filters, 'woocommerce_product_data_tabs', true ) ) );
+		self::assertNotContains( 'woocommerce_product_options_general_product_data', $hooks );
 	}
 
 	public function test_admin_menu_keeps_the_woocommerce_route_and_capability(): void {

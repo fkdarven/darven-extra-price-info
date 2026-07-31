@@ -14,6 +14,7 @@ final class AdminAssetsTest extends TestCase {
 		$GLOBALS['darven_epi_test_localized_scripts'] = array();
 		$GLOBALS['darven_epi_test_enqueued_media'] = 0;
 		$GLOBALS['darven_epi_test_screen'] = null;
+		$GLOBALS['darven_epi_test_script_translations'] = array();
 	}
 
 	public function test_enqueues_the_settings_bundle_with_asset_metadata_and_rest_configuration(): void {
@@ -25,13 +26,21 @@ final class AdminAssetsTest extends TestCase {
 		self::assertCount( 1, $GLOBALS['darven_epi_test_enqueued_scripts'] );
 		self::assertSame( 'darven-precos-parcelados-settings', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['handle'] );
 		self::assertContains( 'wp-api-fetch', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
-		self::assertContains( 'wp-components', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
+		self::assertNotContains( 'wp-components', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
 		self::assertContains( 'wp-element', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
 		self::assertContains( 'wp-i18n', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['deps'] );
+		self::assertSame( array(), $GLOBALS['darven_epi_test_enqueued_styles'][0]['deps'] );
 		$asset = require DARVEN_EPI_DIR_PATH . 'build/settings/index.asset.php';
 		self::assertSame( $asset['version'], $GLOBALS['darven_epi_test_enqueued_scripts'][0]['ver'] );
 		self::assertSame( 'https://example.test/wp-json/darven-precos-parcelados/v1/', $GLOBALS['darven_epi_test_localized_scripts'][0]['data']['restUrl'] );
 		self::assertSame( 'test-rest-nonce', $GLOBALS['darven_epi_test_localized_scripts'][0]['data']['nonce'] );
+		self::assertSame(
+			array(
+				'handle' => 'darven-precos-parcelados-settings',
+				'domain' => 'darven-epi',
+				'path'   => DARVEN_EPI_DIR_PATH . 'languages',
+			), $GLOBALS['darven_epi_test_script_translations'][0]
+		);
 	}
 
 	public function test_enqueues_the_product_bundle_only_on_the_woocommerce_product_editor(): void {
@@ -43,6 +52,9 @@ final class AdminAssetsTest extends TestCase {
 		self::assertSame( 'darven-precos-parcelados-product-options', $GLOBALS['darven_epi_test_enqueued_scripts'][0]['handle'] );
 		self::assertSame( 42, $GLOBALS['darven_epi_test_localized_scripts'][0]['data']['productId'] );
 		self::assertSame( 1, $GLOBALS['darven_epi_test_enqueued_media'] );
+		self::assertNotEmpty( $GLOBALS['darven_epi_test_script_translations'] );
+		self::assertSame( 'darven-precos-parcelados-product-options', $GLOBALS['darven_epi_test_script_translations'][0]['handle'] );
+		self::assertSame( 'darven-epi', $GLOBALS['darven_epi_test_script_translations'][0]['domain'] );
 	}
 
 	public function test_does_not_enqueue_react_assets_on_unrelated_admin_screens(): void {
@@ -58,13 +70,12 @@ final class AdminAssetsTest extends TestCase {
 		$settings_asset = require DARVEN_EPI_DIR_PATH . 'build/settings/index.asset.php';
 		$product_asset  = require DARVEN_EPI_DIR_PATH . 'build/product-options/index.asset.php';
 
-		foreach ( array( 'react', 'react-dom', 'react-jsx-runtime' ) as $unsupported_dependency ) {
+		foreach ( array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-components' ) as $unsupported_dependency ) {
 			self::assertNotContains( $unsupported_dependency, $settings_asset['dependencies'] );
 			self::assertNotContains( $unsupported_dependency, $product_asset['dependencies'] );
 		}
 		self::assertContains( 'wp-element', $settings_asset['dependencies'] );
 		self::assertContains( 'wp-api-fetch', $product_asset['dependencies'] );
-		self::assertContains( 'wp-components', $product_asset['dependencies'] );
 		self::assertContains( 'wp-element', $product_asset['dependencies'] );
 		self::assertContains( 'wp-i18n', $product_asset['dependencies'] );
 	}

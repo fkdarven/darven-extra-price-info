@@ -1,6 +1,5 @@
 /* @jsx createElement */
-import { Panel, PanelBody, SelectControl } from '@wordpress/components';
-import { createElement } from '@wordpress/element';
+import { Component, createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import fields from '../../shared/settings-fields.json';
@@ -65,32 +64,53 @@ const positionFields = [
 	],
 ];
 
-const PositionsSection = ( { settings, onChange } ) => (
-	<Panel>
-		<PanelBody
-			title={ __( 'Statement positions', 'darven-epi' ) }
-			initialOpen
-		>
-			{ positionFields.map( ( [ name, label ] ) => {
-				if ( ! fields.positions.includes( name ) ) {
-					throw new Error(
-						`Unknown positions settings field: ${ name }`
-					);
-				}
+class PositionsSection extends Component {
+	render() {
+		const { settings, onChange } = this.props;
 
-				return (
-					<SelectControl
-						key={ name }
-						name={ name }
-						label={ label }
-						value={ settings[ name ] || 'first' }
-						options={ options }
-						onChange={ ( next ) => onChange( name, next ) }
-					/>
-				);
-			} ) }
-		</PanelBody>
-	</Panel>
-);
+		return (
+			<div className="darven-precos-parcelados-admin__section">
+				<fieldset className="darven-precos-parcelados-admin__group">
+					<legend>
+						{ __( 'Statement positions', 'darven-epi' ) }
+					</legend>
+					{ positionFields.map( ( [ name, label ] ) => {
+						if ( ! fields.positions.includes( name ) ) {
+							throw new Error(
+								`Unknown positions settings field: ${ name }`
+							);
+						}
+
+						return (
+							<div
+								className="darven-precos-parcelados-admin__field"
+								key={ name }
+							>
+								<label htmlFor={ name }>{ label }</label>
+								<select
+									id={ name }
+									name={ name }
+									value={ settings[ name ] || 'first' }
+									onChange={ ( event ) =>
+										onChange( name, event.target.value )
+									}
+								>
+									{ options.map( ( option ) => (
+										<option
+											key={ option.value }
+											value={ option.value }
+										>
+											{ option.label }
+										</option>
+									) ) }
+								</select>
+							</div>
+						);
+					} ) }
+				</fieldset>
+			</div>
+		);
+	}
+}
 
 export default PositionsSection;

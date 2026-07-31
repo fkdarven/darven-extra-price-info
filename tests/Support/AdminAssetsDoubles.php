@@ -29,5 +29,17 @@ if ( ! function_exists( 'wp_enqueue_script' ) ) {
 			'ver'       => $ver,
 			'in_footer' => $in_footer,
 		);
+}
+}
+
+if ( ! function_exists( 'wp_set_script_translations' ) ) {
+	function wp_set_script_translations( $handle, $domain, $path = null ): bool {
+		$GLOBALS['darven_epi_test_script_translations'][] = array(
+			'handle' => $handle,
+			'domain' => $domain,
+			'path'   => $path,
+		);
+
+		return true;
 	}
 }

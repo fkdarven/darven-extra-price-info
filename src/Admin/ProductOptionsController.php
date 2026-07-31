@@ -15,9 +15,11 @@ final class ProductOptionsController {
 	}
 
 	public function register(): void {
+		add_filter(
+			'woocommerce_product_data_tabs', array( $this, 'addTab' )
+		);
 		add_action(
-			'woocommerce_product_options_general_product_data',
-			array( $this, 'renderFields' )
+			'woocommerce_product_data_panels', array( $this, 'renderPanel' )
 		);
 		add_action(
 			'woocommerce_admin_process_product_object',
@@ -25,12 +27,22 @@ final class ProductOptionsController {
 		);
 	}
 
-	public function renderFields(): void {
+	public function addTab( array $tabs ): array {
+		$tabs['darven-precos-parcelados'] = array(
+			'label'  => __( 'Darven', 'darven-epi' ),
+			'target' => 'darven-precos-parcelados-product-options-panel',
+			'class'  => array(),
+		);
+
+		return $tabs;
+	}
+
+	public function renderPanel(): void {
 		global $post;
 
 		$product_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
 		printf(
-			'<div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div>', esc_attr( (string) $product_id )
+			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div></div>', esc_attr( (string) $product_id )
 		);
 	}
 

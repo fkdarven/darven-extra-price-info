@@ -1,12 +1,6 @@
 /* @jsx createElement */
 import apiFetch from '@wordpress/api-fetch';
-import { Notice, Spinner, ToggleControl } from '@wordpress/components';
-import {
-	createElement,
-	useCallback,
-	useEffect,
-	useState,
-} from '@wordpress/element';
+import { Component, createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { normalizeRestError } from '../shared/api';
@@ -30,161 +24,245 @@ export const createProductOptionsApi = ( config, fetch = apiFetch ) => {
 	};
 };
 
-const useProductOptions = ( apiClient ) => {
-	const [ settings, setSettings ] = useState( null );
-	const [ loadError, setLoadError ] = useState( '' );
-	const [ notice, setNotice ] = useState( null );
-	const [ isSaving, setIsSaving ] = useState( false );
+class ProductOptionsApp extends Component {
+	constructor( props ) {
+		super( props );
+		this.state = {
+			settings: null,
+			loadError: '',
+			notice: null,
+			isSaving: false,
+		};
+		this.isActive = false;
+	}
 
-	useEffect( () => {
-		let active = true;
+	componentDidMount() {
+		this.isActive = true;
+		if ( this.props.productId <= 0 || ! this.props.apiClient ) {
+			return;
+		}
 
-		apiClient
+		this.props.apiClient
 			.loadSettings()
-			.then( ( current ) => {
-				if ( active ) {
-					setSettings( current );
+			.then( ( settings ) => {
+				if ( this.isActive ) {
+					this.setState( { settings } );
 				}
 			} )
 			.catch( ( error ) => {
-				if ( active ) {
-					setLoadError(
-						normalizeRestError(
+				if ( this.isActive ) {
+					this.setState( {
+						loadError: normalizeRestError(
 							error,
 							__(
 								'The product options could not be loaded.',
-								'darven-precos-parcelados'
+								'darven-epi'
 							)
-						)
-					);
+						),
+					} );
 				}
 			} );
+	}
 
-		return () => {
-			active = false;
-		};
-	}, [ apiClient ] );
+	componentWillUnmount() {
+		this.isActive = false;
+	}
 
-	const saveFlag = useCallback(
-		async ( name, value ) => {
-			if ( isSaving ) {
-				return;
-			}
+	persistSettings = async ( changed ) => {
+		if ( this.state.isSaving ) {
+			return;
+		}
 
-			const changed = { ...settings, [ name ]: value };
-			setIsSaving( true );
-			setNotice( null );
+		this.setState( {
+			settings: changed,
+			isSaving: true,
+			notice: null,
+		} );
 
-			try {
-				const saved = await apiClient.saveSettings( changed );
-				setSettings( saved );
-				setNotice( {
-					status: 'success',
-					message: __(
-						'Product options saved.',
-						'darven-precos-parcelados'
-					),
+		try {
+			const settings = await this.props.apiClient.saveSettings( changed );
+			if ( this.isActive ) {
+				this.setState( {
+					settings,
+					notice: {
+						status: 'success',
+						message: __( 'Product options saved.', 'darven-epi' ),
+					},
 				} );
-			} catch ( error ) {
-				setNotice( {
-					status: 'error',
-					message: normalizeRestError(
-						error,
-						__(
-							'The product options could not be saved.',
-							'darven-precos-parcelados'
-						)
-					),
-				} );
-			} finally {
-				setIsSaving( false );
 			}
-		},
-		[ apiClient, isSaving, settings ]
-	);
-
-	return {
-		settings,
-		isLoading: null === settings && ! loadError,
-		loadError,
-		isSaving,
-		notice,
-		saveFlag,
+		} catch ( error ) {
+			if ( this.isActive ) {
+				this.setState( {
+					notice: {
+						status: 'error',
+						message: normalizeRestError(
+							error,
+							__(
+								'The product options could not be saved.',
+								'darven-epi'
+							)
+						),
+						canRetry: true,
+						pendingSettings: changed,
+					},
+				} );
+			}
+		} finally {
+			if ( this.isActive ) {
+				this.setState( { isSaving: false } );
+			}
+		}
 	};
-};
 
-const ProductOptionsApp = ( { apiClient } ) => {
-	const store = useProductOptions( apiClient );
+	saveFlag = ( name, value ) => {
+		this.persistSettings( { ...this.state.settings, [ name ]: value } );
+	};
 
-	if ( store.isLoading ) {
+	retrySave = () => {
+		if ( this.state.notice && this.state.notice.pendingSettings ) {
+			this.persistSettings( this.state.notice.pendingSettings );
+		}
+	};
+
+	renderNotice( notice ) {
 		return (
-			<div className="darven-precos-parcelados-product-options darven-precos-parcelados-product-options--loading">
-				<Spinner />
+			<div
+				className={ `darven-precos-parcelados-product-options__notice darven-precos-parcelados-product-options__notice--${ notice.status }` }
+				role={ 'error' === notice.status ? 'alert' : 'status' }
+			>
+				<p>{ notice.message }</p>
+				{ notice.canRetry && (
+					<div>
+						<p>
+							{ __(
+								'The selected change has not been saved yet.',
+								'darven-epi'
+							) }
+						</p>
+						<button
+							className="button"
+							type="button"
+							disabled={ this.state.isSaving }
+							onClick={ this.retrySave }
+						>
+							{ __( 'Retry save', 'darven-epi' ) }
+						</button>
+					</div>
+				) }
 			</div>
 		);
 	}
 
-	if ( store.loadError ) {
+	renderToggle( name, label, help ) {
+		const helpId = `${ name }-description`;
+
+		return (
+			<div className="darven-precos-parcelados-product-options__field">
+				<label htmlFor={ name }>
+					<input
+						id={ name }
+						type="checkbox"
+						checked={ Boolean( this.state.settings[ name ] ) }
+						disabled={ this.state.isSaving }
+						aria-describedby={ helpId }
+						onChange={ ( event ) =>
+							this.saveFlag( name, event.target.checked )
+						}
+					/>
+					<span>{ label }</span>
+				</label>
+				<p id={ helpId } className="description">
+					{ help }
+				</p>
+			</div>
+		);
+	}
+
+	render() {
+		const { settings, loadError, notice, isSaving } = this.state;
+
+		if ( this.props.productId <= 0 ) {
+			return (
+				<div className="darven-precos-parcelados-product-options">
+					{ this.renderNotice( {
+						status: 'info',
+						message: __(
+							'Save the product before editing Darven options.',
+							'darven-epi'
+						),
+					} ) }
+				</div>
+			);
+		}
+
+		if ( null === settings && ! loadError ) {
+			return (
+				<div className="darven-precos-parcelados-product-options darven-precos-parcelados-product-options--loading">
+					<span
+						className="darven-precos-parcelados-product-options__spinner"
+						role="progressbar"
+						aria-label={ __(
+							'Loading product options…',
+							'darven-epi'
+						) }
+					/>
+				</div>
+			);
+		}
+
+		if ( loadError ) {
+			return (
+				<div className="darven-precos-parcelados-product-options">
+					{ this.renderNotice( {
+						status: 'error',
+						message: loadError,
+					} ) }
+				</div>
+			);
+		}
+
 		return (
 			<div className="darven-precos-parcelados-product-options">
-				<Notice status="error" isDismissible={ false }>
-					{ store.loadError }
-				</Notice>
+				{ notice && this.renderNotice( notice ) }
+				<fieldset disabled={ isSaving }>
+					<legend>
+						{ __( 'Installment prices', 'darven-epi' ) }
+					</legend>
+					{ this.renderToggle(
+						'disable_incash',
+						__(
+							'Disable cash price for this product',
+							'darven-epi'
+						),
+						__(
+							'Hides the cash price only for the current product.',
+							'darven-epi'
+						)
+					) }
+					{ this.renderToggle(
+						'disable_installments',
+						__(
+							'Disable installment price for this product',
+							'darven-epi'
+						),
+						__(
+							'Hides the installment price only for the current product.',
+							'darven-epi'
+						)
+					) }
+				</fieldset>
+				{ isSaving && (
+					<div
+						className="darven-precos-parcelados-product-options__saving"
+						aria-live="polite"
+					>
+						<span className="darven-precos-parcelados-product-options__spinner" />
+						<span>{ __( 'Saving…', 'darven-epi' ) }</span>
+					</div>
+				) }
 			</div>
 		);
 	}
-
-	return (
-		<div className="darven-precos-parcelados-product-options">
-			<h4>{ __( 'Installment prices', 'darven-precos-parcelados' ) }</h4>
-			{ store.notice && (
-				<Notice status={ store.notice.status } isDismissible={ false }>
-					{ store.notice.message }
-				</Notice>
-			) }
-			<fieldset disabled={ store.isSaving }>
-				<ToggleControl
-					label={ __(
-						'Disable cash price for this product',
-						'darven-precos-parcelados'
-					) }
-					help={ __(
-						'Hides the cash price only for the current product.',
-						'darven-precos-parcelados'
-					) }
-					checked={ Boolean( store.settings.disable_incash ) }
-					disabled={ store.isSaving }
-					onChange={ ( value ) =>
-						store.saveFlag( 'disable_incash', value )
-					}
-				/>
-				<ToggleControl
-					label={ __(
-						'Disable installment price for this product',
-						'darven-precos-parcelados'
-					) }
-					help={ __(
-						'Hides the installment price only for the current product.',
-						'darven-precos-parcelados'
-					) }
-					checked={ Boolean( store.settings.disable_installments ) }
-					disabled={ store.isSaving }
-					onChange={ ( value ) =>
-						store.saveFlag( 'disable_installments', value )
-					}
-				/>
-			</fieldset>
-			{ store.isSaving && (
-				<div
-					className="darven-precos-parcelados-product-options__saving"
-					aria-live="polite"
-				>
-					<Spinner />
-					<span>{ __( 'Saving…', 'darven-precos-parcelados' ) }</span>
-				</div>
-			) }
-		</div>
-	);
-};
+}
 
 export default ProductOptionsApp;

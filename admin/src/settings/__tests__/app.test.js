@@ -5,10 +5,15 @@ import SettingsApp from '../app';
 
 jest.mock(
 	'@wordpress/element',
-	() => ( {
-		...require( 'react' ),
-		render: jest.fn(),
-	} ),
+	() => {
+		const react = require( 'react' );
+
+		return {
+			Component: react.Component,
+			createElement: react.createElement,
+			render: jest.fn(),
+		};
+	},
 	{ virtual: true }
 );
 
@@ -27,115 +32,6 @@ jest.mock(
 jest.mock( '@wordpress/i18n', () => ( {
 	__: ( text ) => text,
 } ) );
-
-jest.mock(
-	'@wordpress/components',
-	() => {
-		const element = require( '@wordpress/element' );
-		const control = ( tag, type ) =>
-			function Control( {
-				label,
-				value,
-				checked,
-				onChange,
-				options = [],
-				children,
-				...props
-			} ) {
-				if ( 'select' === tag ) {
-					return element.createElement(
-						'label',
-						null,
-						label,
-						element.createElement(
-							'select',
-							{
-								...props,
-								value: value || '',
-								onChange: ( event ) =>
-									onChange( event.target.value ),
-							},
-							options.map( ( option ) =>
-								element.createElement(
-									'option',
-									{ key: option.value, value: option.value },
-									option.label
-								)
-							)
-						)
-					);
-				}
-
-				return element.createElement(
-					'label',
-					null,
-					label,
-					element.createElement( tag, {
-						...props,
-						type,
-						value: 'checkbox' === type ? undefined : value || '',
-						checked:
-							'checkbox' === type
-								? Boolean( checked )
-								: undefined,
-						onChange: ( event ) =>
-							onChange(
-								'checkbox' === type
-									? event.target.checked
-									: event.target.value
-							),
-					} ),
-					children
-				);
-			};
-
-		return {
-			Button: ( { children, isBusy, variant, ...props } ) =>
-				element.createElement( 'button', props, children ),
-			Notice: ( { children, status = 'info' } ) =>
-				element.createElement(
-					'div',
-					{ role: 'error' === status ? 'alert' : 'status' },
-					children
-				),
-			Panel: ( { children } ) =>
-				element.createElement( 'div', null, children ),
-			PanelBody: ( { children, title } ) =>
-				element.createElement(
-					'section',
-					null,
-					element.createElement( 'h2', null, title ),
-					children
-				),
-			SelectControl: control( 'select' ),
-			Spinner: () =>
-				element.createElement( 'div', { role: 'progressbar' } ),
-			TabPanel: ( { tabs, children } ) => {
-				const [ active, setActive ] = element.useState( tabs[ 0 ] );
-				return element.createElement(
-					'div',
-					null,
-					...tabs.map( ( tab ) =>
-						element.createElement(
-							'button',
-							{
-								key: tab.name,
-								type: 'button',
-								onClick: () => setActive( tab ),
-							},
-							tab.title
-						)
-					),
-					children( active )
-				);
-			},
-			TextareaControl: control( 'textarea' ),
-			TextControl: control( 'input', 'text' ),
-			ToggleControl: control( 'input', 'checkbox' ),
-		};
-	},
-	{ virtual: true }
-);
 
 const settingsDocument = {
 	schema_version: 2,

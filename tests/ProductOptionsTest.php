@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 final class ProductOptionsTest extends TestCase {
 	protected function setUp(): void {
 		$GLOBALS['darven_epi_test_actions'] = array();
+		$GLOBALS['darven_epi_test_filters'] = array();
 		$GLOBALS['darven_epi_test_current_user_can'] = true;
 		$GLOBALS['darven_epi_test_nonce_is_valid']    = true;
 		$_POST = array(
@@ -15,24 +16,44 @@ final class ProductOptionsTest extends TestCase {
 		);
 	}
 
-	public function test_registers_the_product_object_save_hook(): void {
+	public function test_registers_the_darven_tab_panel_and_product_object_save_hook(): void {
 		$this->getSubject()->register();
 
 		$hooks = array_column( $GLOBALS['darven_epi_test_actions'], 'hook' );
+		$filters = array_column( $GLOBALS['darven_epi_test_filters'], 'hook' );
 
 		self::assertContains( 'woocommerce_admin_process_product_object', $hooks );
+		self::assertContains( 'woocommerce_product_data_panels', $hooks );
+		self::assertContains( 'woocommerce_product_data_tabs', $filters );
+		self::assertNotContains( 'woocommerce_product_options_general_product_data', $hooks );
 		self::assertNotContains( 'woocommerce_process_product_meta', $hooks );
 	}
 
-	public function test_renders_only_the_react_mount_point_for_the_current_product(): void {
+	public function test_adds_a_darven_product_data_tab_targeting_the_react_panel(): void {
+		$subject = $this->getSubject();
+		$tabs = $subject->addTab(
+			array(
+				'general' => array( 'label' => 'General' ),
+			)
+		);
+
+		self::assertSame( 'General', $tabs['general']['label'] );
+		self::assertSame( 'Darven', $tabs['darven-precos-parcelados']['label'] );
+		self::assertSame(
+			'darven-precos-parcelados-product-options-panel', $tabs['darven-precos-parcelados']['target']
+		);
+	}
+
+	public function test_renders_the_react_mount_point_inside_the_darven_panel(): void {
 		$GLOBALS['post'] = (object) array( 'ID' => 42 );
+		$subject = $this->getSubject();
 
 		ob_start();
-		$this->getSubject()->renderFields();
+		$subject->renderPanel();
 		$output = ob_get_clean();
 
 		self::assertSame(
-			'<div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div>', $output
+			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div></div>', $output
 		);
 		self::assertStringNotContainsString( '_darven_epi_is_incash_enabled', $output );
 	}

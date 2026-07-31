@@ -9,19 +9,56 @@
 		justify-content: center;
 	}
 
-	h4 {
-		margin: 0 0 12px;
-	}
-
 	fieldset {
 		min-width: 0;
 		margin: 0;
-		padding: 0;
-		border: 0;
+		padding: 12px;
+		border: 1px solid #c3c4c7;
+
+		legend {
+			padding: 0 6px;
+			font-weight: 600;
+		}
 	}
 
-	.components-notice {
+	&__field {
+		margin-bottom: 16px;
+
+		label {
+			display: flex;
+			align-items: flex-start;
+			gap: 8px;
+			font-weight: 600;
+		}
+
+		.description {
+			margin: 4px 0 0 24px;
+		}
+	}
+
+	&__notice {
 		margin: 0 0 12px;
+		padding: 10px 12px;
+		border-left: 4px solid #72aee6;
+		background: #fff;
+
+		&--success {
+			border-left-color: #00a32a;
+		}
+
+		&--error {
+			border-left-color: #d63638;
+		}
+	}
+
+	&__spinner {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		border: 2px solid #c3c4c7;
+		border-top-color: #2271b1;
+		border-radius: 50%;
+		animation: darven-precos-parcelados-product-spin 0.8s linear infinite;
 	}
 
 	&__saving {
@@ -29,5 +66,19 @@
 		align-items: center;
 		gap: 8px;
 		margin-top: 8px;
+	}
+}
+
+@keyframes darven-precos-parcelados-product-spin {
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.darven-precos-parcelados-product-options__spinner {
+		animation: none;
 	}
 }
