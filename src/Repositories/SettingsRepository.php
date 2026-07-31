@@ -29,24 +29,37 @@ final class SettingsRepository {
 	 */
 	private $adapter;
 
-	public function __construct( LegacySettingsAdapter $adapter ) {
-		$this->adapter = $adapter;
+	/**
+	 * @var SettingsSanitizer
+	 */
+	private $sanitizer;
+
+	public function __construct( LegacySettingsAdapter $adapter, ?SettingsSanitizer $sanitizer = null ) {
+		$this->adapter   = $adapter;
+		$this->sanitizer = $sanitizer ?? new SettingsSanitizer();
 	}
 
 	public function getSettings(): array {
+		return $this->getNormalizedSettings();
+	}
+
+	/**
+	 * Returns a sanitized v2 document without migrating legacy or v1 storage.
+	 */
+	public function getNormalizedSettings(): array {
 		$canonical = get_option( self::OPTION_NAME, array() );
 
-		if ( $this->isCanonicalDocument( $canonical ) ) {
-			return $canonical;
+		if ( $this->isReadableDocument( $canonical ) ) {
+			return $this->normalizeDocument( $canonical );
 		}
 
-		return $this->adapter->fromLegacyOptions( $this->getLegacyOptions() );
+		return $this->normalizeDocument( $this->adapter->fromLegacyOptions( $this->getLegacyOptions() ) );
 	}
 
 	public function getSection( string $section ): array {
 		$this->assertKnownSection( $section );
 
-		$settings = $this->getSettings();
+		$settings = $this->getNormalizedSettings();
 
 		return $settings[ $section ];
 	}
@@ -66,9 +79,9 @@ final class SettingsRepository {
 			$legacy_options[ $option_name ] = null === $legacy_option ? array() : $legacy_option;
 		}
 
-		$settings = $this->isCanonicalDocument( $canonical )
-			? $canonical
-			: $this->adapter->fromLegacyOptions( $legacy_options );
+		$settings = $this->isReadableDocument( $canonical )
+			? $this->normalizeDocument( $canonical )
+			: $this->normalizeDocument( $this->adapter->fromLegacyOptions( $legacy_options ) );
 
 		$compatibility = isset( $settings['compatibility'] ) && is_array( $settings['compatibility'] )
 			? $settings['compatibility']
@@ -88,18 +101,44 @@ final class SettingsRepository {
 	public function saveSection( string $section, array $values, string $deferred_legacy_option = '' ): bool {
 		$this->assertKnownSection( $section );
 
-		$settings                   = $this->getSettings();
-		$settings['schema_version'] = 1;
-		$settings[ $section ]       = $values;
+		$settings             = $this->getNormalizedSettings();
+		$settings[ $section ] = $values;
+
+		return $this->saveDocumentInternal( $settings, array( $section ), $deferred_legacy_option );
+	}
+
+	/**
+	 * Merges submitted sections with the normalized current state, stores v2,
+	 * and mirrors every legacy option.
+	 */
+	public function saveDocument( array $document ): bool {
+		$sections = array();
+		foreach ( self::SECTION_NAMES as $section ) {
+			if ( isset( $document[ $section ] ) && is_array( $document[ $section ] ) ) {
+				$sections[] = $section;
+			}
+		}
+
+		return $this->saveDocumentInternal( $document, $sections, '' );
+	}
+
+	private function saveDocumentInternal( array $document, array $submitted_sections, string $deferred_legacy_option ): bool {
+		$settings = $this->getNormalizedSettings();
+
+		foreach ( self::SECTION_NAMES as $section ) {
+			if ( isset( $document[ $section ] ) && is_array( $document[ $section ] ) ) {
+				$settings[ $section ] = array_merge( $settings[ $section ], $document[ $section ] );
+			}
+		}
+
+		$settings = $this->normalizeDocument( $settings );
 
 		if ( ! $this->persistAndVerify( self::OPTION_NAME, $settings ) ) {
 			return false;
 		}
 
 		return $this->persistLegacyOptions(
-			$this->adapter->projectToLegacyOptions( $settings, $this->getLegacyOptions() ),
-			$section,
-			$deferred_legacy_option
+			$this->adapter->projectToLegacyOptions( $settings, $this->getLegacyOptions() ), empty( $submitted_sections ) ? self::SECTION_NAMES : $submitted_sections, $deferred_legacy_option
 		);
 	}
 
@@ -115,18 +154,37 @@ final class SettingsRepository {
 		);
 	}
 
-	private function isCanonicalDocument( $settings ): bool {
-		if ( ! is_array( $settings ) || ! isset( $settings['schema_version'] ) || 1 !== $settings['schema_version'] ) {
+	private function isReadableDocument( $settings ): bool {
+		if ( ! is_array( $settings ) || ! isset( $settings['schema_version'] ) || ! in_array( $settings['schema_version'], array( 1, 2 ), true ) ) {
+			return false;
+	}
+
+	foreach ( self::SECTION_NAMES as $section ) {
+		if ( ! array_key_exists( $section, $settings ) || ! is_array( $settings[ $section ] ) ) {
 			return false;
 		}
-
-		foreach ( self::SECTION_NAMES as $section ) {
-			if ( ! array_key_exists( $section, $settings ) || ! is_array( $settings[ $section ] ) ) {
-				return false;
-			}
-		}
+	}
 
 		return true;
+	}
+
+	private function normalizeDocument( array $document ): array {
+		$normalized = array( 'schema_version' => 2 );
+
+		foreach ( self::SECTION_NAMES as $section ) {
+			$values = isset( $document[ $section ] ) && is_array( $document[ $section ] ) ? $document[ $section ] : array();
+			if ( 'compatibility' === $section && ! isset( $values[ YithDynamicPricingMode::FIELD ] ) ) {
+				$normalized[ $section ] = isset( $values[ YithDynamicPricingMode::LEGACY_FIELD ] )
+					&& YithDynamicPricingMode::LEGACY_FIELD === $values[ YithDynamicPricingMode::LEGACY_FIELD ]
+					? array( YithDynamicPricingMode::LEGACY_FIELD => YithDynamicPricingMode::LEGACY_FIELD )
+					: array();
+				continue;
+			}
+
+			$normalized[ $section ] = $this->sanitizer->sanitizeSection( $section, $values );
+		}
+
+		return $normalized;
 	}
 
 	private function getLegacyOptions(): array {
@@ -145,7 +203,7 @@ final class SettingsRepository {
 		return get_option( $option_name, null ) === $value;
 	}
 
-	private function persistLegacyOptions( array $legacy_options, string $section, string $deferred_legacy_option ): bool {
+	private function persistLegacyOptions( array $legacy_options, array $sections, string $deferred_legacy_option ): bool {
 		$failed_options = array();
 
 		foreach ( $legacy_options as $option_name => $option_value ) {
@@ -160,9 +218,8 @@ final class SettingsRepository {
 
 		if ( ! empty( $failed_options ) ) {
 			if ( ! $this->persistAndVerify(
-				self::SYNC_STATE_OPTION,
-				array(
-					'pending_sections' => array( $section ),
+				self::SYNC_STATE_OPTION, array(
+					'pending_sections' => $sections,
 					'failed_options'   => $failed_options,
 				)
 			) ) {

@@ -3,6 +3,7 @@
 namespace Darven\ExtraPriceInfo\Admin\SettingsFields;
 
 use Darven\ExtraPriceInfo\Admin\LegacySettingsSync;
+use Darven\ExtraPriceInfo\Repositories\SettingsSanitizer;
 
 final class DisplayFields {
 	/**
@@ -36,29 +37,9 @@ final class DisplayFields {
 	}
 
 	public function sanitize( $input ): array {
-		if ( ! is_array( $input ) ) {
-			return LegacySettingsSync::save( 'display', array() );
-		}
+		$values = is_array( $input ) ? $input : array();
 
-		$sanitized_values = array();
-		foreach ( $this->getColorFields() as $field ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$value = strtolower( sanitize_text_field( $input[ $field ] ) );
-
-				$sanitized_values[ $field ] = preg_match( '/^#(?:[0-9a-f]{3}){1,2}$/', $value ) ? $value : '';
-			}
-		}
-
-		$allowed_font_sizes = array_keys( $this->font_sizes );
-		foreach ( $this->getFontSizeFields() as $field ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$value = sanitize_text_field( $input[ $field ] );
-
-				$sanitized_values[ $field ] = in_array( $value, $allowed_font_sizes, true ) ? $value : '1.0';
-			}
-		}
-
-		return LegacySettingsSync::save( 'display', $sanitized_values );
+		return LegacySettingsSync::save( 'display', ( new SettingsSanitizer() )->sanitizeSection( 'display', $values ) );
 	}
 
 	private function registerFields(): void {
@@ -116,36 +97,6 @@ final class DisplayFields {
 			},
 			'darven-epi-admin',
 			$section
-		);
-	}
-
-	/**
-	 * @return array<int,string>
-	 */
-	private function getColorFields(): array {
-		return array(
-			'darven_epi_color_of_installments_install',
-			'darven_epi_color_of_installments_prefix',
-			'darven_epi_color_of_installments_suffix',
-			'darven_epi_color_of_installments_price',
-			'darven_epi_color_of_incash_prefix',
-			'darven_epi_color_of_incash_suffix',
-			'darven_epi_color_of_incash_price',
-		);
-	}
-
-	/**
-	 * @return array<int,string>
-	 */
-	private function getFontSizeFields(): array {
-		return array(
-			'darven_epi_font_size_of_incash_price',
-			'darven_epi_font_size_of_incash_suffix',
-			'darven_epi_font_size_of_incash_prefix',
-			'darven_epi_font_size_of_installments_price',
-			'darven_epi_font_size_of_installments_suffix',
-			'darven_epi_font_size_of_installments_prefix',
-			'darven_epi_font_size_of_installments_install',
 		);
 	}
 }

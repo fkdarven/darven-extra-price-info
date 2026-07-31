@@ -6,6 +6,7 @@ use Darven\ExtraPriceInfo\Admin\LegacySettingsSync;
 use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
 use Darven\ExtraPriceInfo\Compatibility\YithDynamicPricingMode;
 use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
+use Darven\ExtraPriceInfo\Repositories\SettingsSanitizer;
 
 final class CompatibilityFields {
 	public function register(): void {
@@ -35,18 +36,8 @@ final class CompatibilityFields {
 	}
 
 	public function sanitize( $input ): array {
-		$value = is_array( $input ) && array_key_exists( YithDynamicPricingMode::FIELD, $input )
-			? sanitize_text_field( $input[ YithDynamicPricingMode::FIELD ] )
-			: '';
-		$mode  = YithDynamicPricingMode::sanitize( $value );
+		$values = is_array( $input ) ? $input : array();
 
-		$sanitized_values = array(
-			YithDynamicPricingMode::FIELD => $mode,
-		);
-		if ( YithDynamicPricingMode::AUTO === $mode ) {
-			$sanitized_values[ YithDynamicPricingMode::LEGACY_FIELD ] = YithDynamicPricingMode::LEGACY_FIELD;
-		}
-
-		return LegacySettingsSync::save( 'compatibility', $sanitized_values );
+		return LegacySettingsSync::save( 'compatibility', ( new SettingsSanitizer() )->sanitizeSection( 'compatibility', $values ) );
 	}
 }

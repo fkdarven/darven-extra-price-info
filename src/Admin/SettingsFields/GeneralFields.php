@@ -3,6 +3,7 @@
 namespace Darven\ExtraPriceInfo\Admin\SettingsFields;
 
 use Darven\ExtraPriceInfo\Admin\LegacySettingsSync;
+use Darven\ExtraPriceInfo\Repositories\SettingsSanitizer;
 
 final class GeneralFields {
 	/**
@@ -19,53 +20,9 @@ final class GeneralFields {
 	}
 
 	public function sanitize( $input ): array {
-		if ( ! is_array( $input ) ) {
-			return LegacySettingsSync::save( 'general', array() );
-		}
+		$values = is_array( $input ) ? $input : array();
 
-		$sanitized_values = array();
-
-		foreach ( $this->getCheckboxFields() as $field => $checked_value ) {
-			if ( isset( $input[ $field ] ) && $checked_value === $this->sanitizePlainText( $input[ $field ] ) ) {
-				$sanitized_values[ $field ] = $checked_value;
-			}
-		}
-
-		foreach ( $this->getEnumFields() as $field => $settings ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$value = $this->sanitizePlainText( $input[ $field ] );
-
-				$sanitized_values[ $field ] = in_array( $value, $settings['allowed'], true )
-					? $value
-					: $settings['default'];
-			}
-		}
-
-		foreach ( $this->getDecimalFields() as $field ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$sanitized_values[ $field ] = $this->sanitizeDecimalValue( $input[ $field ] );
-			}
-		}
-
-		foreach ( $this->getIntegerFields() as $field => $minimum ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$sanitized_values[ $field ] = $this->sanitizeIntegerValue( $input[ $field ], $minimum );
-			}
-		}
-
-		foreach ( $this->getMarkupFields() as $field ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$sanitized_values[ $field ] = wp_kses( $this->getScalarInputValue( $input[ $field ] ), $this->getAllowedMarkupTags() );
-			}
-		}
-
-		if ( array_key_exists( 'darven_epi_installments_interest_fee_table', $input ) ) {
-			$sanitized_values['darven_epi_installments_interest_fee_table'] = $this->sanitizeInterestFeeTable(
-				$input['darven_epi_installments_interest_fee_table']
-			);
-		}
-
-		return LegacySettingsSync::save( 'general', $sanitized_values );
+		return LegacySettingsSync::save( 'general', ( new SettingsSanitizer() )->sanitizeSection( 'general', $values ) );
 	}
 
 	private function registerFields(): void {
@@ -224,150 +181,5 @@ final class GeneralFields {
 
 	private function optionValue( string $field ): string {
 		return isset( $this->options[ $field ] ) ? (string) $this->options[ $field ] : '';
-	}
-
-	/**
-	 * @return array<string,string>
-	 */
-	private function getCheckboxFields(): array {
-		return array(
-			'darven_epi_incash_is_enabled'                         => 'darven_epi_incash_is_enabled',
-			'darven_epi_installments_is_enabled'                   => 'darven_epi_installments_is_enabled',
-			'darven_epi_installments_interest_fee_is_table_enabled' => 'darven_epi_installments_interest_fee_is_table_enabled',
-		);
-	}
-
-	/**
-	 * @return array<string,array{allowed:array<int,string>,default:string}>
-	 */
-	private function getEnumFields(): array {
-		return array(
-			'darven_epi_type_of_discount' => array(
-				'allowed' => array( 'percent', 'fixed' ),
-				'default' => 'percent',
-			),
-			'darven_epi_mode_of_view'     => array(
-				'allowed' => array( 'default', 'popup', 'nofee' ),
-				'default' => 'default',
-			),
-		);
-	}
-
-	/**
-	 * @return array<int,string>
-	 */
-	private function getDecimalFields(): array {
-		return array(
-			'darven_epi_minimum_installments_value',
-			'darven_epi_installments_interest_fee',
-			'darven_epi_installments_interest_fee_first_install',
-			'darven_epi_minimum_incash_value',
-			'darven_epi_value_of_incash_discount',
-		);
-	}
-
-	/**
-	 * @return array<string,int>
-	 */
-	private function getIntegerFields(): array {
-		return array(
-			'darven_epi_max_installments'                 => 1,
-			'darven_epi_installments_interest_fee_from' => 0,
-		);
-	}
-
-	/**
-	 * @return array<int,string>
-	 */
-	private function getMarkupFields(): array {
-		return array(
-			'darven_epi_installments_prefix',
-			'darven_epi_installments_suffix',
-			'darven_epi_incash_suffix',
-			'darven_epi_incash_prefix',
-			'darven_epi_popup_text',
-		);
-	}
-
-	/**
-	 * @return array<string,array<string,array<mixed>>>
-	 */
-	private function getAllowedMarkupTags(): array {
-		return array(
-			'a'    => array( 'href' => array(), 'class' => array() ),
-			'br'   => array(),
-			'i'    => array(),
-			'b'    => array(),
-			'div'  => array( 'style' => array(), 'class' => array() ),
-			'span' => array( 'style' => array(), 'class' => array() ),
-			'p'    => array( 'style' => array(), 'class' => array() ),
-			'em'   => array(),
-		);
-	}
-
-	private function sanitizePlainText( $value ): string {
-		return sanitize_text_field( $this->getScalarInputValue( $value ) );
-	}
-
-	private function getScalarInputValue( $value ): string {
-		if ( is_array( $value ) || is_object( $value ) ) {
-			return '';
-		}
-
-		return (string) wp_unslash( $value );
-	}
-
-	private function sanitizeDecimalValue( $value, float $minimum = 0.0 ): string {
-		$number = $this->parseDecimalValue( $value );
-		if ( null === $number || $number < $minimum ) {
-			$number = $minimum;
-		}
-
-		return $this->formatNumberForOption( $number );
-	}
-
-	private function sanitizeIntegerValue( $value, int $minimum ): string {
-		$number = $this->parseDecimalValue( $value );
-		if ( null === $number ) {
-			$number = 0.0;
-		}
-
-		$number = (int) floor( $number );
-		if ( $number < $minimum ) {
-			$number = $minimum;
-		}
-
-		return (string) $number;
-	}
-
-	private function sanitizeInterestFeeTable( $value ): string {
-		$items            = explode( '|', $this->sanitizePlainText( $value ) );
-		$sanitized_values = array();
-
-		foreach ( $items as $item ) {
-			$number = $this->parseDecimalValue( $item );
-			if ( null === $number || $number < 0 ) {
-				continue;
-			}
-
-			$sanitized_values[] = $this->formatNumberForOption( $number );
-		}
-
-		return implode( '|', $sanitized_values );
-	}
-
-	private function parseDecimalValue( $value ): ?float {
-		$value = str_replace( ',', '.', $this->sanitizePlainText( $value ) );
-		if ( ! preg_match( '/-?\d+(?:\.\d+)?/', $value, $matches ) ) {
-			return null;
-		}
-
-		return (float) $matches[0];
-	}
-
-	private function formatNumberForOption( float $number ): string {
-		$formatted = rtrim( rtrim( number_format( $number, 6, '.', '' ), '0' ), '.' );
-
-		return '' === $formatted ? '0' : $formatted;
 	}
 }

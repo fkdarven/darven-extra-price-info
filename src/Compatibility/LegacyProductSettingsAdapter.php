@@ -5,6 +5,7 @@ namespace Darven\ExtraPriceInfo\Compatibility;
 final class LegacyProductSettingsAdapter {
 	public function fromLegacyMeta( $incash_value, $installments_value ): array {
 		return array(
+			'schema_version'       => 1,
 			'disable_incash'       => 'yes' === $incash_value,
 			'disable_installments' => 'yes' === $installments_value,
 		);

@@ -3,6 +3,7 @@
 namespace Darven\ExtraPriceInfo\Admin\SettingsFields;
 
 use Darven\ExtraPriceInfo\Admin\LegacySettingsSync;
+use Darven\ExtraPriceInfo\Repositories\SettingsSanitizer;
 
 final class PositionsFields {
 	/**
@@ -31,26 +32,9 @@ final class PositionsFields {
 	}
 
 	public function sanitize( $input ): array {
-		if ( ! is_array( $input ) ) {
-			return LegacySettingsSync::save( 'positions', array() );
-		}
+		$values = is_array( $input ) ? $input : array();
 
-		$sanitized_values = array();
-		$allowed_values   = array_keys( $this->getItems() );
-
-		foreach ( array(
-			'darven_epi_others_product_position',
-			'darven_epi_single_product_position',
-			'darven_epi_catalog_product_position',
-		) as $field ) {
-			if ( array_key_exists( $field, $input ) ) {
-				$value = sanitize_text_field( $input[ $field ] );
-
-				$sanitized_values[ $field ] = in_array( $value, $allowed_values, true ) ? $value : 'first';
-			}
-		}
-
-		return LegacySettingsSync::save( 'positions', $sanitized_values );
+		return LegacySettingsSync::save( 'positions', ( new SettingsSanitizer() )->sanitizeSection( 'positions', $values ) );
 	}
 
 	private function registerSettingsFields(): void {

@@ -34,8 +34,7 @@ final class ProductOptionsTest extends TestCase {
 		$subject->save( $product );
 
 		self::assertSame(
-			array( 'disable_incash' => true, 'disable_installments' => false ),
-			$product->get_meta( '_darven_epi_product_settings', true )
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $product->get_meta( '_darven_epi_product_settings', true )
 		);
 		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
@@ -54,8 +53,7 @@ final class ProductOptionsTest extends TestCase {
 
 		self::assertSame( 1, $product->get_save_count() );
 		self::assertSame(
-			array( 'disable_incash' => true, 'disable_installments' => false ),
-			$product->get_meta( '_darven_epi_product_settings', true )
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $product->get_meta( '_darven_epi_product_settings', true )
 		);
 	}
 
@@ -72,8 +70,7 @@ final class ProductOptionsTest extends TestCase {
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_incash_enabled' ) );
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled' ) );
 		self::assertSame(
-			array( 'disable_incash' => false, 'disable_installments' => false ),
-			$product->get_meta( '_darven_epi_product_settings', true )
+			array( 'schema_version' => 1, 'disable_incash' => false, 'disable_installments' => false ), $product->get_meta( '_darven_epi_product_settings', true )
 		);
 	}
 

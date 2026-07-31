@@ -1,6 +1,7 @@
 <?php
 
 use Darven\ExtraPriceInfo\Admin\SettingsFields\GeneralFields;
+use Darven\ExtraPriceInfo\Repositories\SettingsSanitizer;
 use PHPUnit\Framework\TestCase;
 
 final class GeneralSettingsSanitizationTest extends TestCase {
@@ -38,6 +39,14 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 		self::assertSame( '3', $result['darven_epi_installments_interest_fee_from'] );
 		self::assertSame( '8.25|9.5|10', $result['darven_epi_installments_interest_fee_table'] );
 		self::assertArrayNotHasKey( 'darven_epi_unknown_option', $result );
+	}
+
+	public function test_exposes_the_general_field_rules_through_the_shared_sanitizer(): void {
+		$result = ( new SettingsSanitizer() )->sanitizeSection(
+			'general', array( 'darven_epi_max_installments' => '12.9' )
+		);
+
+		self::assertSame( '12', $result['darven_epi_max_installments'] );
 	}
 
 	public function test_allows_limited_markup_only_for_general_text_fields(): void {

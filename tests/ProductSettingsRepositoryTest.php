@@ -19,8 +19,7 @@ final class ProductSettingsRepositoryTest extends TestCase {
 		$settings = $this->get_repository()->getSettings( $product );
 
 		self::assertSame(
-			array( 'disable_incash' => true, 'disable_installments' => false ),
-			$settings
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $settings
 		);
 		self::assertSame( '', $product->get_meta( ProductSettingsRepository::META_KEY, true ) );
 		self::assertSame( 0, $product->get_save_count() );
@@ -39,7 +38,9 @@ final class ProductSettingsRepositoryTest extends TestCase {
 			)
 		);
 
-		self::assertSame( $canonical, $this->get_repository()->getSettings( $product ) );
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => false, 'disable_installments' => true ), $this->get_repository()->getSettings( $product )
+		);
 		self::assertSame( 0, $product->get_save_count() );
 	}
 
@@ -53,8 +54,7 @@ final class ProductSettingsRepositoryTest extends TestCase {
 
 		self::assertTrue( $result );
 		self::assertSame(
-			array( 'disable_incash' => true, 'disable_installments' => false ),
-			$product->get_meta( '_darven_epi_product_settings', true )
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $product->get_meta( '_darven_epi_product_settings', true )
 		);
 		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );

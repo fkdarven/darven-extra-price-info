@@ -23,7 +23,7 @@ final class ProductSettingsRepository {
 		$canonical_settings = $product->get_meta( self::META_KEY, true );
 
 		if ( $this->isCanonicalSettings( $canonical_settings ) ) {
-			return $canonical_settings;
+			return $this->normalizeSettings( $canonical_settings );
 		}
 
 		return $this->adapter->fromLegacyMeta(
@@ -34,6 +34,7 @@ final class ProductSettingsRepository {
 
 	public function save( \WC_Product $product, array $settings ): bool {
 		$canonical_settings = array(
+			'schema_version'       => 1,
 			'disable_incash'       => true === ( $settings['disable_incash'] ?? false ),
 			'disable_installments' => true === ( $settings['disable_installments'] ?? false ),
 		);
@@ -53,5 +54,13 @@ final class ProductSettingsRepository {
 			&& isset( $settings['disable_incash'], $settings['disable_installments'] )
 			&& is_bool( $settings['disable_incash'] )
 			&& is_bool( $settings['disable_installments'] );
+	}
+
+	private function normalizeSettings( array $settings ): array {
+		return array(
+			'schema_version'       => 1,
+			'disable_incash'       => $settings['disable_incash'],
+			'disable_installments' => $settings['disable_installments'],
+		);
 	}
 }
