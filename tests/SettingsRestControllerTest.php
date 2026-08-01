@@ -56,7 +56,7 @@ final class SettingsRestControllerTest extends TestCase {
 		self::assertSame( array(), $GLOBALS['darven_epi_test_option_reads'] );
 	}
 
-	public function test_rest_dispatch_returns_not_found_for_an_unknown_product_before_capability_mapping(): void {
+	public function test_rest_dispatch_does_not_reveal_an_unknown_product_to_an_unauthorized_user(): void {
 		$GLOBALS['darven_epi_test_current_user_can'] = false;
 		$this->getSubject()->register();
 
@@ -64,10 +64,18 @@ final class SettingsRestControllerTest extends TestCase {
 			'darven-precos-parcelados/v1', 'GET', '/products/404/settings', new WP_REST_Request( array( 'id' => 404 ) )
 		);
 
-		self::assertSame( 404, $response->get_status() );
-		self::assertSame( 'darven_epi_product_not_found', $response->get_data()['code'] );
-		self::assertSame( array( 'permission', 'callback' ), $GLOBALS['darven_epi_test_rest_dispatch_log'] );
-		self::assertArrayNotHasKey( 'darven_epi_test_capability_check', $GLOBALS );
+		self::assertSame( 403, $response->get_status() );
+		self::assertSame( 'darven_epi_forbidden', $response->get_data()['code'] );
+		self::assertSame( array( 'permission' ), $GLOBALS['darven_epi_test_rest_dispatch_log'] );
+		self::assertSame( array( 'edit_post', 404 ), $GLOBALS['darven_epi_test_capability_check'] );
+	}
+
+	public function test_product_permission_does_not_reveal_an_unknown_id_to_an_unauthorized_user(): void {
+		$GLOBALS['darven_epi_test_current_user_can'] = false;
+
+		$result = $this->getSubject()->canEditProduct( new WP_REST_Request( array( 'id' => 999 ) ) );
+
+		self::assertSame( 'darven_epi_forbidden', $result->get_error_code() );
 	}
 
 	public function test_rest_dispatch_keeps_unauthorized_existing_products_out_of_handlers(): void {

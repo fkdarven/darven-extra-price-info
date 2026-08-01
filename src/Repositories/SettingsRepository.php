@@ -47,13 +47,15 @@ final class SettingsRepository {
 	 * Returns a sanitized v2 document without migrating legacy or v1 storage.
 	 */
 	public function getNormalizedSettings(): array {
-		$canonical = get_option( self::OPTION_NAME, array() );
+		$canonical      = get_option( self::OPTION_NAME, null );
+		$legacy_options = $this->getLegacyOptions();
+		$has_persisted_darven_settings = null !== $canonical || $this->hasPersistedLegacySettings( $legacy_options );
 
 		if ( $this->isReadableDocument( $canonical ) ) {
-			return $this->normalizeDocument( $canonical );
+			return $this->normalizeDocument( $canonical, $has_persisted_darven_settings, $legacy_options );
 		}
 
-		return $this->normalizeDocument( $this->adapter->fromLegacyOptions( $this->getLegacyOptions() ) );
+		return $this->normalizeDocument( $this->adapter->fromLegacyOptions( $legacy_options ), $has_persisted_darven_settings, $legacy_options );
 	}
 
 	public function getSection( string $section ): array {
@@ -65,37 +67,9 @@ final class SettingsRepository {
 	}
 
 	public function getYithDynamicPricingMode(): string {
-		$canonical                     = get_option( self::OPTION_NAME, null );
-		$has_persisted_darven_settings = null !== $canonical;
-		$legacy_options                 = array();
+		$settings = $this->getNormalizedSettings();
 
-		foreach ( self::LEGACY_OPTION_NAMES as $option_name ) {
-			$legacy_option = get_option( $option_name, null );
-
-			if ( null !== $legacy_option ) {
-				$has_persisted_darven_settings = true;
-			}
-
-			$legacy_options[ $option_name ] = null === $legacy_option ? array() : $legacy_option;
-		}
-
-		$settings = $this->isReadableDocument( $canonical )
-			? $this->normalizeDocument( $canonical )
-			: $this->normalizeDocument( $this->adapter->fromLegacyOptions( $legacy_options ) );
-
-		$compatibility = isset( $settings['compatibility'] ) && is_array( $settings['compatibility'] )
-			? $settings['compatibility']
-			: array();
-
-		$legacy_compatibility = $legacy_options['darven_epi_option_compatibility'];
-
-		if ( ! isset( $compatibility[ YithDynamicPricingMode::FIELD ] )
-			&& is_array( $legacy_compatibility )
-			&& isset( $legacy_compatibility[ YithDynamicPricingMode::LEGACY_FIELD ] ) ) {
-			$compatibility[ YithDynamicPricingMode::LEGACY_FIELD ] = $legacy_compatibility[ YithDynamicPricingMode::LEGACY_FIELD ];
-		}
-
-		return YithDynamicPricingMode::resolve( $compatibility, $has_persisted_darven_settings );
+		return $settings['compatibility'][ YithDynamicPricingMode::FIELD ];
 	}
 
 	public function saveSection( string $section, array $values, string $deferred_legacy_option = '' ): bool {
@@ -133,7 +107,7 @@ final class SettingsRepository {
 			}
 		}
 
-		$settings = $this->normalizeDocument( $settings );
+		$settings = $this->normalizeDocument( $settings, true );
 
 		if ( ! $this->persistAndVerify( self::OPTION_NAME, $settings ) ) {
 			return false;
@@ -170,16 +144,24 @@ final class SettingsRepository {
 		return true;
 	}
 
-	private function normalizeDocument( array $document ): array {
+	private function normalizeDocument( array $document, bool $has_persisted_darven_settings, array $legacy_options = array() ): array {
 		$normalized = array( 'schema_version' => 2 );
 
 		foreach ( self::SECTION_NAMES as $section ) {
 			$values = isset( $document[ $section ] ) && is_array( $document[ $section ] ) ? $document[ $section ] : array();
-			if ( 'compatibility' === $section && ! isset( $values[ YithDynamicPricingMode::FIELD ] ) ) {
-				$normalized[ $section ] = isset( $values[ YithDynamicPricingMode::LEGACY_FIELD ] )
-					&& YithDynamicPricingMode::LEGACY_FIELD === $values[ YithDynamicPricingMode::LEGACY_FIELD ]
-					? array( YithDynamicPricingMode::LEGACY_FIELD => YithDynamicPricingMode::LEGACY_FIELD )
-					: array();
+			if ( 'compatibility' === $section ) {
+				if ( ! isset( $values[ YithDynamicPricingMode::FIELD ] )
+					&& ! isset( $values[ YithDynamicPricingMode::LEGACY_FIELD ] )
+					&& isset( $legacy_options['darven_epi_option_compatibility'] )
+					&& is_array( $legacy_options['darven_epi_option_compatibility'] )
+					&& isset( $legacy_options['darven_epi_option_compatibility'][ YithDynamicPricingMode::LEGACY_FIELD ] ) ) {
+					$values[ YithDynamicPricingMode::LEGACY_FIELD ] = $legacy_options['darven_epi_option_compatibility'][ YithDynamicPricingMode::LEGACY_FIELD ];
+				}
+
+				$mode = YithDynamicPricingMode::resolve( $values, $has_persisted_darven_settings );
+				$normalized[ $section ] = array(
+					YithDynamicPricingMode::FIELD => $mode,
+				);
 				continue;
 			}
 
@@ -193,10 +175,20 @@ final class SettingsRepository {
 		$legacy_options = array();
 
 		foreach ( self::LEGACY_OPTION_NAMES as $option_name ) {
-			$legacy_options[ $option_name ] = get_option( $option_name, array() );
+			$legacy_options[ $option_name ] = get_option( $option_name, null );
 		}
 
 		return $legacy_options;
+	}
+
+	private function hasPersistedLegacySettings( array $legacy_options ): bool {
+		foreach ( $legacy_options as $legacy_option ) {
+			if ( null !== $legacy_option ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function persistAndVerify( string $option_name, array $value ): bool {

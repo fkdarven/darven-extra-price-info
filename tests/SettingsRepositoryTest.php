@@ -1,6 +1,7 @@
 <?php
 
 use Darven\ExtraPriceInfo\Compatibility\LegacySettingsAdapter;
+use Darven\ExtraPriceInfo\Compatibility\YithDynamicPricingMode;
 use Darven\ExtraPriceInfo\Repositories\SettingsRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -43,7 +44,7 @@ final class SettingsRepositoryTest extends TestCase {
 		self::assertSame( array(), $GLOBALS['darven_epi_test_update_option_calls'] );
 	}
 
-	public function test_prefers_a_valid_canonical_document(): void {
+	public function test_normalizes_a_valid_canonical_document_with_an_explicit_effective_mode(): void {
 		$canonical = array(
 			'schema_version' => 2,
 			'general'        => array(
@@ -56,7 +57,12 @@ final class SettingsRepositoryTest extends TestCase {
 		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
 		$GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] = $canonical;
 
-		self::assertSame( $canonical, $this->getRepository()->getSettings() );
+		$expected = $canonical;
+		$expected['compatibility'] = array(
+			YithDynamicPricingMode::FIELD => YithDynamicPricingMode::DISABLED,
+		);
+
+		self::assertSame( $expected, $this->getRepository()->getSettings() );
 	}
 
 	public function test_save_document_merges_partial_sections_and_sanitizes_known_values(): void {
@@ -120,6 +126,41 @@ final class SettingsRepositoryTest extends TestCase {
 	public function test_defaults_to_automatic_without_any_persisted_darven_settings(): void {
 		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
 		self::assertSame( array(), $GLOBALS['darven_epi_test_options'] );
+	}
+
+	public function test_unchanged_react_save_materializes_automatic_mode_for_a_clean_installation(): void {
+		$before_save = $GLOBALS['darven_epi_test_options'];
+		$document    = $this->getRepository()->getNormalizedSettings();
+
+		self::assertSame( 'auto', $document['compatibility'][ YithDynamicPricingMode::FIELD ] );
+		self::assertSame( $before_save, $GLOBALS['darven_epi_test_options'] );
+		self::assertTrue( $this->getRepository()->saveDocument( $document ) );
+		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
+	}
+
+	public function test_unchanged_react_save_preserves_automatic_mode_from_a_checked_legacy_option(): void {
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_compatibility'] = array(
+			YithDynamicPricingMode::LEGACY_FIELD => YithDynamicPricingMode::LEGACY_FIELD,
+		);
+		$before_save = $GLOBALS['darven_epi_test_options'];
+		$document    = $this->getRepository()->getNormalizedSettings();
+
+		self::assertSame( 'auto', $document['compatibility'][ YithDynamicPricingMode::FIELD ] );
+		self::assertSame( $before_save, $GLOBALS['darven_epi_test_options'] );
+		self::assertTrue( $this->getRepository()->saveDocument( $document ) );
+		self::assertSame( 'auto', $this->getRepository()->getYithDynamicPricingMode() );
+	}
+
+	public function test_unchanged_react_save_preserves_disabled_mode_from_an_unchecked_legacy_option(): void {
+		$GLOBALS['darven_epi_test_options'] = $this->getLegacyOptions();
+		$before_save = $GLOBALS['darven_epi_test_options'];
+		$document    = $this->getRepository()->getNormalizedSettings();
+
+		self::assertSame( 'disabled', $document['compatibility'][ YithDynamicPricingMode::FIELD ] );
+		self::assertSame( $before_save, $GLOBALS['darven_epi_test_options'] );
+		self::assertTrue( $this->getRepository()->saveDocument( $document ) );
+		self::assertSame( 'disabled', $this->getRepository()->getYithDynamicPricingMode() );
 	}
 
 	public function test_keeps_an_existing_unchecked_installation_disabled(): void {
@@ -225,7 +266,11 @@ final class SettingsRepositoryTest extends TestCase {
 		$result = $this->getRepository()->saveSection( 'general', $canonical['general'] );
 
 		self::assertTrue( $result );
-		self::assertSame( $canonical, $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] );
+		$expected = $canonical;
+		$expected['compatibility'] = array(
+			YithDynamicPricingMode::FIELD => YithDynamicPricingMode::DISABLED,
+		);
+		self::assertSame( $expected, $GLOBALS['darven_epi_test_options'][ SettingsRepository::OPTION_NAME ] );
 		self::assertArrayNotHasKey( SettingsRepository::SYNC_STATE_OPTION, $GLOBALS['darven_epi_test_options'] );
 	}
 

@@ -78,15 +78,11 @@ final class SettingsRestController {
 	 */
 	public function canEditProduct( \WP_REST_Request $request ) {
 		$product_id = absint( $request->get_param( 'id' ) );
-		if ( ! wc_get_product( $product_id ) ) {
-			return true;
+		if ( ! current_user_can( 'edit_post', $product_id ) ) {
+			return $this->forbiddenError();
 		}
 
-		if ( current_user_can( 'edit_post', $product_id ) ) {
-			return true;
-		}
-
-		return $this->forbiddenError();
+		return true;
 	}
 
 	public function getSettings(): \WP_REST_Response {
