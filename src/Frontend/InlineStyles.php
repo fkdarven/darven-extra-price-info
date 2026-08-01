@@ -17,7 +17,7 @@ final class InlineStyles {
 	public function render(): string {
 		$display = $this->settings_repository->getSection( 'display' );
 
-		return str_replace( '\\n', "\n", '<style>\n\n'
+		return str_replace( '\\n', "\n", '\n'
 			. '    .darven-epi-incash-prefix {\n\n'
 			. '        color: ' . $this->getValue( $display, 'darven_epi_color_of_incash_prefix' ) . ';\n'
 			. '        font-size: ' . $this->getValue( $display, 'darven_epi_font_size_of_incash_prefix', '1' ) . 'em;\n'
@@ -45,8 +45,7 @@ final class InlineStyles {
 			. '    .darven-epi-installment-suffix {\n\n'
 			. '        color: ' . $this->getValue( $display, 'darven_epi_color_of_installments_suffix' ) . ';\n'
 			. '        font-size: ' . $this->getValue( $display, 'darven_epi_font_size_of_installments_suffix', '1' ) . 'em;\n'
-			. '    }\n\n\n'
-			. '</style>\n' );
+			. '    }\n\n\n' );
 	}
 
 	private function getValue( array $display, string $key, string $default = '' ): string {

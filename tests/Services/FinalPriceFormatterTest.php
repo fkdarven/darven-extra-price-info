@@ -124,6 +124,11 @@ final class FinalPriceFormatterTest extends TestCase {
 		self::assertStringContainsString( 'color: #555555;', $styles );
 		self::assertStringNotContainsString( 'color: #555555 !important;', $styles );
 		self::assertStringNotContainsString( '\\n', $styles );
+		self::assertStringNotContainsString( '<style', $styles );
+		foreach ( array( '#111111', '#123456', '#222222', '#333333', '#444444', '#555555', '#666666' ) as $color ) {
+			self::assertStringContainsString( 'color: ' . $color, $styles );
+		}
+		self::assertSame( 7, substr_count( $styles, 'font-size: 1.0em;' ) );
 
 		ob_start();
 		require DARVEN_EPI_DIR_PATH . 'public/partials/darven-epi-custom-css.php';

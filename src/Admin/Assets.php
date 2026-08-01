@@ -50,6 +50,7 @@ final class Assets {
 			: ( defined( 'DARVEN_EPI_VERSION' ) ? DARVEN_EPI_VERSION : '1.0.0' );
 
 		wp_enqueue_style( $handle, $url . 'style-index.css', array(), $version, 'all' );
+		wp_style_add_data( $handle, 'rtl', 'replace' );
 		wp_enqueue_script( $handle, $url . 'index.js', $deps, $version, true );
 		wp_localize_script( $handle, $object_name, $config );
 		if ( function_exists( 'wp_set_script_translations' ) ) {
