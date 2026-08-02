@@ -56,9 +56,9 @@ final class InstallmentPriceFormatterTest extends TestCase {
 		$first_result  = $formatter->getPriceTable( 100.00 );
 		$second_result = $formatter->getPriceTable( 100.00 );
 
-		self::assertStringContainsString( '<td>2x de</td><td>R$ 50.00</td>', $first_result[0] );
-		self::assertStringContainsString( '<td>3x de</td><td>R$ 35.00</td>', $first_result[0] );
-		self::assertStringContainsString( '<td>4x de</td><td>R$ 26.75</td>', $first_result[0] );
+		self::assertStringContainsString( '<td>2x of</td><td>R$ 50.00</td>', $first_result[0] );
+		self::assertStringContainsString( '<td>3x of</td><td>R$ 35.00</td>', $first_result[0] );
+		self::assertStringContainsString( '<td>4x of</td><td>R$ 26.75</td>', $first_result[0] );
 		self::assertSame( $first_result, $second_result );
 	}
 

@@ -603,7 +603,6 @@ try {
 		$runtime_paths = array(
 			'admin',
 			'build',
-			'i18n',
 			'languages',
 			'public',
 			'src',

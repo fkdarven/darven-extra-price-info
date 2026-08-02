@@ -80,6 +80,30 @@ final class AdminAssetsTest extends TestCase {
 		self::assertContains( 'wp-i18n', $product_asset['dependencies'] );
 	}
 
+	public function test_registered_translation_handles_have_wordpress_resolvable_catalogues(): void {
+		$_GET = array( 'page' => 'darven-epi-admin' );
+		( new Assets() )->enqueue();
+
+		$_GET = array( 'post' => '42' );
+		$GLOBALS['darven_epi_test_screen'] = (object) array( 'post_type' => 'product', 'base' => 'post' );
+		( new Assets() )->enqueue();
+
+		$bundles = array(
+			'darven-precos-parcelados-settings'        => 'settings',
+			'darven-precos-parcelados-product-options' => 'product-options',
+		);
+
+		foreach ( $GLOBALS['darven_epi_test_script_translations'] as $registration ) {
+			$catalogue = $registration['path'] . DIRECTORY_SEPARATOR
+				. $registration['domain'] . '-pt_BR-' . $registration['handle'] . '.json';
+
+			self::assertFileExists( $catalogue, 'WordPress cannot resolve translations for ' . $registration['handle'] );
+			self::assertFileExists(
+				DARVEN_EPI_DIR_PATH . 'build/' . $bundles[ $registration['handle'] ] . '/index.js'
+			);
+		}
+	}
+
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled

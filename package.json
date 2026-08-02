@@ -6,8 +6,8 @@
     "build:admin": "npm run build:settings && npm run build:product-options",
     "start:settings": "wp-scripts start --webpack-src-dir=admin/src/settings --output-path=build/settings",
     "start:product-options": "wp-scripts start --webpack-src-dir=admin/src/product-options --output-path=build/product-options",
-    "i18n:pot": "wp i18n make-pot . languages/darven-multiplos-precos-informativos.pot --domain=darven-multiplos-precos-informativos --exclude=node_modules,build,vendor",
-    "i18n:json": "wp i18n make-json languages --no-purge"
+    "i18n:pot": "npm run build:admin && php scripts/build-translations.php",
+    "i18n:json": "npm run build:admin && php scripts/build-translations.php"
   },
   "devDependencies": {
     "@wordpress/scripts": "27.9.0",

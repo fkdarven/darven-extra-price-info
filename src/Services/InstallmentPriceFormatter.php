@@ -200,7 +200,12 @@ final class InstallmentPriceFormatter {
 				$total_with_interest = $price * ( 1 + ( $interest_rate / 100 ) );
 				$installment_price   = $total_with_interest / $installment;
 				$html_result        .= '<tr>';
-				$html_result        .= '<td>' . $installment . 'x de</td><td>' . wc_price( $installment_price ) . '</td>';
+				$installment_label   = sprintf(
+					/* translators: %1$s: number of installments. */
+					__( '%1$sx of', 'darven-multiplos-precos-informativos' ),
+					$installment
+				);
+				$html_result        .= '<td>' . $installment_label . '</td><td>' . wc_price( $installment_price ) . '</td>';
 				$html_result        .= '</tr>';
 			}
 
