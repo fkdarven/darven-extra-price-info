@@ -20,6 +20,7 @@ if ( ! function_exists( 'esc_attr' ) ) {
 
 final class FinalPriceFormatterTest extends TestCase {
 	protected function setUp(): void {
+		$GLOBALS['darven_epi_test_products'] = array();
 		$GLOBALS['darven_epi_test_options'] = array(
 			'darven_epi_option_general'   => $this->getGeneralSettings(),
 			'darven_epi_option_positions' => array(
@@ -34,7 +35,7 @@ final class FinalPriceFormatterTest extends TestCase {
 		$result = $this->getFormatter()->filter( $original_html, new WC_Product( '100.00' ) );
 
 		self::assertStringContainsString( 'R$ 90.00', $result );
-		self::assertStringContainsString( '4x de', $result );
+		self::assertStringContainsString( '4x of', $result );
 		self::assertStringContainsString( 'darven-epi-incash-price-statement', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
 		self::assertStringContainsString( 'darven-epi-incash-prefix', $result );
@@ -82,7 +83,26 @@ final class FinalPriceFormatterTest extends TestCase {
 		$result = $this->getFormatter()->filter( '<span class="amount">R$ 100.00</span>', $product );
 
 		self::assertStringContainsString( 'R$ 90.00', $result );
-		self::assertStringContainsString( '4x de', $result );
+		self::assertStringContainsString( '4x of', $result );
+	}
+
+	public function test_variation_inherits_parent_flags_but_uses_its_own_price(): void {
+		$parent = new WC_Product(
+			'100.00', 'variable', '90.00', array(
+				ProductSettingsRepository::META_KEY => array(
+					'disable_incash'       => true,
+					'disable_installments' => false,
+				),
+			), 10
+		);
+		$variation = new WC_Product( '90.00', 'variation', $parent, array(), 11 );
+
+		$result = $this->getFormatter()->filter( '<span class="amount">R$ 90.00</span>', $variation );
+
+		self::assertStringNotContainsString( 'darven-epi-incash-price-statement', $result );
+		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
+		self::assertStringContainsString( 'R$ 22.50', $result );
+		self::assertStringNotContainsString( 'R$ 25.00', $result );
 	}
 
 	/**

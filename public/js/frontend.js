@@ -16,9 +16,14 @@
 
 	function getModal( trigger ) {
 		const modalId = trigger.getAttribute( 'aria-controls' );
-		const modal = modalId ? document.getElementById( modalId ) : null;
+		const statement = trigger.closest(
+			'.darven-epi-installments-price-statement'
+		);
 
-		return modal && modal.matches( popupSelector ) ? modal : null;
+		return Array.prototype.find.call(
+			statement ? statement.querySelectorAll( popupSelector ) : [],
+			( candidate ) => candidate.id === modalId
+		);
 	}
 
 	function getFocusableElements( modal ) {

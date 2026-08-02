@@ -44,6 +44,43 @@ final class ProductSettingsRepositoryTest extends TestCase {
 		self::assertSame( 0, $product->get_save_count() );
 	}
 
+	public function test_variation_inherits_parent_flags_when_it_has_no_direct_meta(): void {
+		$parent = new WC_Product(
+			'100.00', 'variable', '90.00', array(
+				ProductSettingsRepository::META_KEY => array(
+					'disable_incash'       => true,
+					'disable_installments' => false,
+				),
+			), 10
+		);
+		$variation = new WC_Product( '90.00', 'variation', $parent, array(), 11 );
+
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $this->get_repository()->getSettings( $variation )
+		);
+	}
+
+	public function test_direct_variation_legacy_meta_wins_over_parent_flags(): void {
+		$parent = new WC_Product(
+			'100.00', 'variable', '90.00', array(
+				ProductSettingsRepository::META_KEY => array(
+					'disable_incash'       => true,
+					'disable_installments' => false,
+				),
+			), 10
+		);
+		$variation = new WC_Product(
+			'90.00', 'variation', $parent, array(
+				'_darven_epi_is_incash_enabled'      => 'no',
+				'_darven_epi_is_installment_enabled' => 'yes',
+			), 11
+		);
+
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => false, 'disable_installments' => true ), $this->get_repository()->getSettings( $variation )
+		);
+	}
+
 	public function test_saves_canonical_settings_and_projects_the_legacy_flags(): void {
 		$product = new WC_Product( '100.00' );
 

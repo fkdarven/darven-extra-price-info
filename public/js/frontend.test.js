@@ -96,6 +96,27 @@ describe( 'installment popup', () => {
 		expect( triggers[ 1 ].getAttribute( 'aria-expanded' ) ).toBe( 'true' );
 	} );
 
+	it( 'resolves duplicate dialog ids inside the clicked statement', () => {
+		document.body.innerHTML =
+			popupMarkup( 'shared' ) + popupMarkup( 'shared' );
+		const triggers = document.querySelectorAll(
+			'.darven-epi-installments-toggle'
+		);
+		const modals = document.querySelectorAll(
+			'.darven-epi-installments-popup'
+		);
+		const closeButtons = document.querySelectorAll(
+			'.darven-epi-installments-close'
+		);
+
+		click( triggers[ 1 ] );
+
+		expect( modals[ 0 ].hidden ).toBe( true );
+		expect( modals[ 1 ].hidden ).toBe( false );
+		expect( document.activeElement ).not.toBe( closeButtons[ 0 ] );
+		expect( document.activeElement ).toBe( closeButtons[ 1 ] );
+	} );
+
 	it.each( [ 'close button', 'backdrop', 'Escape' ] )(
 		'closes with %s and returns focus to the trigger',
 		( closeMethod ) => {

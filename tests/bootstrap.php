@@ -22,6 +22,7 @@ $GLOBALS['darven_epi_test_localized_scripts'] = array();
 $GLOBALS['darven_epi_test_enqueued_media'] = 0;
 $GLOBALS['darven_epi_test_screen'] = null;
 $GLOBALS['darven_epi_test_loaded_textdomains'] = array();
+$GLOBALS['darven_epi_test_translations'] = array();
 
 function get_option( $name, $default = false ) {
 	$GLOBALS['darven_epi_test_option_reads'][] = $name;
@@ -336,9 +337,18 @@ function wp_unique_id( $prefix = '' ): string {
 	return (string) $prefix . $GLOBALS['darven_epi_test_unique_id'];
 }
 
+function wp_generate_uuid4(): string {
+	static $sequence = 0;
+
+	$sequence++;
+
+	return sprintf( '00000000-0000-4000-8000-%012d', $sequence );
+}
+
 class WC_Product {
 	private $id;
 	private $meta;
+	private $parent_id = 0;
 	private $price;
 	private $type;
 	private $variation_price;
@@ -350,6 +360,12 @@ class WC_Product {
 		$this->price           = $price;
 		$this->type            = $type;
 		$this->variation_price = $variation_price;
+
+		if ( 'variation' === $type && $variation_price instanceof self ) {
+			$this->parent_id = $variation_price->get_id();
+			$GLOBALS['darven_epi_test_products'][ $this->parent_id ] = $variation_price;
+			$this->variation_price = null;
+		}
 	}
 
 	public function get_id() {
@@ -358,6 +374,10 @@ class WC_Product {
 
 	public function get_price() {
 		return $this->price;
+	}
+
+	public function get_parent_id() {
+		return $this->parent_id;
 	}
 
 	public function is_type( $type ) {
@@ -438,7 +458,7 @@ function sanitize_text_field( $value ): string {
 }
 
 function __( $text, $domain = null ): string {
-	return (string) $text;
+	return (string) ( $GLOBALS['darven_epi_test_translations'][ $text ] ?? $text );
 }
 
 function wp_kses( $value, $allowed_html ): string {

@@ -57,12 +57,19 @@ final class InstallmentPriceFormatter {
 		);
 
 		$mode = (string) ( $this->general_settings['darven_epi_mode_of_view'] ?? '' );
+		$installment_count = sprintf(
+			/* translators: %1$s: number of installments. */
+			__( '%1$sx of', 'darven-multiplos-precos-informativos' ),
+			$number_of_installments
+		);
 
 		if ( 'popup' === $mode ) {
-			$statement = $prefix
-				. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
-				. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_table[1] ) ) . '</span>'
-				. $suffix;
+			$statement = $this->getStatement(
+				$prefix,
+				$installment_count,
+				wp_strip_all_tags( wc_price( $price_table[1] ) ),
+				$suffix
+			);
 
 			return $this->markup_builder->div(
 				'installments-price-statement darven-epi-installments-price-statement',
@@ -72,10 +79,12 @@ final class InstallmentPriceFormatter {
 		}
 
 		if ( 'nofee' === $mode ) {
-			$statement = $prefix
-				. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
-				. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $installment_price ) ) . '</span>'
-				. $suffix;
+			$statement = $this->getStatement(
+				$prefix,
+				$installment_count,
+				wp_strip_all_tags( wc_price( $installment_price ) ),
+				$suffix
+			);
 
 			return $this->markup_builder->div(
 				'installments-price-statement darven-epi-installments-price-statement',
@@ -84,15 +93,27 @@ final class InstallmentPriceFormatter {
 			);
 		}
 
-		$statement = $prefix
-			. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
-			. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_table[1] ) ) . '</span>'
-			. $suffix;
+		$statement = $this->getStatement(
+			$prefix,
+			$installment_count,
+			wp_strip_all_tags( wc_price( $price_table[1] ) ),
+			$suffix
+		);
 
 		return $this->markup_builder->div(
 			'installments-price-statement darven-epi-installments-price-statement',
 			$statement,
 			'installments'
+		);
+	}
+
+	private function getStatement( string $prefix, string $count, string $price, string $suffix ): string {
+		return sprintf(
+			'%s<span class="darven-epi-installment-count">%s</span><span class="darven-epi-installment-price"> %s</span>%s',
+			$prefix,
+			$count,
+			$price,
+			$suffix
 		);
 	}
 
@@ -145,11 +166,11 @@ final class InstallmentPriceFormatter {
 	}
 
 	private function getPopupInstanceId(): string {
-		if ( function_exists( 'wp_unique_id' ) ) {
-			return wp_unique_id( 'darven-epi-installments-' );
-		}
+		$unique_id = function_exists( 'wp_generate_uuid4' )
+			? wp_generate_uuid4()
+			: uniqid( '', true );
 
-		return uniqid( 'darven-epi-installments-' );
+		return 'darven-epi-installments-' . $unique_id;
 	}
 
 	public function getPriceTable( float $price ): array {

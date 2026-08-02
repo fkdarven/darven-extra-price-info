@@ -20,15 +20,44 @@ final class ProductSettingsRepository {
 	}
 
 	public function getSettings( \WC_Product $product ): array {
+		$direct_settings = $this->getDirectSettings( $product );
+
+		if ( null !== $direct_settings ) {
+			return $direct_settings;
+		}
+
+		if ( $product->is_type( 'variation' ) ) {
+			$parent_id = (int) $product->get_parent_id();
+			$parent    = $parent_id > 0 ? wc_get_product( $parent_id ) : false;
+
+			if ( $parent instanceof \WC_Product ) {
+				$parent_settings = $this->getDirectSettings( $parent );
+
+				if ( null !== $parent_settings ) {
+					return $parent_settings;
+				}
+			}
+		}
+
+		return $this->adapter->fromLegacyMeta( '', '' );
+	}
+
+	private function getDirectSettings( \WC_Product $product ): ?array {
 		$canonical_settings = $product->get_meta( self::META_KEY, true );
 
 		if ( $this->isCanonicalSettings( $canonical_settings ) ) {
 			return $this->normalizeSettings( $canonical_settings );
 		}
 
+		$legacy_incash       = $product->get_meta( self::LEGACY_INCASH_META_KEY, true );
+		$legacy_installments = $product->get_meta( self::LEGACY_INSTALLMENTS_META_KEY, true );
+
+		if ( '' === $legacy_incash && '' === $legacy_installments ) {
+			return null;
+		}
+
 		return $this->adapter->fromLegacyMeta(
-			$product->get_meta( self::LEGACY_INCASH_META_KEY, true ),
-			$product->get_meta( self::LEGACY_INSTALLMENTS_META_KEY, true )
+			$legacy_incash, $legacy_installments
 		);
 	}
 

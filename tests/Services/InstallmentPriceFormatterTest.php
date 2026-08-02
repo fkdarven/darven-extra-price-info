@@ -13,12 +13,13 @@ final class InstallmentPriceFormatterTest extends TestCase {
 			'darven_epi_option_general' => $this->getDefaultGeneralSettings(),
 		);
 		$GLOBALS['darven_epi_test_option_reads'] = array();
+		$GLOBALS['darven_epi_test_translations']  = array();
 	}
 
 	public function test_formats_default_installments_with_the_existing_markup(): void {
 		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
 
-		self::assertStringContainsString( '4x de', $result );
+		self::assertStringContainsString( '4x of', $result );
 		self::assertStringContainsString( 'R$ 25.00', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
 	}
@@ -79,6 +80,37 @@ final class InstallmentPriceFormatterTest extends TestCase {
 		self::assertStringContainsString( 'darven-epi-installments-table', $result );
 		self::assertStringContainsString( 'darven-epi-installments-popup', $result );
 		self::assertStringContainsString( 'class="darven-epi-installments-toggle"', $result );
+	}
+
+	public function test_installment_connector_is_translatable_with_the_count_placeholder(): void {
+		$GLOBALS['darven_epi_test_translations']['%1$sx of'] = '%1$s installments';
+
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringContainsString( '>4 installments</span>', $result );
+	}
+
+	public function test_independent_popup_renders_use_distinct_cross_request_ids(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
+			$this->getDefaultGeneralSettings(), array(
+				'darven_epi_mode_of_view' => 'popup',
+				'darven_epi_popup_text'   => 'View installments',
+			)
+		);
+
+		$GLOBALS['darven_epi_test_unique_id'] = 0;
+		$first = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+		$GLOBALS['darven_epi_test_unique_id'] = 0;
+		$second = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		preg_match( '/aria-controls="([^"]+)"/', $first, $first_controls );
+		preg_match( '/aria-controls="([^"]+)"/', $second, $second_controls );
+
+		self::assertNotEmpty( $first_controls[1] ?? '' );
+		self::assertNotEmpty( $second_controls[1] ?? '' );
+		self::assertNotSame( $first_controls[1], $second_controls[1] );
+		self::assertStringContainsString( 'id="' . $first_controls[1] . '"', $first );
+		self::assertStringContainsString( 'id="' . $second_controls[1] . '"', $second );
 	}
 
 	public function test_installments_table_has_balanced_rows(): void {

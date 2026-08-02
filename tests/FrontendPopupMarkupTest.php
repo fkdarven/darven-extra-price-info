@@ -23,8 +23,7 @@ final class FrontendPopupMarkupTest extends TestCase {
 			$result
 		);
 		self::assertMatchesRegularExpression(
-			'/<div id="darven-epi-installments-\d+-dialog" class="messagepop pop darven-epi-installments-popup" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="darven-epi-installments-\d+-title">/',
-			$result
+			'/<div id="darven-epi-installments-[0-9a-f-]+-dialog" class="messagepop pop darven-epi-installments-popup" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="darven-epi-installments-[0-9a-f-]+-title">/', $result
 		);
 		self::assertStringContainsString( 'class="darven-epi-installments-backdrop"', $result );
 		self::assertStringContainsString( 'class="screen-reader-text darven-epi-installments-title"', $result );
@@ -47,13 +46,14 @@ final class FrontendPopupMarkupTest extends TestCase {
 		self::assertStringContainsString( '>View installment options</button>', $result );
 	}
 
-	public function test_wordpress_5_0_has_a_unique_id_fallback(): void {
+	public function test_popup_ids_use_wordpress_uuids_with_an_unavailable_function_fallback(): void {
 		$source = file_get_contents( DARVEN_EPI_DIR_PATH . 'src/Services/InstallmentPriceFormatter.php' );
 
 		self::assertIsString( $source );
-		self::assertStringContainsString( "function_exists( 'wp_unique_id' )", $source );
-		self::assertStringContainsString( "wp_unique_id( 'darven-epi-installments-' )", $source );
-		self::assertStringContainsString( "uniqid( 'darven-epi-installments-' )", $source );
+		self::assertStringContainsString( "function_exists( 'wp_generate_uuid4' )", $source );
+		self::assertStringContainsString( 'wp_generate_uuid4()', $source );
+		self::assertStringContainsString( "uniqid( '', true )", $source );
+		self::assertStringNotContainsString( "function_exists( 'wp_unique_id' )", $source );
 	}
 
 	public function test_each_formatted_popup_uses_distinct_linked_ids(): void {
