@@ -44,18 +44,27 @@ final class ProductOptionsTest extends TestCase {
 		);
 	}
 
-	public function test_renders_the_react_mount_point_inside_the_darven_panel(): void {
+	public function test_renders_the_react_mount_point_and_classic_controls_inside_the_darven_panel(): void {
 		$GLOBALS['post'] = (object) array( 'ID' => 42 );
+		$GLOBALS['darven_epi_test_products'][42] = new WC_Product(
+			'100.00', 'simple', null, array(
+				'_darven_epi_product_settings' => array(
+					'schema_version'       => 1,
+					'disable_incash'       => true,
+					'disable_installments' => false,
+				),
+			), 42
+		);
 		$subject = $this->getSubject();
 
 		ob_start();
 		$subject->renderPanel();
 		$output = ob_get_clean();
 
-		self::assertSame(
-			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div></div>', $output
-		);
-		self::assertStringNotContainsString( '_darven_epi_is_incash_enabled', $output );
+		self::assertStringContainsString( '<div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div>', $output );
+		self::assertStringContainsString( '<noscript>', $output );
+		self::assertStringContainsString( 'name="_darven_epi_is_incash_enabled" value="yes" checked', $output );
+		self::assertStringContainsString( 'name="_darven_epi_is_installment_enabled" value="yes"', $output );
 	}
 
 	public function test_projects_checked_and_unchecked_product_options(): void {

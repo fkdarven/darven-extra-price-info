@@ -31,6 +31,7 @@ class SettingsApp extends Component {
 		super( props );
 		this.state = createSettingsState();
 		this.isActive = false;
+		this.editableFieldset = null;
 	}
 
 	componentDidMount() {
@@ -61,23 +62,78 @@ class SettingsApp extends Component {
 		this.isActive = false;
 	}
 
+	componentDidUpdate( previousProps, previousState ) {
+		if (
+			previousState.isSaving !== this.state.isSaving &&
+			this.editableFieldset
+		) {
+			this.editableFieldset
+				.querySelectorAll( 'input, select, textarea, button' )
+				.forEach( ( control ) => {
+					control.disabled = this.state.isSaving;
+				} );
+		}
+	}
+
 	setActiveTab = ( activeTab ) => {
 		this.setState( { activeTab } );
 	};
 
+	handleTabKeyDown = ( event, currentIndex ) => {
+		let nextIndex;
+
+		switch ( event.key ) {
+			case 'ArrowLeft':
+				nextIndex = ( currentIndex - 1 + tabs.length ) % tabs.length;
+				break;
+			case 'ArrowRight':
+				nextIndex = ( currentIndex + 1 ) % tabs.length;
+				break;
+			case 'Home':
+				nextIndex = 0;
+				break;
+			case 'End':
+				nextIndex = tabs.length - 1;
+				break;
+			default:
+				return;
+		}
+
+		event.preventDefault();
+		const nextTab = tabs[ nextIndex ];
+		this.setState( { activeTab: nextTab.name }, () => {
+			const target = document.getElementById(
+				`darven-precos-parcelados-tab-${ nextTab.name }`
+			);
+			if ( target ) {
+				target.focus();
+			}
+		} );
+	};
+
 	updateField = ( section, field, value ) => {
-		this.setState( ( current ) => ( {
-			document: updateSettingsField(
-				current.document,
-				section,
-				field,
-				value
-			),
-			notice: null,
-		} ) );
+		this.setState( ( current ) => {
+			if ( current.isSaving ) {
+				return null;
+			}
+
+			return {
+				document: updateSettingsField(
+					current.document,
+					section,
+					field,
+					value
+				),
+				notice: null,
+			};
+		} );
 	};
 
 	save = async () => {
+		if ( this.state.isSaving ) {
+			return;
+		}
+
 		this.setState( { isSaving: true, notice: null } );
 
 		try {
@@ -172,7 +228,7 @@ class SettingsApp extends Component {
 					role="tablist"
 					aria-label={ __( 'Settings sections', 'darven-multiplos-precos-informativos' ) }
 				>
-					{ tabs.map( ( tab ) => (
+					{ tabs.map( ( tab, index ) => (
 						<button
 							key={ tab.name }
 							id={ `darven-precos-parcelados-tab-${ tab.name }` }
@@ -183,35 +239,47 @@ class SettingsApp extends Component {
 							role="tab"
 							aria-selected={ activeTab === tab.name }
 							aria-controls={ `darven-precos-parcelados-panel-${ tab.name }` }
+							tabIndex={ activeTab === tab.name ? 0 : -1 }
 							onClick={ () => this.setActiveTab( tab.name ) }
+							onKeyDown={ ( event ) =>
+								this.handleTabKeyDown( event, index )
+							}
 						>
 							{ tab.title }
 						</button>
 					) ) }
 				</div>
-				<div
-					id={ panelId }
-					role="tabpanel"
-					aria-labelledby={ tabId }
-					tabIndex="0"
-				>
-					<Section
-						settings={ document[ activeTab ] || {} }
-						onChange={ ( field, value ) =>
-							this.updateField( activeTab, field, value )
-						}
-					/>
-				</div>
-				<button
-					className="button button-primary"
-					type="button"
+				<fieldset
+					ref={ ( element ) => {
+						this.editableFieldset = element;
+					} }
 					disabled={ isSaving }
-					onClick={ this.save }
+					aria-busy={ isSaving }
 				>
-					{ isSaving
-						? __( 'Saving…', 'darven-multiplos-precos-informativos' )
-						: __( 'Save settings', 'darven-multiplos-precos-informativos' ) }
-				</button>
+					<div
+						id={ panelId }
+						role="tabpanel"
+						aria-labelledby={ tabId }
+						tabIndex="0"
+					>
+						<Section
+							settings={ document[ activeTab ] || {} }
+							onChange={ ( field, value ) =>
+								this.updateField( activeTab, field, value )
+							}
+						/>
+					</div>
+					<button
+						className="button button-primary"
+						type="button"
+						disabled={ isSaving }
+						onClick={ this.save }
+					>
+						{ isSaving
+							? __( 'Saving…', 'darven-multiplos-precos-informativos' )
+							: __( 'Save settings', 'darven-multiplos-precos-informativos' ) }
+					</button>
+				</fieldset>
 			</div>
 		);
 	}

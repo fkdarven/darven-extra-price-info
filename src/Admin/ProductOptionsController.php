@@ -41,8 +41,30 @@ final class ProductOptionsController {
 		global $post;
 
 		$product_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
+		$product    = $product_id > 0 ? wc_get_product( $product_id ) : false;
+		$settings   = $product instanceof \WC_Product
+			? $this->repository->getSettings( $product )
+			: array(
+				'disable_incash'       => false,
+				'disable_installments' => false,
+			);
+
 		printf(
-			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div></div>', esc_attr( (string) $product_id )
+			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div>', esc_attr( (string) $product_id )
+		);
+		echo '<noscript><div class="options_group">';
+		$this->renderFallbackCheckbox(
+			'_darven_epi_is_incash_enabled', __( 'Disable cash price for this product', 'darven-multiplos-precos-informativos' ), true === $settings['disable_incash']
+		);
+		$this->renderFallbackCheckbox(
+			'_darven_epi_is_installment_enabled', __( 'Disable installment price for this product', 'darven-multiplos-precos-informativos' ), true === $settings['disable_installments']
+		);
+		echo '</div></noscript></div>';
+	}
+
+	private function renderFallbackCheckbox( string $name, string $label, bool $is_checked ): void {
+		printf(
+			'<p class="form-field"><input type="hidden" name="%1$s" value="no"><label><input type="checkbox" name="%1$s" value="yes"%2$s> %3$s</label></p>', esc_attr( $name ), $is_checked ? ' checked' : '', esc_html( $label )
 		);
 	}
 

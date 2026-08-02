@@ -68,7 +68,7 @@ final class PluginBootstrapTest extends TestCase {
 		);
 	}
 
-	public function test_admin_page_renders_only_the_settings_react_mount_point(): void {
+	public function test_admin_page_keeps_the_react_mount_point_with_a_classic_fallback(): void {
 		Plugin::boot();
 		$menu_action = array_values(
 			array_filter(
@@ -83,6 +83,8 @@ final class PluginBootstrapTest extends TestCase {
 		call_user_func( $GLOBALS['darven_epi_test_submenu_pages'][0]['callback'] );
 		$output = ob_get_clean();
 
-		self::assertSame( '<div id="darven-precos-parcelados-settings-root"></div>', $output );
+		self::assertStringContainsString( '<div id="darven-precos-parcelados-settings-root"></div>', $output );
+		self::assertStringContainsString( '<noscript><form', $output );
+		self::assertStringContainsString( 'name="darven_epi_settings_nonce"', $output );
 	}
 }

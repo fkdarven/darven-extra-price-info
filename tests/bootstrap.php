@@ -331,10 +331,33 @@ function esc_html( $value ): string {
 	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
 }
 
+function esc_url( $value ): string {
+	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+}
+
 function wp_unique_id( $prefix = '' ): string {
 	$GLOBALS['darven_epi_test_unique_id'] = ( $GLOBALS['darven_epi_test_unique_id'] ?? 0 ) + 1;
 
 	return (string) $prefix . $GLOBALS['darven_epi_test_unique_id'];
+}
+
+function wp_nonce_field( $action, $name ): void {
+	$GLOBALS['darven_epi_test_nonce_field'] = array( $action, $name );
+	echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="test-settings-nonce">';
+}
+
+function admin_url( $path = '' ): string {
+	return 'https://example.test/wp-admin/' . ltrim( $path, '/' );
+}
+
+function add_query_arg( array $args, $url ): string {
+	return $url . ( false === strpos( $url, '?' ) ? '?' : '&' ) . http_build_query( $args );
+}
+
+function wp_safe_redirect( $location ): bool {
+	$GLOBALS['darven_epi_test_safe_redirect'] = $location;
+
+	return true;
 }
 
 function wp_generate_uuid4(): string {

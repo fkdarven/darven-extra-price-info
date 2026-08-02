@@ -33,7 +33,7 @@ final class Plugin {
 			$settings,
 			$product_settings
 		);
-		$settings_page     = new ReactPage();
+		$settings_page     = new ReactPage( $settings );
 		$settings_rest     = new SettingsRestController( $settings, $product_settings );
 		$product_options   = new ProductOptionsController( $product_settings );
 		$admin_assets      = new AdminAssets();

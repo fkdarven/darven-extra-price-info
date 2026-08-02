@@ -99,6 +99,13 @@ const click = ( element ) =>
 		)
 	);
 
+const keyDown = ( element, key ) =>
+	act( () =>
+		element.dispatchEvent(
+			new window.KeyboardEvent( 'keydown', { bubbles: true, key } )
+		)
+	);
+
 const change = ( element, value ) =>
 	act( () => {
 		const setter = Object.getOwnPropertyDescriptor(
@@ -131,6 +138,11 @@ describe( 'SettingsApp', () => {
 		root = createRoot( container );
 		act( () => root.render( <SettingsApp apiClient={ apiClient } /> ) );
 	};
+
+	const findButton = ( label ) =>
+		Array.from( container.querySelectorAll( 'button' ) ).find(
+			( button ) => label === button.textContent
+		);
 
 	it( 'shows loading until the settings document arrives', async () => {
 		let resolveRequest;
@@ -292,5 +304,60 @@ describe( 'SettingsApp', () => {
 		expect(
 			container.querySelector( '[role="alert"]' ).textContent
 		).toContain( 'Falha ao salvar' );
+	} );
+
+	it( 'disables editable controls while a settings save is pending', async () => {
+		let resolveSave;
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(
+				() =>
+					new Promise( ( resolve ) => {
+						resolveSave = resolve;
+					} )
+			),
+		} );
+		await flushPromises();
+
+		click( findButton( 'Save settings' ) );
+
+		const field = container.querySelector(
+			'[name="darven_epi_max_installments"]'
+		);
+		const busyRegion = container.querySelector( 'fieldset[aria-busy]' );
+		expect( field.disabled ).toBe( true );
+		expect( findButton( 'Saving…' ).disabled ).toBe( true );
+		expect( busyRegion.getAttribute( 'aria-busy' ) ).toBe( 'true' );
+
+		resolveSave( settingsDocument );
+		await flushPromises();
+	} );
+
+	it( 'moves roving tab focus with arrow, Home and End keys', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+		await flushPromises();
+
+		const general = findButton( 'General' );
+		const display = findButton( 'Display' );
+		const compatibility = findButton( 'Compatibility' );
+		expect( general.tabIndex ).toBe( 0 );
+		expect( display.tabIndex ).toBe( -1 );
+
+		general.focus();
+		keyDown( general, 'ArrowRight' );
+		expect( display.getAttribute( 'aria-selected' ) ).toBe( 'true' );
+		expect( display.tabIndex ).toBe( 0 );
+		expect( document.activeElement ).toBe( display );
+
+		keyDown( display, 'End' );
+		expect( compatibility.getAttribute( 'aria-selected' ) ).toBe( 'true' );
+		expect( document.activeElement ).toBe( compatibility );
+
+		keyDown( compatibility, 'Home' );
+		expect( general.getAttribute( 'aria-selected' ) ).toBe( 'true' );
+		expect( document.activeElement ).toBe( general );
 	} );
 } );
