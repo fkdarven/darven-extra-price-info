@@ -50,7 +50,7 @@ final class ProductOptionsController {
 			);
 
 		printf(
-			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div>', esc_attr( (string) $product_id )
+			'<div id="darven-precos-parcelados-product-options-panel" class="panel woocommerce_options_panel hidden"><div id="darven-precos-parcelados-product-options-root" data-product-id="%s"></div></div>', esc_attr( (string) $product_id )
 		);
 		echo '<noscript><div class="options_group">';
 		$this->renderFallbackCheckbox(
@@ -59,7 +59,7 @@ final class ProductOptionsController {
 		$this->renderFallbackCheckbox(
 			'_darven_epi_is_installment_enabled', __( 'Disable installment price for this product', 'darven-multiplos-precos-informativos' ), true === $settings['disable_installments']
 		);
-		echo '</div></noscript></div>';
+		echo '</div></noscript>';
 	}
 
 	private function renderFallbackCheckbox( string $name, string $label, bool $is_checked ): void {

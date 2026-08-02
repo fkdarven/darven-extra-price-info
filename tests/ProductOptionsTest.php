@@ -44,7 +44,7 @@ final class ProductOptionsTest extends TestCase {
 		);
 	}
 
-	public function test_renders_the_react_mount_point_and_classic_controls_inside_the_darven_panel(): void {
+	public function test_renders_the_react_mount_point_and_visible_classic_controls_outside_the_hidden_panel(): void {
 		$GLOBALS['post'] = (object) array( 'ID' => 42 );
 		$GLOBALS['darven_epi_test_products'][42] = new WC_Product(
 			'100.00', 'simple', null, array(
@@ -61,8 +61,9 @@ final class ProductOptionsTest extends TestCase {
 		$subject->renderPanel();
 		$output = ob_get_clean();
 
-		self::assertStringContainsString( '<div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div>', $output );
-		self::assertStringContainsString( '<noscript>', $output );
+		self::assertStringContainsString(
+			'<div id="darven-precos-parcelados-product-options-root" data-product-id="42"></div></div><noscript>', $output
+		);
 		self::assertStringContainsString( 'name="_darven_epi_is_incash_enabled" value="yes" checked', $output );
 		self::assertStringContainsString( 'name="_darven_epi_is_installment_enabled" value="yes"', $output );
 	}
