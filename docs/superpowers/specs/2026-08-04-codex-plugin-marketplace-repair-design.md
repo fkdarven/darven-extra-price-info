@@ -10,7 +10,7 @@ The explicitly configured MCP servers (`node_repl` and `chrome-devtools`) are re
 
 Restore the useful plugin set without retaining invalid cross-platform configuration:
 
-- preserve the existing MCP server configuration;
+- preserve the existing MCP server registrations, disabling only commands that cannot resolve in Linux;
 - retain and verify Superpowers;
 - install Octo from the configured `nyldn-plugins` marketplace;
 - refresh the Git-backed `darven-plugins` marketplace and reinstall Jira and Clockify;
@@ -21,6 +21,8 @@ Restore the useful plugin set without retaining invalid cross-platform configura
 ## Approach
 
 Use a hybrid repair through supported `codex plugin` and `codex mcp` commands. First create a timestamped backup of the global Codex configuration. Refresh or re-add Git marketplaces from their configured repository sources, then install the selected plugins. Remove only irrecoverable Windows-local marketplace records and their stale enabled-plugin records; OpenAI's built-in app connectors remain provided by the current Codex surface and are not replaced with guessed filesystem paths.
+
+Keep the platform-specific `node_repl` and `chrome-devtools` MCP records but set them disabled in Linux. Their configured commands are a Windows executable and an unavailable `npx` binary respectively. The registrations can be re-enabled after installing compatible Linux dependencies without reconstructing their configuration.
 
 This is preferred to removing every missing plugin because Jira and Clockify have recoverable Git sources. It is also preferred to attempting a literal reinstall of bundled OpenAI plugins because their configured source directories do not exist in this environment and no supported replacement local path is available.
 
@@ -36,8 +38,8 @@ After repair:
 
 1. `codex plugin marketplace list` resolves every remaining marketplace.
 2. `codex plugin list` reports Superpowers, Octo, Jira, and Clockify without snapshot errors.
-3. `codex mcp list` retains `node_repl`, `chrome-devtools`, and `openaiDeveloperDocs`.
-4. `codex doctor --summary` is checked for configuration, plugin, and MCP failures.
+3. `codex mcp list` retains disabled `node_repl` and `chrome-devtools` records while `openaiDeveloperDocs` remains enabled.
+4. `codex doctor --summary` reports zero warnings and zero failures when run with normal network access.
 5. A fresh Codex process is started and its new log records are inspected for `failed to load plugin` warnings.
 
 If a recoverable Git marketplace or plugin cannot be installed, stop at that component, preserve the backup, and report the exact command failure instead of deleting additional functionality.

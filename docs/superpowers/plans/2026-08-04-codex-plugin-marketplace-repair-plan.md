@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Preserve `node_repl`, `chrome-devtools`, and `openaiDeveloperDocs` MCP registrations.
+- Preserve `node_repl`, `chrome-devtools`, and `openaiDeveloperDocs` MCP registrations; disable the two stdio registrations whose commands cannot resolve in Linux.
 - Preserve all existing project working-tree changes.
 - Install or verify Superpowers, Octo, Jira, and Clockify only.
 - Do not invent Linux paths for unavailable Windows-local OpenAI marketplace bundles.
@@ -135,10 +135,10 @@ Expected: the remaining `nyldn-plugins` and `superpowers-dev` marketplaces resol
 Run:
 
 ```bash
-codex plugin marketplace add https://github.com/fkdarven/publishers-ops.git --json
+codex plugin marketplace add git@github.com:fkdarven/publishers-ops.git --json
 ```
 
-Expected: JSON reports a successful marketplace add named `darven-plugins`.
+Expected: existing SSH credentials provide non-interactive access and JSON reports a successful marketplace add named `darven-plugins`.
 
 - [ ] **Step 2: Install Jira and Clockify**
 
@@ -171,7 +171,7 @@ codex plugin add superpowers@superpowers-dev --json
 
 Expected: JSON reports that Superpowers is installed or already installed; its cache remains available under `plugins/cache/superpowers-dev/superpowers/`.
 
-### Task 4: Verify the repaired runtime configuration
+### Task 4: Disable incompatible MCP commands and verify the repaired runtime configuration
 
 **Files:**
 - Read: `/home/darven/.codex/config.toml`
@@ -182,7 +182,23 @@ Expected: JSON reports that Superpowers is installed or already installed; its c
 - Consumes: Installed plugin and marketplace state from Task 3.
 - Produces: Evidence that marketplace, plugin, MCP, and fresh-process startup checks are healthy.
 
-- [ ] **Step 1: Verify marketplaces and plugins**
+- [ ] **Step 1: Prove that disabling incompatible MCP commands clears the warning**
+
+Run:
+
+```bash
+codex -c 'mcp_servers.node_repl.enabled=false' -c 'mcp_servers.chrome-devtools.enabled=false' doctor --summary --no-color
+```
+
+Expected: the non-persistent health check reports `0 warn` and `0 fail` with both stdio servers disabled.
+
+- [ ] **Step 2: Persist the reversible MCP state**
+
+Add `enabled = false` under `[mcp_servers.node_repl]` and `[mcp_servers.chrome-devtools]`, leaving their commands, arguments, and environment entries intact.
+
+Expected: only the two `enabled` fields differ from the post-plugin-install configuration.
+
+- [ ] **Step 3: Verify marketplaces and plugins**
 
 Run:
 
@@ -193,7 +209,7 @@ codex plugin list
 
 Expected: both exit 0; the output includes `superpowers`, `octo`, `jira`, and `clockify`, with no invalid snapshot errors.
 
-- [ ] **Step 2: Verify MCP preservation**
+- [ ] **Step 4: Verify MCP preservation**
 
 Run:
 
@@ -201,9 +217,9 @@ Run:
 codex mcp list
 ```
 
-Expected: `node_repl`, `chrome-devtools`, and `openaiDeveloperDocs` remain enabled.
+Expected: `node_repl` and `chrome-devtools` remain registered but disabled; `openaiDeveloperDocs` remains enabled.
 
-- [ ] **Step 3: Run the built-in health check**
+- [ ] **Step 5: Run the built-in health check with normal network access**
 
 Run:
 
@@ -211,22 +227,21 @@ Run:
 codex doctor --summary --no-color
 ```
 
-Expected: no plugin marketplace or MCP configuration failures. Environment-only PATH alias warnings are recorded separately and are not plugin/MCP failures.
+Expected: `17 ok`, `1 idle`, `0 warn`, and `0 fail`.
 
-- [ ] **Step 4: Start a fresh Codex process and inspect new plugin-loader output**
+- [ ] **Step 6: Query fresh plugin-loader records**
 
 Run:
 
 ```bash
 codex plugin list
-strings /home/darven/.codex/logs_2.sqlite /home/darven/.codex/logs_2.sqlite-wal
+repair_epoch=$(stat -c %Y /home/darven/.codex/config.toml)
+python3 -c 'import sqlite3,sys; db=sqlite3.connect("file:/home/darven/.codex/logs_2.sqlite?mode=ro", uri=True); print(db.execute("select count(*) from logs where ts >= ? and target=\"codex_core_plugins::loader\" and feedback_log_body like \"%failed to load plugin: plugin is not installed%\"", (int(sys.argv[1]),)).fetchone()[0])' "$repair_epoch"
 ```
 
-Filter the fresh output for `failed to load plugin: plugin is not installed` and compare process/session identifiers with the pre-repair baseline.
+Expected: the SQL query returns `0`; raw `strings` output is not used because SQLite WAL pages can duplicate historical rows.
 
-Expected: no new post-repair plugin-loader warnings name the repaired or removed selectors.
-
-- [ ] **Step 5: Confirm project work stayed untouched**
+- [ ] **Step 7: Confirm project work stayed untouched**
 
 Run:
 
