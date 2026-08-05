@@ -399,6 +399,31 @@ describe( 'SettingsApp', () => {
 				( subgroup ) => subgroup.querySelector( 'h3' ).textContent
 			)
 		).toEqual( [ 'Cash price', 'Installment price' ] );
+		expect(
+			subgroups.map( ( subgroup ) => ( {
+				headingId: subgroup.querySelector( 'h3' ).id,
+				labelledBy: subgroup.getAttribute( 'aria-labelledby' ),
+			} ) )
+		).toEqual( [
+			{
+				headingId: 'darven-appearance-cash-price-heading',
+				labelledBy: 'darven-appearance-cash-price-heading',
+			},
+			{
+				headingId: 'darven-appearance-installment-price-heading',
+				labelledBy: 'darven-appearance-installment-price-heading',
+			},
+		] );
+		expect(
+			Array.from( subgroups[ 0 ].querySelectorAll( 'label' ) ).map(
+				( label ) => label.textContent
+			)
+		).toContain( 'Cash price — color for Price' );
+		expect(
+			Array.from( subgroups[ 1 ].querySelectorAll( 'label' ) ).map(
+				( label ) => label.textContent
+			)
+		).toContain( 'Installment price — color for Price' );
 
 		[
 			[

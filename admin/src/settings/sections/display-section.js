@@ -5,6 +5,7 @@ import fields from '../../shared/settings-fields.json';
 
 const appearanceGroups = [
 	{
+		id: 'cash-price',
 		title: __( 'Cash price', 'darven-multiplos-precos-informativos' ),
 		parts: [
 			[
@@ -31,6 +32,7 @@ const appearanceGroups = [
 		],
 	},
 	{
+		id: 'installment-price',
 		title: __(
 			'Installment price',
 			'darven-multiplos-precos-informativos'
@@ -82,18 +84,23 @@ const assertField = ( name ) => {
 	return name;
 };
 
-const getColorLabel = ( part ) => {
+const getColorLabel = ( statement, part ) => {
 	return sprintf(
-		/* translators: %s: statement part, such as Price or Text before price. */
-		__( 'Color for %s', 'darven-multiplos-precos-informativos' ),
+		/* translators: 1: price statement, 2: statement part, such as Price or Text before price. */
+		__( '%1$s — color for %2$s', 'darven-multiplos-precos-informativos' ),
+		statement,
 		part
 	);
 };
 
-const getFontSizeLabel = ( part ) => {
+const getFontSizeLabel = ( statement, part ) => {
 	return sprintf(
-		/* translators: %s: statement part, such as Price or Text before price. */
-		__( 'Font size for %s', 'darven-multiplos-precos-informativos' ),
+		/* translators: 1: price statement, 2: statement part, such as Price or Text before price. */
+		__(
+			'%1$s — font size for %2$s',
+			'darven-multiplos-precos-informativos'
+		),
+		statement,
 		part
 	);
 };
@@ -113,10 +120,15 @@ class DisplaySection extends Component {
 					</legend>
 					{ appearanceGroups.map( ( group ) => (
 						<section
+							aria-labelledby={ `darven-appearance-${ group.id }-heading` }
 							className="darven-precos-parcelados-admin__appearance-subgroup"
 							key={ group.title }
 						>
-							<h3>{ group.title }</h3>
+							<h3
+								id={ `darven-appearance-${ group.id }-heading` }
+							>
+								{ group.title }
+							</h3>
 							<div className="darven-precos-parcelados-admin__appearance-rows">
 								{ group.parts.map(
 									( [
@@ -145,6 +157,7 @@ class DisplaySection extends Component {
 														htmlFor={ colorName }
 													>
 														{ getColorLabel(
+															group.title,
 															part
 														) }
 													</label>
@@ -171,6 +184,7 @@ class DisplaySection extends Component {
 														htmlFor={ fontSizeName }
 													>
 														{ getFontSizeLabel(
+															group.title,
 															part
 														) }
 													</label>
