@@ -34,6 +34,8 @@ jest.mock( '@wordpress/i18n', () => ( {
 		'Darven Preços Parcelados' === text
 			? 'Translated brand must not render'
 			: text,
+	sprintf: ( text, ...values ) =>
+		text.replace( /%(\d+)\$s/g, ( match, index ) => values[ index - 1 ] ),
 } ) );
 
 const settingsDocument = {
@@ -213,6 +215,48 @@ describe( 'SettingsApp', () => {
 		).toEqual( [ 'Pricing', 'Presentation', 'Advanced' ] );
 	} );
 
+	it( 'reorders a visual placement card and saves its legacy value', async () => {
+		const apiClient = {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn().mockResolvedValue( settingsDocument ),
+		};
+		renderApp( apiClient );
+		await flushPromises();
+
+		click( findButton( 'Presentation' ) );
+
+		const singleProduct = container.querySelector(
+			'[data-position-field="darven_epi_single_product_position"]'
+		);
+		expect(
+			Array.from( singleProduct.querySelectorAll( '[data-statement]' ) ).map(
+				( row ) => row.dataset.statement
+			)
+		).toEqual( [ 'original', 'installments', 'cash' ] );
+
+		click(
+			Array.from( singleProduct.querySelectorAll( 'button' ) ).find(
+				( button ) =>
+					'Move cash price up in Single product' ===
+					button.getAttribute( 'aria-label' )
+			)
+		);
+
+		expect(
+			Array.from( singleProduct.querySelectorAll( '[data-statement]' ) ).map(
+				( row ) => row.dataset.statement
+			)
+		).toEqual( [ 'original', 'cash', 'installments' ] );
+
+		click( findButton( 'Save settings' ) );
+		await flushPromises();
+
+		expect(
+			apiClient.saveSettings.mock.calls[ 0 ][ 0 ].positions
+				.darven_epi_single_product_position
+		).toBe( 'first' );
+	} );
+
 	it( 'edits one field in every tab and PUTs the entire document', async () => {
 		const savedDocument = JSON.parse( JSON.stringify( settingsDocument ) );
 		const apiClient = {
@@ -236,11 +280,18 @@ describe( 'SettingsApp', () => {
 			),
 			'1.8'
 		);
-		change(
-			container.querySelector(
-				'[name="darven_epi_single_product_position"]'
-			),
-			'sixth'
+		click(
+			Array.from(
+				container
+					.querySelector(
+						'[data-position-field="darven_epi_single_product_position"]'
+					)
+					.querySelectorAll( 'button' )
+			).find(
+				( button ) =>
+					'Move cash price up in Single product' ===
+					button.getAttribute( 'aria-label' )
+			)
 		);
 		click( findButton( 'Advanced' ) );
 		change(
@@ -268,7 +319,7 @@ describe( 'SettingsApp', () => {
 			},
 			positions: {
 				...settingsDocument.positions,
-				darven_epi_single_product_position: 'sixth',
+				darven_epi_single_product_position: 'first',
 			},
 			compatibility: { darven_epi_yith_dynamic_pricing_mode: 'disabled' },
 		} );
