@@ -10,11 +10,10 @@ import PricingSection from './sections/pricing-section';
 import PresentationSection from './sections/presentation-section';
 import AdvancedSection from './sections/advanced-section';
 
-const domain = 'darven-multiplos-precos-informativos';
 const tabs = [
-	{ name: 'pricing', title: __( 'Pricing', domain ) },
-	{ name: 'presentation', title: __( 'Presentation', domain ) },
-	{ name: 'advanced', title: __( 'Advanced', domain ) },
+	{ name: 'pricing', title: __( 'Pricing', 'darven-multiplos-precos-informativos' ) },
+	{ name: 'presentation', title: __( 'Presentation', 'darven-multiplos-precos-informativos' ) },
+	{ name: 'advanced', title: __( 'Advanced', 'darven-multiplos-precos-informativos' ) },
 ];
 
 class SettingsApp extends Component {

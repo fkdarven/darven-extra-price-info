@@ -8,33 +8,31 @@ import {
 	movePositionStatement,
 } from '../placement-order';
 
-const domain = 'darven-multiplos-precos-informativos';
-
 const positionFields = [
 	{
 		name: 'darven_epi_single_product_position',
-		title: __( 'Single product', domain ),
+		title: __( 'Single product', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_catalog_product_position',
-		title: __( 'Catalog and shop', domain ),
+		title: __( 'Catalog and shop', 'darven-multiplos-precos-informativos' ),
 	},
 	{
 		name: 'darven_epi_others_product_position',
-		title: __( 'Other pages', domain ),
+		title: __( 'Other pages', 'darven-multiplos-precos-informativos' ),
 	},
 ];
 
 const statementLabels = {
-	original: __( 'Original price', domain ),
-	cash: __( 'Cash price', domain ),
-	installments: __( 'Installment price', domain ),
+	original: __( 'Original price', 'darven-multiplos-precos-informativos' ),
+	cash: __( 'Cash price', 'darven-multiplos-precos-informativos' ),
+	installments: __( 'Installment price', 'darven-multiplos-precos-informativos' ),
 };
 
 const statementMoveLabels = {
-	original: __( 'original price', domain ),
-	cash: __( 'cash price', domain ),
-	installments: __( 'installment price', domain ),
+	original: __( 'original price', 'darven-multiplos-precos-informativos' ),
+	cash: __( 'cash price', 'darven-multiplos-precos-informativos' ),
+	installments: __( 'installment price', 'darven-multiplos-precos-informativos' ),
 };
 
 class PositionCard extends Component {
@@ -51,7 +49,7 @@ class PositionCard extends Component {
 		onChange( name, nextValue );
 		this.setState( {
 			announcement: sprintf(
-				__( '%1$s order: %2$s.', domain ),
+				__( '%1$s order: %2$s.', 'darven-multiplos-precos-informativos' ),
 				title,
 				nextOrder
 					.map( ( item ) => statementLabels[ item ] )
@@ -76,7 +74,7 @@ class PositionCard extends Component {
 				<p className="darven-precos-parcelados-admin__position-description">
 					{ __(
 						'This preview shows statement order only and does not represent your theme.',
-						domain
+						'darven-multiplos-precos-informativos'
 					) }
 				</p>
 				<div className="darven-precos-parcelados-admin__position-preview">
@@ -84,7 +82,7 @@ class PositionCard extends Component {
 						className="darven-precos-parcelados-admin__product-placeholder"
 						aria-hidden="true"
 					>
-						{ __( 'Product', domain ) }
+						{ __( 'Product', 'darven-multiplos-precos-informativos' ) }
 					</div>
 					<ul className="darven-precos-parcelados-admin__position-statements">
 						{ order.map( ( statement, index ) => (
@@ -99,25 +97,25 @@ class PositionCard extends Component {
 										type="button"
 										disabled={ 0 === index }
 										aria-label={ sprintf(
-											__( 'Move %1$s up in %2$s', domain ),
+											__( 'Move %1$s up in %2$s', 'darven-multiplos-precos-informativos' ),
 											statementMoveLabels[ statement ],
 											title
 										) }
 										onClick={ () => this.moveStatement( statement, -1 ) }
 									>
-										{ __( 'Move up', domain ) }
+										{ __( 'Move up', 'darven-multiplos-precos-informativos' ) }
 									</button>
 									<button
 										type="button"
 										disabled={ index === order.length - 1 }
 										aria-label={ sprintf(
-											__( 'Move %1$s down in %2$s', domain ),
+											__( 'Move %1$s down in %2$s', 'darven-multiplos-precos-informativos' ),
 											statementMoveLabels[ statement ],
 											title
 										) }
 										onClick={ () => this.moveStatement( statement, 1 ) }
 									>
-										{ __( 'Move down', domain ) }
+										{ __( 'Move down', 'darven-multiplos-precos-informativos' ) }
 									</button>
 								</span>
 							</li>
@@ -140,7 +138,7 @@ class PositionsSection extends Component {
 			<div className="darven-precos-parcelados-admin__section">
 				<fieldset className="darven-precos-parcelados-admin__group">
 					<legend>
-						{ __( 'Statement positions', domain ) }
+						{ __( 'Statement positions', 'darven-multiplos-precos-informativos' ) }
 					</legend>
 					{ positionFields.map( ( { name, title } ) => {
 						if ( ! fields.positions.includes( name ) ) {

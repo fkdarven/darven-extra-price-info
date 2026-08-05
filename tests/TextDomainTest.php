@@ -101,10 +101,12 @@ final class TextDomainTest extends TestCase {
 			'darven-precos-parcelados-settings'        => array(
 				'source'       => 'build/settings/index.js',
 				'translations' => array(
-					'General' => 'Geral',
-					'Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing.' => 'O modo automático usa um preço válido do YITH quando disponível e retorna com segurança aos preços do WooCommerce.',
-					'Cash suffix font size' => 'Tamanho da fonte do sufixo do preço à vista',
-					'Original price, cash price, installments price' => 'Preço original, preço à vista, preço parcelado',
+					'Pricing'                 => 'Preços',
+					'Presentation'            => 'Apresentação',
+					'Advanced'                => 'Avançado',
+					'Single product'          => 'Produto individual',
+					'Move up'                 => 'Mover para cima',
+					'%1$s — color for %2$s'  => '%1$s — cor de %2$s',
 				),
 			),
 			'darven-precos-parcelados-product-options' => array(

@@ -4,32 +4,35 @@
     "source": "build/settings/index.js",
     "domain": "darven-multiplos-precos-informativos",
     "locale_data": {
-        "darven-multiplos-precos-informativos": {
+        "messages": {
             "": {
                 "domain": "darven-multiplos-precos-informativos",
                 "lang": "pt_BR",
                 "plural-forms": "nplurals=2; plural=(n > 1);"
             },
+            "%1$s order: %2$s.": [
+                "Ordem de %1$s: %2$s."
+            ],
+            "%1$s — color for %2$s": [
+                "%1$s — cor de %2$s"
+            ],
+            "%1$s — font size for %2$s": [
+                "%1$s — tamanho da fonte de %2$s"
+            ],
+            "Advanced": [
+                "Avançado"
+            ],
+            "Appearance": [
+                "Aparência"
+            ],
             "Automatic (recommended)": [
                 "Automático (recomendado)"
             ],
             "Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing.": [
                 "O modo automático usa um preço válido do YITH quando disponível e retorna com segurança aos preços do WooCommerce."
             ],
-            "Cash prefix color": [
-                "Cor do prefixo do preço à vista"
-            ],
-            "Cash prefix font size": [
-                "Tamanho da fonte do prefixo do preço à vista"
-            ],
             "Cash price": [
                 "Preço à vista"
-            ],
-            "Cash price color": [
-                "Cor do preço à vista"
-            ],
-            "Cash price font size": [
-                "Tamanho da fonte do preço à vista"
             ],
             "Cash price prefix": [
                 "Prefixo do preço à vista"
@@ -37,26 +40,17 @@
             "Cash price suffix": [
                 "Sufixo do preço à vista"
             ],
-            "Cash price, installments price, original price": [
-                "Preço à vista, preço parcelado, preço original"
+            "Catalog and shop": [
+                "Catálogo e loja"
             ],
-            "Cash price, original price, installments price": [
-                "Preço à vista, preço original, preço parcelado"
-            ],
-            "Cash suffix color": [
-                "Cor do sufixo do preço à vista"
-            ],
-            "Cash suffix font size": [
-                "Tamanho da fonte do sufixo do preço à vista"
-            ],
-            "Colors": [
-                "Cores"
-            ],
-            "Compatibility": [
-                "Compatibilidade"
+            "Choose how this integration should resolve prices when YITH Dynamic Pricing is active.": [
+                "Escolha como esta integração deve resolver os preços quando o YITH Dynamic Pricing estiver ativo."
             ],
             "Compatibility mode": [
                 "Modo de compatibilidade"
+            ],
+            "Custom rates configured": [
+                "Taxas personalizadas configuradas"
             ],
             "Disabled": [
                 "Desativado"
@@ -67,9 +61,6 @@
             "Discount value": [
                 "Valor do desconto"
             ],
-            "Display": [
-                "Exibição"
-            ],
             "Display mode": [
                 "Modo de exibição"
             ],
@@ -79,44 +70,23 @@
             "Enable installments": [
                 "Ativar parcelamento"
             ],
+            "Existing legacy settings remain synchronized automatically. No action is normally required.": [
+                "As configurações legadas existentes permanecem sincronizadas automaticamente. Normalmente, nenhuma ação é necessária."
+            ],
             "First interest fee (%)": [
                 "Primeira taxa de juros (%)"
             ],
             "Fixed": [
                 "Fixo"
             ],
-            "Font sizes": [
-                "Tamanhos de fonte"
-            ],
-            "General": [
-                "Geral"
-            ],
             "Incremental interest fee (%)": [
                 "Taxa de juros incremental (%)"
             ],
-            "Installment number color": [
-                "Cor do número da parcela"
+            "Installment number": [
+                "Número da parcela"
             ],
-            "Installment number font size": [
-                "Tamanho da fonte do número da parcela"
-            ],
-            "Installment prefix color": [
-                "Cor do prefixo do parcelamento"
-            ],
-            "Installment prefix font size": [
-                "Tamanho da fonte do prefixo do parcelamento"
-            ],
-            "Installment price color": [
-                "Cor do preço parcelado"
-            ],
-            "Installment price font size": [
-                "Tamanho da fonte do preço parcelado"
-            ],
-            "Installment suffix color": [
-                "Cor do sufixo do parcelamento"
-            ],
-            "Installment suffix font size": [
-                "Tamanho da fonte do sufixo do parcelamento"
+            "Installment price": [
+                "Preço parcelado"
             ],
             "Installments": [
                 "Parcelamento"
@@ -124,17 +94,8 @@
             "Installments prefix": [
                 "Prefixo do parcelamento"
             ],
-            "Installments price, cash price, original price": [
-                "Preço parcelado, preço à vista, preço original"
-            ],
-            "Installments price, original price, cash price": [
-                "Preço parcelado, preço original, preço à vista"
-            ],
             "Installments suffix": [
                 "Sufixo do parcelamento"
-            ],
-            "Interest fee table": [
-                "Tabela de taxas de juros"
             ],
             "Interest fees by installment": [
                 "Taxas de juros por parcela"
@@ -157,11 +118,23 @@
             "Minimum price for the discount": [
                 "Preço mínimo para o desconto"
             ],
-            "Original price, cash price, installments price": [
-                "Preço original, preço à vista, preço parcelado"
+            "Move %1$s down in %2$s": [
+                "Mover %1$s para baixo em %2$s"
             ],
-            "Original price, installments price, cash price": [
-                "Preço original, preço parcelado, preço à vista"
+            "Move %1$s up in %2$s": [
+                "Mover %1$s para cima em %2$s"
+            ],
+            "Move down": [
+                "Mover para baixo"
+            ],
+            "Move up": [
+                "Mover para cima"
+            ],
+            "Original price": [
+                "Preço original"
+            ],
+            "Other pages": [
+                "Outras páginas"
             ],
             "Percent": [
                 "Porcentagem"
@@ -169,23 +142,20 @@
             "Popup text": [
                 "Texto do pop-up"
             ],
-            "Position on catalog pages": [
-                "Posição nas páginas de catálogo"
+            "Presentation": [
+                "Apresentação"
             ],
-            "Position on other pages": [
-                "Posição em outras páginas"
+            "Price": [
+                "Preço"
             ],
-            "Position on the single product page": [
-                "Posição na página de produto"
+            "Pricing": [
+                "Preços"
             ],
-            "Positions": [
-                "Posições"
+            "Product": [
+                "Produto"
             ],
             "Save settings": [
                 "Salvar configurações"
-            ],
-            "Saving here also keeps the legacy settings synchronized for compatibility.": [
-                "Salvar aqui também mantém as configurações legadas sincronizadas para compatibilidade."
             ],
             "Saving…": [
                 "Salvando…"
@@ -199,14 +169,29 @@
             "Settings sections": [
                 "Seções de configurações"
             ],
+            "Single product": [
+                "Produto individual"
+            ],
+            "Standard calculation": [
+                "Cálculo padrão"
+            ],
             "Statement positions": [
-                "Posições das informações de preço"
+                "Posicionamento das informações"
+            ],
+            "Text after price": [
+                "Texto depois do preço"
+            ],
+            "Text before price": [
+                "Texto antes do preço"
             ],
             "The settings could not be loaded.": [
                 "Não foi possível carregar as configurações."
             ],
             "The settings could not be saved.": [
                 "Não foi possível salvar as configurações."
+            ],
+            "This preview shows statement order only and does not represent your theme.": [
+                "Esta prévia mostra apenas a ordem das informações e não representa o seu tema."
             ],
             "Use customized interest fees": [
                 "Usar taxas de juros personalizadas"
@@ -219,6 +204,226 @@
             ],
             "YITH Dynamic Pricing": [
                 "YITH Dynamic Pricing"
+            ],
+            "cash price": [
+                "preço à vista"
+            ],
+            "installment price": [
+                "preço parcelado"
+            ],
+            "original price": [
+                "preço original"
+            ]
+        },
+        "darven-multiplos-precos-informativos": {
+            "": {
+                "domain": "darven-multiplos-precos-informativos",
+                "lang": "pt_BR",
+                "plural-forms": "nplurals=2; plural=(n > 1);"
+            },
+            "%1$s order: %2$s.": [
+                "Ordem de %1$s: %2$s."
+            ],
+            "%1$s — color for %2$s": [
+                "%1$s — cor de %2$s"
+            ],
+            "%1$s — font size for %2$s": [
+                "%1$s — tamanho da fonte de %2$s"
+            ],
+            "Advanced": [
+                "Avançado"
+            ],
+            "Appearance": [
+                "Aparência"
+            ],
+            "Automatic (recommended)": [
+                "Automático (recomendado)"
+            ],
+            "Automatic mode uses a valid YITH price when available and safely falls back to WooCommerce pricing.": [
+                "O modo automático usa um preço válido do YITH quando disponível e retorna com segurança aos preços do WooCommerce."
+            ],
+            "Cash price": [
+                "Preço à vista"
+            ],
+            "Cash price prefix": [
+                "Prefixo do preço à vista"
+            ],
+            "Cash price suffix": [
+                "Sufixo do preço à vista"
+            ],
+            "Catalog and shop": [
+                "Catálogo e loja"
+            ],
+            "Choose how this integration should resolve prices when YITH Dynamic Pricing is active.": [
+                "Escolha como esta integração deve resolver os preços quando o YITH Dynamic Pricing estiver ativo."
+            ],
+            "Compatibility mode": [
+                "Modo de compatibilidade"
+            ],
+            "Custom rates configured": [
+                "Taxas personalizadas configuradas"
+            ],
+            "Disabled": [
+                "Desativado"
+            ],
+            "Discount type": [
+                "Tipo de desconto"
+            ],
+            "Discount value": [
+                "Valor do desconto"
+            ],
+            "Display mode": [
+                "Modo de exibição"
+            ],
+            "Enable cash discount": [
+                "Ativar desconto à vista"
+            ],
+            "Enable installments": [
+                "Ativar parcelamento"
+            ],
+            "Existing legacy settings remain synchronized automatically. No action is normally required.": [
+                "As configurações legadas existentes permanecem sincronizadas automaticamente. Normalmente, nenhuma ação é necessária."
+            ],
+            "First interest fee (%)": [
+                "Primeira taxa de juros (%)"
+            ],
+            "Fixed": [
+                "Fixo"
+            ],
+            "Incremental interest fee (%)": [
+                "Taxa de juros incremental (%)"
+            ],
+            "Installment number": [
+                "Número da parcela"
+            ],
+            "Installment price": [
+                "Preço parcelado"
+            ],
+            "Installments": [
+                "Parcelamento"
+            ],
+            "Installments prefix": [
+                "Prefixo do parcelamento"
+            ],
+            "Installments suffix": [
+                "Sufixo do parcelamento"
+            ],
+            "Interest fees by installment": [
+                "Taxas de juros por parcela"
+            ],
+            "Interest starts at installment": [
+                "Os juros começam na parcela"
+            ],
+            "Loading settings…": [
+                "Carregando configurações…"
+            ],
+            "Maximum installments": [
+                "Máximo de parcelas"
+            ],
+            "Maximum installments with popup": [
+                "Máximo de parcelas com pop-up"
+            ],
+            "Minimum price for installments": [
+                "Preço mínimo para parcelamento"
+            ],
+            "Minimum price for the discount": [
+                "Preço mínimo para o desconto"
+            ],
+            "Move %1$s down in %2$s": [
+                "Mover %1$s para baixo em %2$s"
+            ],
+            "Move %1$s up in %2$s": [
+                "Mover %1$s para cima em %2$s"
+            ],
+            "Move down": [
+                "Mover para baixo"
+            ],
+            "Move up": [
+                "Mover para cima"
+            ],
+            "Original price": [
+                "Preço original"
+            ],
+            "Other pages": [
+                "Outras páginas"
+            ],
+            "Percent": [
+                "Porcentagem"
+            ],
+            "Popup text": [
+                "Texto do pop-up"
+            ],
+            "Presentation": [
+                "Apresentação"
+            ],
+            "Price": [
+                "Preço"
+            ],
+            "Pricing": [
+                "Preços"
+            ],
+            "Product": [
+                "Produto"
+            ],
+            "Save settings": [
+                "Salvar configurações"
+            ],
+            "Saving…": [
+                "Salvando…"
+            ],
+            "Separate each percentage with a vertical bar, for example: 8,25|9,50|10,12.": [
+                "Separe cada porcentagem com uma barra vertical, por exemplo: 8,25|9,50|10,12."
+            ],
+            "Settings saved.": [
+                "Configurações salvas."
+            ],
+            "Settings sections": [
+                "Seções de configurações"
+            ],
+            "Single product": [
+                "Produto individual"
+            ],
+            "Standard calculation": [
+                "Cálculo padrão"
+            ],
+            "Statement positions": [
+                "Posicionamento das informações"
+            ],
+            "Text after price": [
+                "Texto depois do preço"
+            ],
+            "Text before price": [
+                "Texto antes do preço"
+            ],
+            "The settings could not be loaded.": [
+                "Não foi possível carregar as configurações."
+            ],
+            "The settings could not be saved.": [
+                "Não foi possível salvar as configurações."
+            ],
+            "This preview shows statement order only and does not represent your theme.": [
+                "Esta prévia mostra apenas a ordem das informações e não representa o seu tema."
+            ],
+            "Use customized interest fees": [
+                "Usar taxas de juros personalizadas"
+            ],
+            "When enabled, only the values in the table below are considered.": [
+                "Quando ativado, apenas os valores da tabela abaixo são considerados."
+            ],
+            "Without interest with popup": [
+                "Sem juros com pop-up"
+            ],
+            "YITH Dynamic Pricing": [
+                "YITH Dynamic Pricing"
+            ],
+            "cash price": [
+                "preço à vista"
+            ],
+            "installment price": [
+                "preço parcelado"
+            ],
+            "original price": [
+                "preço original"
             ]
         }
     }
