@@ -549,10 +549,16 @@ git commit -m "build: refresh settings assets and translations"
 - Modify: `docs/release/4.0.0-qa.md`
 
 **Interfaces:**
-- Consumes: `dist/darven-extra-price-info-4.0.0.zip` from Task 6.
+- Consumes: a freshly rebuilt `dist/darven-extra-price-info-4.0.0.zip` containing the Task 8 visibility bundle.
 - Produces: verified LEMP installation and current WordPress.org settings screenshot.
 
 - [ ] **Step 1: Install the exact release ZIP on the persistent QA site**
+
+Rebuild the release ZIP after Task 8 so the artifact includes the final Presentation visibility predicate:
+
+```bash
+php scripts/build-release.php --output=dist/darven-extra-price-info-4.0.0.zip
+```
 
 Run from the project root:
 
@@ -569,6 +575,8 @@ Authenticate with the already-provisioned local QA administrator without recordi
 `https://staging.test/darven-epi-qa/wp-admin/admin.php?page=darven-epi-admin`
 
 Verify Pricing is initially selected, keyboard arrows move through all three tabs, hidden values survive disable/re-enable cycles, and Save changes persists after reload.
+
+With both cash price and installments disabled, verify Presentation is absent. Enable only installments and verify Presentation returns.
 
 - [ ] **Step 3: Verify every visual placement permutation**
 
