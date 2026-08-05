@@ -592,6 +592,71 @@ git commit -m "docs: refresh settings release evidence"
 
 ---
 
+### Task 8: Hide Presentation Without Visible Prices
+
+**Files:**
+- Modify: `admin/src/settings/app.js`
+- Modify: `admin/src/settings/__tests__/app.test.js`
+- Regenerate: `build/settings/index.js`
+- Regenerate: `build/settings/index.asset.php`
+
+**Interfaces:**
+- Produces: `getAvailableTabs(document): Array<{ name: string, title: string }>`.
+- Preserves: `Pricing` and `Advanced` when both price modes are disabled; includes `Presentation` whenever cash price or installments is enabled.
+
+- [ ] **Step 1: Add a failing visibility test**
+
+Render a document with both `darven_epi_incash_is_enabled` and `darven_epi_installments_is_enabled` set to the empty string. Assert the role-tab labels are exactly `Pricing` and `Advanced`, and that no Presentation panel is rendered. Render a second document with only installments enabled and assert all three tabs are available.
+
+- [ ] **Step 2: Run the focused test and verify the old unconditional tab list fails**
+
+Run: `/tmp/node-v24.19.0-linux-x64/bin/node node_modules/@wordpress/scripts/scripts/test-unit-js.js --runInBand admin/src/settings/__tests__/app.test.js`
+
+Expected: FAIL because the current app always renders Presentation.
+
+- [ ] **Step 3: Filter tabs from the existing general settings state**
+
+Add `getAvailableTabs(document)` beside the tab definitions. Treat a value equal to its checkbox field name as enabled:
+
+```js
+const hasVisiblePrice = ( settings, field ) => settings[ field ] === field;
+
+const getAvailableTabs = ( document ) => {
+	const general = document?.general || {};
+	const hasPrice =
+		hasVisiblePrice( general, 'darven_epi_incash_is_enabled' ) ||
+		hasVisiblePrice( general, 'darven_epi_installments_is_enabled' );
+
+	return hasPrice ? tabs : tabs.filter( ( tab ) => 'presentation' !== tab.name );
+};
+```
+
+Use the available-tab list for rendering, roving keyboard indices, and tab activation. If a loaded document has no visible prices while the state points at Presentation, render Pricing and make Pricing the roving tab. Do not mutate or clear any hidden Presentation settings.
+
+- [ ] **Step 4: Run focused and full JavaScript tests**
+
+Run: `/tmp/node-v24.19.0-linux-x64/bin/node node_modules/@wordpress/scripts/scripts/test-unit-js.js --runInBand admin/src/settings/__tests__/app.test.js`
+
+Run: `/tmp/node-v24.19.0-linux-x64/bin/node node_modules/@wordpress/scripts/scripts/test-unit-js.js --runInBand`
+
+Expected: PASS with the new visibility coverage and all existing tests.
+
+- [ ] **Step 5: Regenerate only the settings JavaScript bundle and manifest**
+
+Run: `/tmp/node-v24.19.0-linux-x64/bin/node node_modules/@wordpress/scripts/scripts/build.js --webpack-src-dir=admin/src/settings --output-path=build/settings`
+
+Verify `build/settings/index.js` contains the Presentation visibility predicate and `build/settings/index.asset.php` has the new content hash.
+
+- [ ] **Step 6: Commit the visibility slice and generated settings bundle**
+
+```bash
+git add admin/src/settings/app.js admin/src/settings/__tests__/app.test.js build/settings/index.js build/settings/index.asset.php
+git diff --cached --check
+git commit -m "fix: hide presentation without visible prices"
+```
+
+---
+
 ## Self-Review Results
 
 - Spec coverage: all approved navigation, field ordering, conditional disclosure, visual placement, mapping, accessibility, responsive, saving, translation, and LEMP evidence requirements map to Tasks 1 through 7.

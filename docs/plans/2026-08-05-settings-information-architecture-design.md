@@ -78,6 +78,8 @@ Opening and closing the disclosure must not alter any value. The control exposes
 
 Presentation contains Placement by page followed by Appearance.
 
+The Presentation tab is available only when at least one price mode is enabled. If both cash price and installments are disabled, the tab and its panel are omitted because there is no rendered price statement to position or style. If either mode is enabled, Presentation remains available and continues to show both configuration groups so a merchant can prepare the second mode before enabling it.
+
 #### Visual placement editor
 
 The editor presents three page-context cards in this order:
@@ -154,6 +156,7 @@ Changing tabs, expanding disclosures, or disabling a feature must not silently d
 ## Acceptance criteria
 
 - The top-level tabs are Pricing, Presentation, and Advanced in that order.
+- Presentation is omitted when both cash price and installments are disabled, and returns when either mode is enabled.
 - Compatibility no longer occupies a top-level tab.
 - Cash and installment essentials appear before advanced interest controls.
 - Popup and custom-interest fields appear only when relevant while retaining saved values.
