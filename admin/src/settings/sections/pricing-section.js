@@ -1,15 +1,15 @@
-/* @jsx createElement */
-import { Component, createElement } from '@wordpress/element';
+import { createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import fields from '../../shared/settings-fields.json';
 
+const cashEnablementField = {
+	name: 'darven_epi_incash_is_enabled',
+	type: 'checkbox',
+	label: __( 'Enable cash discount', 'darven-multiplos-precos-informativos' ),
+};
+
 const cashFields = [
-	{
-		name: 'darven_epi_incash_is_enabled',
-		type: 'checkbox',
-		label: __( 'Enable cash discount', 'darven-multiplos-precos-informativos' ),
-	},
 	{
 		name: 'darven_epi_type_of_discount',
 		type: 'select',
@@ -37,12 +37,13 @@ const cashFields = [
 	},
 ];
 
+const installmentEnablementField = {
+	name: 'darven_epi_installments_is_enabled',
+	type: 'checkbox',
+	label: __( 'Enable installments', 'darven-multiplos-precos-informativos' ),
+};
+
 const installmentFields = [
-	{
-		name: 'darven_epi_installments_is_enabled',
-		type: 'checkbox',
-		label: __( 'Enable installments', 'darven-multiplos-precos-informativos' ),
-	},
 	{
 		name: 'darven_epi_mode_of_view',
 		type: 'select',
@@ -78,11 +79,15 @@ const installmentFields = [
 		name: 'darven_epi_installments_suffix',
 		label: __( 'Installments suffix', 'darven-multiplos-precos-informativos' ),
 	},
-	{
-		name: 'darven_epi_popup_text',
-		type: 'textarea',
-		label: __( 'Popup text', 'darven-multiplos-precos-informativos' ),
-	},
+];
+
+const popupTextField = {
+	name: 'darven_epi_popup_text',
+	type: 'textarea',
+	label: __( 'Popup text', 'darven-multiplos-precos-informativos' ),
+};
+
+const interestFields = [
 	{
 		name: 'darven_epi_installments_interest_fee_from',
 		label: __( 'Interest starts at installment', 'darven-multiplos-precos-informativos' ),
@@ -97,26 +102,25 @@ const installmentFields = [
 	},
 ];
 
-const tableFields = [
-	{
-		name: 'darven_epi_installments_interest_fee_is_table_enabled',
-		type: 'checkbox',
-		label: __( 'Use customized interest fees', 'darven-multiplos-precos-informativos' ),
-		help: __(
-			'When enabled, only the values in the table below are considered.',
-			'darven-multiplos-precos-informativos'
-		),
-	},
-	{
-		name: 'darven_epi_installments_interest_fee_table',
-		type: 'textarea',
-		label: __( 'Interest fees by installment', 'darven-multiplos-precos-informativos' ),
-		help: __(
-			'Separate each percentage with a vertical bar, for example: 8,25|9,50|10,12.',
-			'darven-multiplos-precos-informativos'
-		),
-	},
-];
+const customTableEnablementField = {
+	name: 'darven_epi_installments_interest_fee_is_table_enabled',
+	type: 'checkbox',
+	label: __( 'Use customized interest fees', 'darven-multiplos-precos-informativos' ),
+	help: __(
+		'When enabled, only the values in the table below are considered.',
+		'darven-multiplos-precos-informativos'
+	),
+};
+
+const customTableField = {
+	name: 'darven_epi_installments_interest_fee_table',
+	type: 'textarea',
+	label: __( 'Interest fees by installment', 'darven-multiplos-precos-informativos' ),
+	help: __(
+		'Separate each percentage with a vertical bar, for example: 8,25|9,50|10,12.',
+		'darven-multiplos-precos-informativos'
+	),
+};
 
 const assertField = ( name ) => {
 	if ( ! fields.general.includes( name ) ) {
@@ -125,6 +129,33 @@ const assertField = ( name ) => {
 
 	return name;
 };
+
+const allFieldDefinitions = [
+	cashEnablementField,
+	...cashFields,
+	installmentEnablementField,
+	...installmentFields,
+	popupTextField,
+	...interestFields,
+	customTableEnablementField,
+	customTableField,
+];
+
+allFieldDefinitions.forEach( ( definition ) => assertField( definition.name ) );
+
+const missingFieldDefinitions = fields.general.filter(
+	( name ) => ! allFieldDefinitions.some( ( definition ) => definition.name === name )
+);
+
+if ( missingFieldDefinitions.length ) {
+	throw new Error(
+		`Missing general settings field definitions: ${ missingFieldDefinitions.join(
+			', '
+		) }`
+	);
+}
+
+const isEnabled = ( settings, field ) => settings[ field ] === field;
 
 const renderField = ( settings, onChange, definition ) => {
 	const name = assertField( definition.name );
@@ -141,7 +172,7 @@ const renderField = ( settings, onChange, definition ) => {
 					id={ name }
 					name={ name }
 					type="checkbox"
-					checked={ settings[ name ] === name }
+					checked={ isEnabled( settings, name ) }
 					aria-describedby={ helpId }
 					onChange={ ( event ) =>
 						onChange( name, event.target.checked ? name : '' )
@@ -202,38 +233,61 @@ const renderField = ( settings, onChange, definition ) => {
 	);
 };
 
-class GeneralSection extends Component {
-	renderGroup( title, definitions ) {
-		const { settings, onChange } = this.props;
+const renderFields = ( settings, onChange, definitions ) =>
+	definitions.map( ( definition ) => renderField( settings, onChange, definition ) );
 
-		return (
+const PricingSection = ( { settings, onChange } ) => {
+	const installmentsEnabled = isEnabled(
+		settings,
+		installmentEnablementField.name
+	);
+	const customTableEnabled = isEnabled(
+		settings,
+		customTableEnablementField.name
+	);
+	const showsPopupText = [ 'popup', 'nofee' ].includes(
+		settings.darven_epi_mode_of_view
+	);
+
+	return (
+		<div className="darven-precos-parcelados-admin__section">
 			<fieldset className="darven-precos-parcelados-admin__group">
-				<legend>{ title }</legend>
-				{ definitions.map( ( definition ) =>
-					renderField( settings, onChange, definition )
-				) }
+				<legend>
+					{ __( 'Cash price', 'darven-multiplos-precos-informativos' ) }
+					{ renderField( settings, onChange, cashEnablementField ) }
+				</legend>
+				{ isEnabled( settings, cashEnablementField.name ) &&
+					renderFields( settings, onChange, cashFields ) }
 			</fieldset>
-		);
-	}
+			<fieldset className="darven-precos-parcelados-admin__group">
+				<legend>
+					{ __( 'Installments', 'darven-multiplos-precos-informativos' ) }
+					{ renderField( settings, onChange, installmentEnablementField ) }
+				</legend>
+				{ installmentsEnabled && [
+						...renderFields( settings, onChange, installmentFields ),
+						showsPopupText
+							? renderField( settings, onChange, popupTextField )
+							: null,
+						<details key="interest-rules">
+							<summary>
+								{ customTableEnabled
+									? __( 'Custom rates configured', 'darven-multiplos-precos-informativos' )
+									: __( 'Standard calculation', 'darven-multiplos-precos-informativos' ) }
+							</summary>
+							{ renderFields( settings, onChange, interestFields ) }
+							{ renderField(
+								settings,
+								onChange,
+								customTableEnablementField
+							) }
+							{ customTableEnabled &&
+								renderField( settings, onChange, customTableField ) }
+						</details>,
+					] }
+			</fieldset>
+		</div>
+	);
+};
 
-	render() {
-		return (
-			<div className="darven-precos-parcelados-admin__section">
-				{ this.renderGroup(
-					__( 'Cash price', 'darven-multiplos-precos-informativos' ),
-					cashFields
-				) }
-				{ this.renderGroup(
-					__( 'Installments', 'darven-multiplos-precos-informativos' ),
-					installmentFields
-				) }
-				{ this.renderGroup(
-					__( 'Interest fee table', 'darven-multiplos-precos-informativos' ),
-					tableFields
-				) }
-			</div>
-		);
-	}
-}
-
-export default GeneralSection;
+export default PricingSection;

@@ -1,3 +1,4 @@
+import { createElement } from '@wordpress/element';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
@@ -118,6 +119,13 @@ const change = ( element, value ) =>
 		element.dispatchEvent( new Event( 'change', { bubbles: true } ) );
 	} );
 
+const toggle = ( element, checked ) =>
+	act( () => {
+		if ( element.checked !== checked ) {
+			element.click();
+		}
+	} );
+
 describe( 'SettingsApp', () => {
 	let container;
 	let root;
@@ -213,6 +221,107 @@ describe( 'SettingsApp', () => {
 				( tab ) => tab.textContent
 			)
 		).toEqual( [ 'Pricing', 'Presentation', 'Advanced' ] );
+	} );
+
+	it( 'shows popup text only for popup display modes', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+		await flushPromises();
+
+		expect(
+			container.querySelector( '[name="darven_epi_popup_text"]' )
+		).toBeNull();
+
+		change(
+			container.querySelector( '[name="darven_epi_mode_of_view"]' ),
+			'popup'
+		);
+
+		expect(
+			container.querySelector( '[name="darven_epi_popup_text"]' ).value
+		).toBe( 'Ver parcelas' );
+	} );
+
+	it( 'shows the custom interest table only after customized fees are enabled', async () => {
+		const documentWithoutCustomFees = {
+			...settingsDocument,
+			general: {
+				...settingsDocument.general,
+				darven_epi_installments_interest_fee_is_table_enabled: '',
+			},
+		};
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( documentWithoutCustomFees ),
+			saveSettings: jest.fn(),
+		} );
+		await flushPromises();
+
+		expect(
+			container.querySelector(
+				'[name="darven_epi_installments_interest_fee_table"]'
+			)
+		).toBeNull();
+
+		toggle(
+			container.querySelector(
+				'[name="darven_epi_installments_interest_fee_is_table_enabled"]'
+			),
+			true
+		);
+
+		expect(
+			container.querySelector(
+				'[name="darven_epi_installments_interest_fee_table"]'
+			).value
+		).toBe( '1|2|3' );
+	} );
+
+	it( 'preserves hidden installment values when installments are disabled and saved', async () => {
+		const apiClient = {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn().mockResolvedValue( settingsDocument ),
+		};
+		renderApp( apiClient );
+		await flushPromises();
+
+		toggle(
+			container.querySelector(
+				'[name="darven_epi_installments_is_enabled"]'
+			),
+			false
+		);
+
+		expect(
+			container.querySelector( '[name="darven_epi_max_installments"]' )
+		).toBeNull();
+		click( findButton( 'Save settings' ) );
+		await flushPromises();
+
+		expect( apiClient.saveSettings.mock.calls[ 0 ][ 0 ].general ).toEqual( {
+			...settingsDocument.general,
+			darven_epi_installments_is_enabled: '',
+		} );
+	} );
+
+	it( 'uses a keyboard-reachable native disclosure for advanced interest rules', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+		await flushPromises();
+
+		const details = container.querySelector( 'details' );
+		const summary = details && details.querySelector( 'summary' );
+		expect( summary.textContent ).toBe( 'Custom rates configured' );
+		expect(
+			details.querySelector(
+				'[name="darven_epi_installments_interest_fee_from"]'
+			)
+		).not.toBeNull();
+		summary.focus();
+		expect( document.activeElement ).toBe( summary );
 	} );
 
 	it( 'reorders a visual placement card and saves its legacy value', async () => {

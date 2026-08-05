@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { Component, createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -7,7 +6,7 @@ import {
 	updateSettingsField,
 } from '../shared/settings-store';
 import { normalizeRestError } from '../shared/api';
-import GeneralSection from './sections/general-section';
+import PricingSection from './sections/pricing-section';
 import PresentationSection from './sections/presentation-section';
 import AdvancedSection from './sections/advanced-section';
 
@@ -247,7 +246,7 @@ class SettingsApp extends Component {
 						tabIndex="0"
 					>
 						{ 'pricing' === activeTab && (
-							<GeneralSection
+							<PricingSection
 								settings={ document.general || {} }
 								onChange={ ( field, value ) =>
 									this.updateField( 'general', field, value )

@@ -6,7 +6,7 @@ const activeSources = [
 	'admin/src/shared/settings-store.js',
 	'admin/src/settings/app.js',
 	'admin/src/settings/index.js',
-	'admin/src/settings/sections/general-section.js',
+	'admin/src/settings/sections/pricing-section.js',
 	'admin/src/settings/sections/display-section.js',
 	'admin/src/settings/sections/positions-section.js',
 	'admin/src/settings/sections/compatibility-section.js',
