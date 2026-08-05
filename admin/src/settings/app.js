@@ -16,6 +16,19 @@ const tabs = [
 	{ name: 'advanced', title: __( 'Advanced', 'darven-multiplos-precos-informativos' ) },
 ];
 
+const hasVisiblePrice = ( settings, field ) => settings[ field ] === field;
+
+export const getAvailableTabs = ( document ) => {
+	const general = document?.general || {};
+	const hasPrice =
+		hasVisiblePrice( general, 'darven_epi_incash_is_enabled' ) ||
+		hasVisiblePrice( general, 'darven_epi_installments_is_enabled' );
+
+	return hasPrice
+		? tabs
+		: tabs.filter( ( tab ) => 'presentation' !== tab.name );
+};
+
 class SettingsApp extends Component {
 	constructor( props ) {
 		super( props );
@@ -66,31 +79,43 @@ class SettingsApp extends Component {
 	}
 
 	setActiveTab = ( activeTab ) => {
-		this.setState( { activeTab } );
+		this.setState( ( current ) => {
+			const availableTabs = getAvailableTabs( current.document );
+			const isAvailable = availableTabs.some(
+				( tab ) => tab.name === activeTab
+			);
+
+			return {
+				activeTab: isAvailable ? activeTab : availableTabs[ 0 ].name,
+			};
+		} );
 	};
 
 	handleTabKeyDown = ( event, currentIndex ) => {
+		const availableTabs = getAvailableTabs( this.state.document );
 		let nextIndex;
 
 		switch ( event.key ) {
 			case 'ArrowLeft':
-				nextIndex = ( currentIndex - 1 + tabs.length ) % tabs.length;
+				nextIndex =
+					( currentIndex - 1 + availableTabs.length ) %
+					availableTabs.length;
 				break;
 			case 'ArrowRight':
-				nextIndex = ( currentIndex + 1 ) % tabs.length;
+				nextIndex = ( currentIndex + 1 ) % availableTabs.length;
 				break;
 			case 'Home':
 				nextIndex = 0;
 				break;
 			case 'End':
-				nextIndex = tabs.length - 1;
+				nextIndex = availableTabs.length - 1;
 				break;
 			default:
 				return;
 		}
 
 		event.preventDefault();
-		const nextTab = tabs[ nextIndex ];
+		const nextTab = availableTabs[ nextIndex ];
 		this.setState( { activeTab: nextTab.name }, () => {
 			const target = document.getElementById(
 				`darven-precos-parcelados-tab-${ nextTab.name }`
@@ -173,7 +198,13 @@ class SettingsApp extends Component {
 	}
 
 	render() {
-		const { document, loadError, isSaving, notice, activeTab } = this.state;
+		const {
+			document,
+			loadError,
+			isSaving,
+			notice,
+			activeTab: requestedActiveTab,
+		} = this.state;
 
 		if ( null === document && ! loadError ) {
 			return (
@@ -198,6 +229,12 @@ class SettingsApp extends Component {
 			);
 		}
 
+		const availableTabs = getAvailableTabs( document );
+		const activeTab = availableTabs.some(
+			( tab ) => tab.name === requestedActiveTab
+		)
+			? requestedActiveTab
+			: availableTabs[ 0 ].name;
 		const tabId = `darven-precos-parcelados-tab-${ activeTab }`;
 		const panelId = `darven-precos-parcelados-panel-${ activeTab }`;
 
@@ -210,7 +247,7 @@ class SettingsApp extends Component {
 					role="tablist"
 					aria-label={ __( 'Settings sections', 'darven-multiplos-precos-informativos' ) }
 				>
-					{ tabs.map( ( tab, index ) => (
+					{ availableTabs.map( ( tab, index ) => (
 						<button
 							key={ tab.name }
 							id={ `darven-precos-parcelados-tab-${ tab.name }` }

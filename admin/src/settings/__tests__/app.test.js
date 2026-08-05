@@ -223,6 +223,60 @@ describe( 'SettingsApp', () => {
 		).toEqual( [ 'Pricing', 'Presentation', 'Advanced' ] );
 	} );
 
+	it( 'hides Presentation when neither price is visible', async () => {
+		const documentWithoutVisiblePrices = {
+			...settingsDocument,
+			general: {
+				...settingsDocument.general,
+				darven_epi_incash_is_enabled: '',
+				darven_epi_installments_is_enabled: '',
+			},
+		};
+		renderApp( {
+			loadSettings: jest
+				.fn()
+				.mockResolvedValue( documentWithoutVisiblePrices ),
+			saveSettings: jest.fn(),
+		} );
+
+		await flushPromises();
+
+		expect(
+			Array.from( container.querySelectorAll( '[role="tab"]' ) ).map(
+				( tab ) => tab.textContent
+			)
+		).toEqual( [ 'Pricing', 'Advanced' ] );
+		expect(
+			container.querySelector(
+				'#darven-precos-parcelados-panel-presentation'
+			)
+		).toBeNull();
+	} );
+
+	it( 'keeps Presentation when installments are visible', async () => {
+		const documentWithInstallmentsOnly = {
+			...settingsDocument,
+			general: {
+				...settingsDocument.general,
+				darven_epi_incash_is_enabled: '',
+			},
+		};
+		renderApp( {
+			loadSettings: jest
+				.fn()
+				.mockResolvedValue( documentWithInstallmentsOnly ),
+			saveSettings: jest.fn(),
+		} );
+
+		await flushPromises();
+
+		expect(
+			Array.from( container.querySelectorAll( '[role="tab"]' ) ).map(
+				( tab ) => tab.textContent
+			)
+		).toEqual( [ 'Pricing', 'Presentation', 'Advanced' ] );
+	} );
+
 	it( 'shows popup text only for popup display modes', async () => {
 		renderApp( {
 			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
