@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { Component, createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -14,14 +13,26 @@ class CompatibilitySection extends Component {
 		const { settings, onChange } = this.props;
 
 		return (
-			<div className="darven-precos-parcelados-admin__section">
-				<fieldset className="darven-precos-parcelados-admin__group">
+			<div className="darven-precos-parcelados-admin__section darven-precos-parcelados-admin__compatibility-section">
+				<fieldset className="darven-precos-parcelados-admin__group darven-precos-parcelados-admin__compatibility-group">
 					<legend>
-						{ __( 'YITH Dynamic Pricing', 'darven-multiplos-precos-informativos' ) }
+						{ __(
+							'YITH Dynamic Pricing',
+							'darven-multiplos-precos-informativos'
+						) }
 					</legend>
+					<p className="darven-precos-parcelados-admin__compatibility-description">
+						{ __(
+							'Choose how this integration should resolve prices when YITH Dynamic Pricing is active.',
+							'darven-multiplos-precos-informativos'
+						) }
+					</p>
 					<div className="darven-precos-parcelados-admin__field">
 						<label htmlFor={ modeField }>
-							{ __( 'Compatibility mode', 'darven-multiplos-precos-informativos' ) }
+							{ __(
+								'Compatibility mode',
+								'darven-multiplos-precos-informativos'
+							) }
 						</label>
 						<select
 							id={ modeField }
@@ -38,7 +49,10 @@ class CompatibilitySection extends Component {
 								) }
 							</option>
 							<option value="disabled">
-								{ __( 'Disabled', 'darven-multiplos-precos-informativos' ) }
+								{ __(
+									'Disabled',
+									'darven-multiplos-precos-informativos'
+								) }
 							</option>
 						</select>
 					</div>

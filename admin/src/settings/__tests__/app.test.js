@@ -253,7 +253,9 @@ describe( 'SettingsApp', () => {
 			},
 		};
 		renderApp( {
-			loadSettings: jest.fn().mockResolvedValue( documentWithoutCustomFees ),
+			loadSettings: jest
+				.fn()
+				.mockResolvedValue( documentWithoutCustomFees ),
 			saveSettings: jest.fn(),
 		} );
 		await flushPromises();
@@ -338,9 +340,9 @@ describe( 'SettingsApp', () => {
 			'[data-position-field="darven_epi_single_product_position"]'
 		);
 		expect(
-			Array.from( singleProduct.querySelectorAll( '[data-statement]' ) ).map(
-				( row ) => row.dataset.statement
-			)
+			Array.from(
+				singleProduct.querySelectorAll( '[data-statement]' )
+			).map( ( row ) => row.dataset.statement )
 		).toEqual( [ 'original', 'installments', 'cash' ] );
 
 		click(
@@ -352,9 +354,9 @@ describe( 'SettingsApp', () => {
 		);
 
 		expect(
-			Array.from( singleProduct.querySelectorAll( '[data-statement]' ) ).map(
-				( row ) => row.dataset.statement
-			)
+			Array.from(
+				singleProduct.querySelectorAll( '[data-statement]' )
+			).map( ( row ) => row.dataset.statement )
 		).toEqual( [ 'original', 'cash', 'installments' ] );
 
 		click( findButton( 'Save settings' ) );
@@ -364,6 +366,86 @@ describe( 'SettingsApp', () => {
 			apiClient.saveSettings.mock.calls[ 0 ][ 0 ].positions
 				.darven_epi_single_product_position
 		).toBe( 'first' );
+	} );
+
+	it( 'groups appearance controls by statement after visual placement', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+		await flushPromises();
+
+		click( findButton( 'Presentation' ) );
+
+		const groups = Array.from(
+			container.querySelectorAll(
+				'.darven-precos-parcelados-admin__group'
+			)
+		);
+		expect(
+			groups.map(
+				( group ) => group.querySelector( 'legend' ).textContent
+			)
+		).toEqual( [ 'Statement positions', 'Appearance' ] );
+
+		const appearance = groups[ 1 ];
+		const subgroups = Array.from(
+			appearance.querySelectorAll(
+				'.darven-precos-parcelados-admin__appearance-subgroup'
+			)
+		);
+		expect(
+			subgroups.map(
+				( subgroup ) => subgroup.querySelector( 'h3' ).textContent
+			)
+		).toEqual( [ 'Cash price', 'Installment price' ] );
+
+		[
+			[
+				'darven_epi_color_of_incash_price',
+				'darven_epi_font_size_of_incash_price',
+			],
+			[
+				'darven_epi_color_of_incash_prefix',
+				'darven_epi_font_size_of_incash_prefix',
+			],
+			[
+				'darven_epi_color_of_incash_suffix',
+				'darven_epi_font_size_of_incash_suffix',
+			],
+			[
+				'darven_epi_color_of_installments_price',
+				'darven_epi_font_size_of_installments_price',
+			],
+			[
+				'darven_epi_color_of_installments_install',
+				'darven_epi_font_size_of_installments_install',
+			],
+			[
+				'darven_epi_color_of_installments_prefix',
+				'darven_epi_font_size_of_installments_prefix',
+			],
+			[
+				'darven_epi_color_of_installments_suffix',
+				'darven_epi_font_size_of_installments_suffix',
+			],
+		].forEach( ( [ colorName, fontSizeName ] ) => {
+			const row = appearance.querySelector(
+				`[data-appearance-row="${ colorName }"]`
+			);
+			expect(
+				row.querySelector( `[name="${ colorName }"]` )
+			).not.toBeNull();
+			expect(
+				row.querySelector( `[name="${ fontSizeName }"]` )
+			).not.toBeNull();
+		} );
+
+		Object.keys( settingsDocument.display ).forEach( ( name ) => {
+			expect(
+				appearance.querySelectorAll( `[name="${ name }"]` )
+			).toHaveLength( 1 );
+		} );
 	} );
 
 	it( 'edits one field in every tab and PUTs the entire document', async () => {
