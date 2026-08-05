@@ -7,24 +7,16 @@ import {
 	updateSettingsField,
 } from '../shared/settings-store';
 import { normalizeRestError } from '../shared/api';
-import CompatibilitySection from './sections/compatibility-section';
-import DisplaySection from './sections/display-section';
 import GeneralSection from './sections/general-section';
-import PositionsSection from './sections/positions-section';
+import PresentationSection from './sections/presentation-section';
+import AdvancedSection from './sections/advanced-section';
 
+const domain = 'darven-multiplos-precos-informativos';
 const tabs = [
-	{ name: 'general', title: __( 'General', 'darven-multiplos-precos-informativos' ) },
-	{ name: 'display', title: __( 'Display', 'darven-multiplos-precos-informativos' ) },
-	{ name: 'positions', title: __( 'Positions', 'darven-multiplos-precos-informativos' ) },
-	{ name: 'compatibility', title: __( 'Compatibility', 'darven-multiplos-precos-informativos' ) },
+	{ name: 'pricing', title: __( 'Pricing', domain ) },
+	{ name: 'presentation', title: __( 'Presentation', domain ) },
+	{ name: 'advanced', title: __( 'Advanced', domain ) },
 ];
-
-const sections = {
-	general: GeneralSection,
-	display: DisplaySection,
-	positions: PositionsSection,
-	compatibility: CompatibilitySection,
-};
 
 class SettingsApp extends Component {
 	constructor( props ) {
@@ -208,20 +200,12 @@ class SettingsApp extends Component {
 			);
 		}
 
-		const Section = sections[ activeTab ];
 		const tabId = `darven-precos-parcelados-tab-${ activeTab }`;
 		const panelId = `darven-precos-parcelados-panel-${ activeTab }`;
 
 		return (
 			<div className="darven-precos-parcelados-admin">
 				<h1>Darven Preços Parcelados</h1>
-				{ this.renderNotice( {
-					status: 'info',
-					message: __(
-						'Saving here also keeps the legacy settings synchronized for compatibility.',
-						'darven-multiplos-precos-informativos'
-					),
-				} ) }
 				{ notice && this.renderNotice( notice ) }
 				<div
 					className="darven-precos-parcelados-admin__tabs"
@@ -262,12 +246,28 @@ class SettingsApp extends Component {
 						aria-labelledby={ tabId }
 						tabIndex="0"
 					>
-						<Section
-							settings={ document[ activeTab ] || {} }
-							onChange={ ( field, value ) =>
-								this.updateField( activeTab, field, value )
-							}
-						/>
+						{ 'pricing' === activeTab && (
+							<GeneralSection
+								settings={ document.general || {} }
+								onChange={ ( field, value ) =>
+									this.updateField( 'general', field, value )
+								}
+							/>
+						) }
+						{ 'presentation' === activeTab && (
+							<PresentationSection
+								document={ document }
+								onChange={ this.updateField }
+							/>
+						) }
+						{ 'advanced' === activeTab && (
+							<AdvancedSection
+								settings={ document.compatibility || {} }
+								onChange={ ( field, value ) =>
+									this.updateField( 'compatibility', field, value )
+								}
+							/>
+						) }
 					</div>
 					<button
 						className="button button-primary"

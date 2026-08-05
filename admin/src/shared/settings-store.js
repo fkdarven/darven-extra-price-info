@@ -3,7 +3,7 @@ export const createSettingsState = () => ( {
 	loadError: '',
 	isSaving: false,
 	notice: null,
-	activeTab: 'general',
+	activeTab: 'pricing',
 } );
 
 export const updateSettingsField = ( document, section, field, value ) => ( {

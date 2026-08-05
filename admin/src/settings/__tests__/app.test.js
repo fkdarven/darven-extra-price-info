@@ -198,6 +198,21 @@ describe( 'SettingsApp', () => {
 		);
 	} );
 
+	it( 'renders task-oriented settings tabs', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+
+		await flushPromises();
+
+		expect(
+			Array.from( container.querySelectorAll( '[role="tab"]' ) ).map(
+				( tab ) => tab.textContent
+			)
+		).toEqual( [ 'Pricing', 'Presentation', 'Advanced' ] );
+	} );
+
 	it( 'edits one field in every tab and PUTs the entire document', async () => {
 		const savedDocument = JSON.parse( JSON.stringify( settingsDocument ) );
 		const apiClient = {
@@ -214,21 +229,12 @@ describe( 'SettingsApp', () => {
 			container.querySelector( '[name="darven_epi_max_installments"]' ),
 			'10'
 		);
-		click(
-			Array.from( container.querySelectorAll( 'button' ) ).find(
-				( button ) => 'Display' === button.textContent
-			)
-		);
+		click( findButton( 'Presentation' ) );
 		change(
 			container.querySelector(
 				'[name="darven_epi_font_size_of_incash_price"]'
 			),
 			'1.8'
-		);
-		click(
-			Array.from( container.querySelectorAll( 'button' ) ).find(
-				( button ) => 'Positions' === button.textContent
-			)
 		);
 		change(
 			container.querySelector(
@@ -236,11 +242,7 @@ describe( 'SettingsApp', () => {
 			),
 			'sixth'
 		);
-		click(
-			Array.from( container.querySelectorAll( 'button' ) ).find(
-				( button ) => 'Compatibility' === button.textContent
-			)
-		);
+		click( findButton( 'Advanced' ) );
 		change(
 			container.querySelector(
 				'[name="darven_epi_yith_dynamic_pricing_mode"]'
@@ -340,24 +342,24 @@ describe( 'SettingsApp', () => {
 		} );
 		await flushPromises();
 
-		const general = findButton( 'General' );
-		const display = findButton( 'Display' );
-		const compatibility = findButton( 'Compatibility' );
-		expect( general.tabIndex ).toBe( 0 );
-		expect( display.tabIndex ).toBe( -1 );
+		const pricing = findButton( 'Pricing' );
+		const presentation = findButton( 'Presentation' );
+		const advanced = findButton( 'Advanced' );
+		expect( pricing.tabIndex ).toBe( 0 );
+		expect( presentation.tabIndex ).toBe( -1 );
 
-		general.focus();
-		keyDown( general, 'ArrowRight' );
-		expect( display.getAttribute( 'aria-selected' ) ).toBe( 'true' );
-		expect( display.tabIndex ).toBe( 0 );
-		expect( document.activeElement ).toBe( display );
+		pricing.focus();
+		keyDown( pricing, 'ArrowRight' );
+		expect( presentation.getAttribute( 'aria-selected' ) ).toBe( 'true' );
+		expect( presentation.tabIndex ).toBe( 0 );
+		expect( document.activeElement ).toBe( presentation );
 
-		keyDown( display, 'End' );
-		expect( compatibility.getAttribute( 'aria-selected' ) ).toBe( 'true' );
-		expect( document.activeElement ).toBe( compatibility );
+		keyDown( presentation, 'End' );
+		expect( advanced.getAttribute( 'aria-selected' ) ).toBe( 'true' );
+		expect( document.activeElement ).toBe( advanced );
 
-		keyDown( compatibility, 'Home' );
-		expect( general.getAttribute( 'aria-selected' ) ).toBe( 'true' );
-		expect( document.activeElement ).toBe( general );
+		keyDown( advanced, 'Home' );
+		expect( pricing.getAttribute( 'aria-selected' ) ).toBe( 'true' );
+		expect( document.activeElement ).toBe( pricing );
 	} );
 } );
