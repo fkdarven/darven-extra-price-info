@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import apiFetch from '@wordpress/api-fetch';
 import { Component, createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';

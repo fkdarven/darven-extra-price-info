@@ -65,7 +65,7 @@ msgid "The settings security check failed."
 msgstr ""
 
 #: src/Admin/ReactPage.php:89
-#: admin/src/settings/app.js:278
+#: admin/src/settings/app.js:315
 msgid "Save settings"
 msgstr ""
 
@@ -74,7 +74,7 @@ msgid "The settings payload must be an object."
 msgstr ""
 
 #: src/Admin/SettingsRestController.php:108
-#: admin/src/settings/app.js:149
+#: admin/src/settings/app.js:174
 msgid "The settings could not be saved."
 msgstr ""
 
@@ -150,7 +150,7 @@ msgid "Hides the installment price only for the current product."
 msgstr ""
 
 #: admin/src/product-options/app.js:259
-#: admin/src/settings/app.js:277
+#: admin/src/settings/app.js:314
 msgid "Saving…"
 msgstr ""
 
@@ -166,19 +166,19 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: admin/src/settings/app.js:41
+#: admin/src/settings/app.js:54
 msgid "The settings could not be loaded."
 msgstr ""
 
-#: admin/src/settings/app.js:138
+#: admin/src/settings/app.js:163
 msgid "Settings saved."
 msgstr ""
 
-#: admin/src/settings/app.js:184
+#: admin/src/settings/app.js:215
 msgid "Loading settings…"
 msgstr ""
 
-#: admin/src/settings/app.js:211
+#: admin/src/settings/app.js:248
 msgid "Settings sections"
 msgstr ""
 

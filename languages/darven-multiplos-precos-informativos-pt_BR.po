@@ -79,33 +79,33 @@ msgid "Hides the installment price only for the current product."
 msgstr "Oculta o preço parcelado apenas para este produto."
 
 #: admin/src/product-options/app.js:259
-#: admin/src/settings/app.js:277
+#: admin/src/settings/app.js:314
 msgid "Saving…"
 msgstr "Salvando…"
 
-#: admin/src/settings/app.js:41
+#: admin/src/settings/app.js:54
 msgid "The settings could not be loaded."
 msgstr "Não foi possível carregar as configurações."
 
-#: admin/src/settings/app.js:138
+#: admin/src/settings/app.js:163
 msgid "Settings saved."
 msgstr "Configurações salvas."
 
 #: src/Admin/SettingsRestController.php:108
-#: admin/src/settings/app.js:149
+#: admin/src/settings/app.js:174
 msgid "The settings could not be saved."
 msgstr "Não foi possível salvar as configurações."
 
-#: admin/src/settings/app.js:184
+#: admin/src/settings/app.js:215
 msgid "Loading settings…"
 msgstr "Carregando configurações…"
 
-#: admin/src/settings/app.js:211
+#: admin/src/settings/app.js:248
 msgid "Settings sections"
 msgstr "Seções de configurações"
 
 #: src/Admin/ReactPage.php:89
-#: admin/src/settings/app.js:278
+#: admin/src/settings/app.js:315
 msgid "Save settings"
 msgstr "Salvar configurações"
 

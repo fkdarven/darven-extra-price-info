@@ -14,6 +14,7 @@ const DARVEN_EPI_TRANSLATION_DOMAIN        = 'darven-multiplos-precos-informativ
 const DARVEN_EPI_TRANSLATION_LOCALE        = 'pt_BR';
 const DARVEN_EPI_TRANSLATION_POT_DATE      = '2026-07-31T00:00:00+00:00';
 const DARVEN_EPI_TRANSLATION_REVISION_DATE = '2026-07-31 00:00+0000';
+const DARVEN_EPI_TRANSLATION_BUG_REPORT_URL = 'https://wordpress.org/support/plugin/darven-extra-price-info';
 
 /**
  * Stops the build with a concise diagnostic.
@@ -129,19 +130,24 @@ function darven_epi_translation_assert_complete_po( string $po_path ): void {
 /**
  * Normalizes volatile gettext headers.
  *
- * @param string $path Catalogue path.
+ * @param string      $path     Catalogue path.
+ * @param string|null $language Catalogue language, or null for a POT template.
  * @return void
  */
-function darven_epi_translation_normalize_headers( string $path ): void {
+function darven_epi_translation_normalize_headers( string $path, ?string $language = null ): void {
 	$contents = file_get_contents( $path );
 	if ( false === $contents ) {
 		darven_epi_translation_fail( 'Unable to read ' . $path );
 	}
 
 	$contents = str_replace( "\r\n", "\n", $contents );
+	$contents = preg_replace( '/"Report-Msgid-Bugs-To:[^"]*"/', '"Report-Msgid-Bugs-To: ' . DARVEN_EPI_TRANSLATION_BUG_REPORT_URL . '\\n"', $contents );
 	$contents = preg_replace( '/"POT-Creation-Date:[^"]*"/', '"POT-Creation-Date: ' . DARVEN_EPI_TRANSLATION_POT_DATE . '\\n"', $contents );
 	$contents = preg_replace( '/"PO-Revision-Date:[^"]*"/', '"PO-Revision-Date: ' . DARVEN_EPI_TRANSLATION_REVISION_DATE . '\\n"', $contents );
 	$contents = preg_replace( '/"X-Generator:[^"]*"/', '"X-Generator: build-translations.php\\n"', $contents );
+	if ( null !== $language ) {
+		$contents = preg_replace( '/"Language:[^"]*"/', '"Language: ' . $language . '\\n"', $contents );
+	}
 
 	if ( false === file_put_contents( $path, $contents ) ) {
 		darven_epi_translation_fail( 'Unable to write ' . $path );
@@ -258,13 +264,16 @@ function darven_epi_translation_aggregate_json( string $generated_directory, str
 			'generator'                 => 'build-translations.php',
 			'source'                    => $bundle['source'],
 			'domain'                    => DARVEN_EPI_TRANSLATION_DOMAIN,
-			'locale_data'               => array( DARVEN_EPI_TRANSLATION_DOMAIN => $messages ),
+			'locale_data'               => array(
+				'messages'                    => $messages,
+				DARVEN_EPI_TRANSLATION_DOMAIN => $messages,
+			),
 		);
 		$filename    = DARVEN_EPI_TRANSLATION_DOMAIN . '-' . DARVEN_EPI_TRANSLATION_LOCALE . '-' . $handle . '.json';
 		$staged_path = $generated_directory . DIRECTORY_SEPARATOR . $filename;
 		$json        = json_encode( $catalogue, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
-		if ( false === $json || false === file_put_contents( $staged_path, $json . PHP_EOL ) ) {
+		if ( false === $json || false === file_put_contents( $staged_path, $json . "\n" ) ) {
 			darven_epi_translation_fail( 'Unable to write ' . $filename );
 		}
 
@@ -326,7 +335,7 @@ try {
 		darven_epi_translation_normalize_headers( $pot_path );
 
 		darven_epi_translation_run_wp_cli( array( 'i18n', 'update-po', $pot_path, $po_path ) );
-		darven_epi_translation_normalize_headers( $po_path );
+		darven_epi_translation_normalize_headers( $po_path, DARVEN_EPI_TRANSLATION_LOCALE );
 		darven_epi_translation_assert_complete_po( $po_path );
 
 		darven_epi_translation_run_wp_cli( array( 'i18n', 'make-mo', $po_path, $mo_path ) );

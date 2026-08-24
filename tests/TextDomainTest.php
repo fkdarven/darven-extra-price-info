@@ -96,6 +96,19 @@ final class TextDomainTest extends TestCase {
 		}
 	}
 
+	public function test_translation_headers_are_locale_specific_and_worktree_independent(): void {
+		$po      = file_get_contents( DARVEN_EPI_DIR_PATH . 'languages/' . self::DOMAIN . '-pt_BR.po' );
+		$pot     = file_get_contents( DARVEN_EPI_DIR_PATH . 'languages/' . self::DOMAIN . '.pot' );
+		$bug_url = 'https://wordpress.org/support/plugin/darven-extra-price-info';
+
+		self::assertStringContainsString( '"Language: pt_BR\\n"', $po );
+		foreach ( array( $po, $pot ) as $catalogue ) {
+			self::assertStringContainsString( '"Report-Msgid-Bugs-To: ' . $bug_url . '\\n"', $catalogue );
+			self::assertStringNotContainsString( '.worktrees', $catalogue );
+			self::assertStringNotContainsString( '4.0.0-darven-precos-parcelados', $catalogue );
+		}
+	}
+
 	public function test_both_admin_handles_resolve_complete_aggregated_catalogues(): void {
 		$catalogues = array(
 			'darven-precos-parcelados-settings'        => array(
@@ -123,13 +136,21 @@ final class TextDomainTest extends TestCase {
 			$path = DARVEN_EPI_DIR_PATH . 'languages/' . self::DOMAIN . '-pt_BR-' . $handle . '.json';
 			self::assertFileExists( $path );
 
-			$json = json_decode( file_get_contents( $path ), true );
+			$json_contents = file_get_contents( $path );
+			self::assertStringEndsWith( "\n", $json_contents );
+			self::assertStringNotContainsString( "\r\n", $json_contents );
+
+			$json = json_decode( $json_contents, true );
 			self::assertIsArray( $json, 'Invalid JSON catalogue: ' . $path );
 			self::assertSame( $expected['source'], $json['source'] );
 			self::assertSame( self::DOMAIN, $json['domain'] );
-			self::assertSame( 'pt_BR', $json['locale_data'][ self::DOMAIN ]['']['lang'] );
 
-			$messages = $json['locale_data'][ self::DOMAIN ];
+			$wordpress_500_messages = $this->resolveWordPress500LocaleData( $json );
+			$wordpress_503_messages = $this->resolveWordPress503LocaleData( $json );
+			self::assertSame( $wordpress_500_messages, $wordpress_503_messages );
+			self::assertSame( 'pt_BR', $wordpress_500_messages['']['lang'] );
+
+			$messages = $wordpress_503_messages;
 			foreach ( $expected['translations'] as $msgid => $msgstr ) {
 				self::assertSame( $msgstr, $messages[ $msgid ][0], $handle . ' is missing: ' . $msgid );
 			}
@@ -142,6 +163,18 @@ final class TextDomainTest extends TestCase {
 				self::assertNotSame( '', $translation[0], $handle . ' has a blank translation for: ' . $msgid );
 			}
 		}
+
+		$generator = file_get_contents( DARVEN_EPI_DIR_PATH . 'scripts/build-translations.php' );
+		self::assertStringNotContainsString( '$json . PHP_EOL', $generator );
+		self::assertStringContainsString( '$json . "\\n"', $generator );
+	}
+
+	private function resolveWordPress500LocaleData( array $catalogue ): array {
+		return $catalogue['locale_data']['messages'];
+	}
+
+	private function resolveWordPress503LocaleData( array $catalogue ): array {
+		return $catalogue['locale_data'][ self::DOMAIN ] ?? $catalogue['locale_data']['messages'];
 	}
 
 	private function readPoField( string $entry, string $field ): ?string {

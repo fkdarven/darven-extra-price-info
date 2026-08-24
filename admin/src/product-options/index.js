@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import './style.scss';
 
 import { createElement, render } from '@wordpress/element';

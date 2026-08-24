@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { Component, createElement } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 

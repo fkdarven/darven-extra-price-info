@@ -94,8 +94,7 @@ final class AdminAssetsTest extends TestCase {
 		);
 
 		foreach ( $GLOBALS['darven_epi_test_script_translations'] as $registration ) {
-			$catalogue = $registration['path'] . DIRECTORY_SEPARATOR
-				. $registration['domain'] . '-pt_BR-' . $registration['handle'] . '.json';
+			$catalogue = $registration['path'] . DIRECTORY_SEPARATOR . $registration['domain'] . '-pt_BR-' . $registration['handle'] . '.json';
 
 			self::assertFileExists( $catalogue, 'WordPress cannot resolve translations for ' . $registration['handle'] );
 			self::assertFileExists(

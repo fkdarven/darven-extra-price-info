@@ -1,4 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
+import { createElement } from '@wordpress/element';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
