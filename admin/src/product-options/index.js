@@ -1,6 +1,6 @@
 import './style.scss';
 
-import { createElement, render } from '@wordpress/element';
+import { createElement, createRoot, render } from '@wordpress/element';
 
 import ProductOptionsApp, { createProductOptionsApi } from './app';
 
@@ -16,13 +16,17 @@ const rootNode = panelNode
 if ( rootNode ) {
 	const config = window.DarvenPrecosParceladosProductOptions || {};
 	const productId = Number( config.productId ) || 0;
-	render(
+	const app = (
 		<ProductOptionsApp
 			apiClient={
 				productId > 0 ? createProductOptionsApi( config ) : null
 			}
 			productId={ productId }
-		/>,
-		rootNode
+		/>
 	);
+	if ( typeof createRoot === 'function' ) {
+		createRoot( rootNode ).render( app );
+	} else {
+		render( app, rootNode );
+	}
 }

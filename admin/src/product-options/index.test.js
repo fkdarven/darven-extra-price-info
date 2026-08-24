@@ -6,6 +6,7 @@ jest.mock(
 		return {
 			Component: react.Component,
 			createElement: react.createElement,
+			createRoot: undefined,
 			render: jest.fn(),
 		};
 	},
@@ -40,6 +41,7 @@ describe( 'product options entrypoint', () => {
 			productId: 42,
 		};
 		require( '@wordpress/element' ).render.mockClear();
+		require( '@wordpress/element' ).createRoot = undefined;
 	} );
 
 	afterEach( () => {
@@ -70,6 +72,23 @@ describe( 'product options entrypoint', () => {
 			'darven-precos-parcelados-product-options-root'
 		);
 		expect( render.mock.calls[ 0 ][ 0 ].props.productId ).toBe( 42 );
+	} );
+
+	it( 'uses the React 18 root API when WordPress provides it', () => {
+		document.body.innerHTML = [
+			'<div id="darven-precos-parcelados-product-options-panel">',
+			'<div id="darven-precos-parcelados-product-options-root"></div>',
+			'</div>',
+		].join( '' );
+		const modernRender = jest.fn();
+		const element = require( '@wordpress/element' );
+		element.createRoot = jest.fn( () => ( { render: modernRender } ) );
+
+		loadEntrypoint();
+
+		expect( element.createRoot ).toHaveBeenCalledTimes( 1 );
+		expect( modernRender ).toHaveBeenCalledTimes( 1 );
+		expect( element.render ).not.toHaveBeenCalled();
 	} );
 
 	it( 'mounts a new-product message without constructing a REST client for zero', () => {
