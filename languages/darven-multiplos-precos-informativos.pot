@@ -55,7 +55,7 @@ msgid "Disable installment price for this product"
 msgstr ""
 
 #: src/Admin/ReactPage.php:44
-#: src/Admin/SettingsRestController.php:176
+#: src/Admin/SettingsRestController.php:196
 msgid "You are not allowed to manage these settings."
 msgstr ""
 
@@ -65,28 +65,32 @@ msgid "The settings security check failed."
 msgstr ""
 
 #: src/Admin/ReactPage.php:89
-#: admin/src/settings/app.js:315
+#: admin/src/settings/app.js:299
 msgid "Save settings"
 msgstr ""
 
-#: src/Admin/SettingsRestController.php:100
+#: src/Admin/SettingsRestController.php:108
 msgid "The settings payload must be an object."
 msgstr ""
 
-#: src/Admin/SettingsRestController.php:108
-#: admin/src/settings/app.js:174
+#: src/Admin/SettingsRestController.php:116
+#: admin/src/settings/app.js:160
 msgid "The settings could not be saved."
 msgstr ""
 
-#: src/Admin/SettingsRestController.php:136
+#: src/Admin/SettingsRestController.php:144
 msgid "The product settings payload must be an object."
 msgstr ""
 
-#: src/Admin/SettingsRestController.php:149
+#: src/Admin/SettingsRestController.php:157
 msgid "The product settings could not be saved."
 msgstr ""
 
-#: src/Admin/SettingsRestController.php:168
+#: src/Admin/SettingsRestController.php:177
+msgid "WooCommerce is required to manage product settings."
+msgstr ""
+
+#: src/Admin/SettingsRestController.php:184
 msgid "The requested product was not found."
 msgstr ""
 
@@ -150,7 +154,7 @@ msgid "Hides the installment price only for the current product."
 msgstr ""
 
 #: admin/src/product-options/app.js:259
-#: admin/src/settings/app.js:314
+#: admin/src/settings/app.js:298
 msgid "Saving…"
 msgstr ""
 
@@ -166,19 +170,19 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: admin/src/settings/app.js:54
+#: admin/src/settings/app.js:53
 msgid "The settings could not be loaded."
 msgstr ""
 
-#: admin/src/settings/app.js:163
+#: admin/src/settings/app.js:149
 msgid "Settings saved."
 msgstr ""
 
-#: admin/src/settings/app.js:215
+#: admin/src/settings/app.js:201
 msgid "Loading settings…"
 msgstr ""
 
-#: admin/src/settings/app.js:248
+#: admin/src/settings/app.js:231
 msgid "Settings sections"
 msgstr ""
 

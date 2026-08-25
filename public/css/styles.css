@@ -173,8 +173,7 @@
 	word-wrap: normal;
 }
 
-.darven-epi-installments-popup p,
-.darven-epi-installments-popup.div {
+.darven-epi-installments-popup p {
     border-bottom: 1px solid #EFEFEF;
     margin: 8px 0;
     padding-bottom: 8px;

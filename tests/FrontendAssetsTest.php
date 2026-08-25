@@ -60,7 +60,6 @@ final class FrontendAssetsTest extends TestCase {
 		self::assertStringNotContainsString( 'window.onload', $script );
 		self::assertStringContainsString( '.darven-epi-installments-toggle', $script );
 		self::assertStringContainsString( '.darven-epi-installments-popup', $script );
-		self::assertStringContainsString( '.closest(', $script );
 		self::assertStringContainsString( 'aria-expanded', $script );
 		self::assertStringContainsString( 'aria-hidden', $script );
 		self::assertStringNotContainsString( 'jQuery', $script );

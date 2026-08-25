@@ -62,6 +62,44 @@ final class InstallmentPriceFormatterTest extends TestCase {
 		self::assertSame( $first_result, $second_result );
 	}
 
+	public function test_custom_interest_table_treats_zero_start_as_no_interest(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
+			$this->getDefaultGeneralSettings(), array(
+				'darven_epi_installments_interest_fee_is_table_enabled' => 'darven_epi_installments_interest_fee_is_table_enabled',
+				'darven_epi_installments_interest_fee_from' => '0',
+				'darven_epi_installments_interest_fee_table' => '5|7',
+			)
+		);
+
+		$result = $this->getFormatter()->getPriceTable( 100.00 );
+
+		self::assertStringContainsString( '<td>1x of</td><td>R$ 100.00</td>', $result[0] );
+		self::assertStringContainsString( '<td>4x of</td><td>R$ 25.00</td>', $result[0] );
+	}
+
+	public function test_nofee_mode_with_zero_interest_start_keeps_all_installments(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general']['darven_epi_mode_of_view'] = 'nofee';
+
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringContainsString( '4x of', $result );
+		self::assertStringContainsString( 'R$ 25.00', $result );
+	}
+
+	public function test_nofee_mode_excludes_the_interest_start_installment(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
+			$this->getDefaultGeneralSettings(), array(
+				'darven_epi_mode_of_view' => 'nofee',
+				'darven_epi_installments_interest_fee_from' => '4',
+			)
+		);
+
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringContainsString( '3x of', $result );
+		self::assertStringNotContainsString( '4x of', $result );
+	}
+
 	public function test_nofee_popup_preserves_legacy_component_classes(): void {
 		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
 			$this->getDefaultGeneralSettings(),

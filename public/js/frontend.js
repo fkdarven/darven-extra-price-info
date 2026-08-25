@@ -14,9 +14,24 @@
 
 	document.__darvenEpiInstallmentsModalBound = true;
 
+	function closest( element, selector ) {
+		let current = element;
+
+		while ( current && current.nodeType === 1 ) {
+			if ( current.matches( selector ) ) {
+				return current;
+			}
+
+			current = current.parentElement;
+		}
+
+		return null;
+	}
+
 	function getModal( trigger ) {
 		const modalId = trigger.getAttribute( 'aria-controls' );
-		const statement = trigger.closest(
+		const statement = closest(
+			trigger,
 			'.darven-epi-installments-price-statement'
 		);
 
@@ -132,17 +147,17 @@
 	document.addEventListener( 'click', function ( event ) {
 		const target = event.target;
 
-		if ( ! target || ! target.closest ) {
+		if ( ! target || ! target.matches ) {
 			return;
 		}
 
-		const toggle = target.closest( toggleSelector );
+		const toggle = closest( target, toggleSelector );
 		if ( toggle ) {
 			toggleModal( toggle );
 			return;
 		}
 
-		if ( activeModal && target.closest( closeSelector ) ) {
+		if ( activeModal && closest( target, closeSelector ) ) {
 			closeActiveModal( true );
 			return;
 		}
@@ -155,7 +170,9 @@
 	document.addEventListener( 'keydown', function ( event ) {
 		const target = event.target;
 		const toggle =
-			target && target.closest ? target.closest( toggleSelector ) : null;
+			target && target.matches
+				? closest( target, toggleSelector )
+				: null;
 
 		if (
 			toggle &&

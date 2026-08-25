@@ -11,7 +11,7 @@ final class ReleaseMetadataTest extends TestCase {
 		self::assertIsString( $readme );
 		self::assertStringContainsString( 'Version: 4.0.0', $plugin_file );
 		self::assertStringContainsString( "const DARVEN_EPI_VERSION = '4.0.0';", $plugin_file );
-		self::assertStringContainsString( 'Tested up to: 7.0', $readme );
+		self::assertStringContainsString( 'Tested up to: 7.1', $readme );
 		self::assertStringContainsString( 'Stable tag: 4.0.0', $readme );
 		self::assertStringContainsString( '= 4.0.0 =', $readme );
 	}

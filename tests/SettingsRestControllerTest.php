@@ -125,6 +125,39 @@ final class SettingsRestControllerTest extends TestCase {
 		self::assertSame( 400, $result->get_error_data()['status'] );
 	}
 
+	public function test_put_settings_rejects_a_json_array_payload(): void {
+		$result = $this->getSubject()->updateSettings(
+			new WP_REST_Request( array(), array(), '[]' )
+		);
+
+		self::assertSame( 'darven_epi_invalid_settings', $result->get_error_code() );
+		self::assertSame( 400, $result->get_error_data()['status'] );
+	}
+
+	public function test_put_product_settings_rejects_a_json_array_payload(): void {
+		$result = $this->getSubject()->updateProductSettings(
+			new WP_REST_Request( array( 'id' => 42 ), array(), '[]' )
+		);
+
+		self::assertSame( 'darven_epi_invalid_product_settings', $result->get_error_code() );
+		self::assertSame( 400, $result->get_error_data()['status'] );
+	}
+
+	public function test_product_routes_report_an_unavailable_woocommerce_dependency(): void {
+		$subject = new SettingsRestController(
+			new SettingsRepository( new LegacySettingsAdapter() ),
+			new ProductSettingsRepository( new LegacyProductSettingsAdapter() ),
+			static function () {
+				return null;
+			}
+		);
+
+		$result = $subject->getProductSettings( new WP_REST_Request( array( 'id' => 42 ) ) );
+
+		self::assertSame( 'darven_epi_woocommerce_unavailable', $result->get_error_code() );
+		self::assertSame( 503, $result->get_error_data()['status'] );
+	}
+
 	public function test_put_settings_reports_persistence_failures(): void {
 		$GLOBALS['darven_epi_test_failing_options'] = array( SettingsRepository::OPTION_NAME );
 

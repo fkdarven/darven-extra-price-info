@@ -25,8 +25,10 @@ final class SettingsSanitizer {
 		$sanitized_values = array();
 
 		foreach ( $this->getCheckboxFields() as $field => $checked_value ) {
-			if ( isset( $input[ $field ] ) && $checked_value === $this->sanitizePlainText( $input[ $field ] ) ) {
-				$sanitized_values[ $field ] = $checked_value;
+			if ( array_key_exists( $field, $input ) ) {
+				$sanitized_values[ $field ] = $checked_value === $this->sanitizePlainText( $input[ $field ] )
+					? $checked_value
+					: '';
 			}
 		}
 
@@ -43,9 +45,9 @@ final class SettingsSanitizer {
 			}
 		}
 
-		foreach ( $this->getIntegerFields() as $field => $minimum ) {
+		foreach ( $this->getIntegerFields() as $field => $limits ) {
 			if ( array_key_exists( $field, $input ) ) {
-				$sanitized_values[ $field ] = $this->sanitizeIntegerValue( $input[ $field ], $minimum );
+				$sanitized_values[ $field ] = $this->sanitizeIntegerValue( $input[ $field ], $limits['minimum'], $limits['maximum'] );
 			}
 		}
 
@@ -130,7 +132,10 @@ final class SettingsSanitizer {
 	}
 
 	private function getIntegerFields(): array {
-		return array( 'darven_epi_max_installments' => 1, 'darven_epi_installments_interest_fee_from' => 0 );
+		return array(
+			'darven_epi_max_installments' => array( 'minimum' => 1, 'maximum' => 120 ),
+			'darven_epi_installments_interest_fee_from' => array( 'minimum' => 0, 'maximum' => 120 ),
+		);
 	}
 
 	private function getMarkupFields(): array {
@@ -162,7 +167,7 @@ final class SettingsSanitizer {
 			return '';
 		}
 
-		return (string) wp_unslash( $value );
+		return (string) $value;
 	}
 
 	private function sanitizeDecimalValue( $value, float $minimum = 0.0 ): string {
@@ -174,7 +179,7 @@ final class SettingsSanitizer {
 		return $this->formatNumberForOption( $number );
 	}
 
-	private function sanitizeIntegerValue( $value, int $minimum ): string {
+	private function sanitizeIntegerValue( $value, int $minimum, int $maximum ): string {
 		$number = $this->parseDecimalValue( $value );
 		if ( null === $number ) {
 			$number = 0.0;
@@ -185,7 +190,7 @@ final class SettingsSanitizer {
 			$number = $minimum;
 		}
 
-		return (string) $number;
+		return (string) min( $maximum, $number );
 	}
 
 	private function sanitizeInterestFeeTable( $value ): string {

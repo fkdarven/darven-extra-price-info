@@ -173,12 +173,12 @@ final class InstallmentPriceFormatter {
 			},
 				explode( '|', (string) ( $this->general_settings['darven_epi_installments_interest_fee_table'] ?? '' ) )
 			);
-			$interest_fee_from = max( 1, (int) ( $this->general_settings['darven_epi_installments_interest_fee_from'] ?? 0 ) );
+			$interest_fee_from = (int) ( $this->general_settings['darven_epi_installments_interest_fee_from'] ?? 0 );
 
 			for ( $installment = 1; $installment <= $install_count; $installment++ ) {
 				$interest_rate = 0.0;
 
-				if ( $installment >= $interest_fee_from ) {
+				if ( 0 !== $interest_fee_from && $installment >= $interest_fee_from ) {
 					$interest_index = $installment - $interest_fee_from;
 					$interest_rate  = $customised_values[ $interest_index ] ?? 0.0;
 				}
@@ -285,8 +285,9 @@ final class InstallmentPriceFormatter {
 		$interest_fee_from = (int) ( $this->general_settings['darven_epi_installments_interest_fee_from'] ?? 0 );
 
 		if (
-		$price_count > $interest_fee_from
-		&& $display_count > $interest_fee_from
+		0 !== $interest_fee_from
+		&& $price_count >= $interest_fee_from
+		&& $display_count >= $interest_fee_from
 		&& 'nofee' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' )
 		) {
 			$price_count   = $interest_fee_from - 1;

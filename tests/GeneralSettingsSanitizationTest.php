@@ -23,9 +23,9 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 			)
 		);
 
-		self::assertArrayNotHasKey( 'darven_epi_incash_is_enabled', $result );
+		self::assertSame( '', $result['darven_epi_incash_is_enabled'] );
 		self::assertSame( 'darven_epi_installments_is_enabled', $result['darven_epi_installments_is_enabled'] );
-		self::assertArrayNotHasKey( 'darven_epi_installments_interest_fee_is_table_enabled', $result );
+		self::assertSame( '', $result['darven_epi_installments_interest_fee_is_table_enabled'] );
 		self::assertSame( 'percent', $result['darven_epi_type_of_discount'] );
 		self::assertSame( 'popup', $result['darven_epi_mode_of_view'] );
 		self::assertSame( '10.5', $result['darven_epi_value_of_incash_discount'] );
@@ -42,6 +42,36 @@ final class GeneralSettingsSanitizationTest extends TestCase {
 		);
 
 		self::assertSame( '12', $result['darven_epi_max_installments'] );
+	}
+
+	public function test_preserves_explicit_unchecked_checkbox_values(): void {
+		$result = ( new SettingsSanitizer() )->sanitizeSection(
+			'general', array(
+				'darven_epi_incash_is_enabled' => false,
+				'darven_epi_installments_is_enabled' => '',
+				'darven_epi_installments_interest_fee_is_table_enabled' => '',
+			)
+		);
+
+		self::assertSame( '', $result['darven_epi_incash_is_enabled'] );
+		self::assertSame( '', $result['darven_epi_installments_is_enabled'] );
+		self::assertSame( '', $result['darven_epi_installments_interest_fee_is_table_enabled'] );
+	}
+
+	public function test_clamps_maximum_installments_to_a_safe_upper_bound(): void {
+		$result = ( new SettingsSanitizer() )->sanitizeSection(
+			'general', array( 'darven_epi_max_installments' => '1000000000' )
+		);
+
+		self::assertSame( '120', $result['darven_epi_max_installments'] );
+	}
+
+	public function test_preserves_literal_backslashes_in_text_values(): void {
+		$result = ( new SettingsSanitizer() )->sanitizeSection(
+			'general', array( 'darven_epi_popup_text' => 'C:\\catalog\\plans' )
+		);
+
+		self::assertSame( 'C:\\catalog\\plans', $result['darven_epi_popup_text'] );
 	}
 
 	public function test_allows_limited_markup_only_for_general_text_fields(): void {

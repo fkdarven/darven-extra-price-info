@@ -34,7 +34,6 @@ class SettingsApp extends Component {
 		super( props );
 		this.state = createSettingsState();
 		this.isActive = false;
-		this.editableFieldset = null;
 	}
 
 	componentDidMount() {
@@ -63,19 +62,6 @@ class SettingsApp extends Component {
 
 	componentWillUnmount() {
 		this.isActive = false;
-	}
-
-	componentDidUpdate( previousProps, previousState ) {
-		if (
-			previousState.isSaving !== this.state.isSaving &&
-			this.editableFieldset
-		) {
-			this.editableFieldset
-				.querySelectorAll( 'input, select, textarea, button' )
-				.forEach( ( control ) => {
-					control.disabled = this.state.isSaving;
-				} );
-		}
 	}
 
 	setActiveTab = ( activeTab ) => {
@@ -235,9 +221,6 @@ class SettingsApp extends Component {
 		)
 			? requestedActiveTab
 			: availableTabs[ 0 ].name;
-		const tabId = `darven-precos-parcelados-tab-${ activeTab }`;
-		const panelId = `darven-precos-parcelados-panel-${ activeTab }`;
-
 		return (
 			<div className="darven-precos-parcelados-admin">
 				<h1>Darven Preços Parcelados</h1>
@@ -269,41 +252,42 @@ class SettingsApp extends Component {
 					) ) }
 				</div>
 				<fieldset
-					ref={ ( element ) => {
-						this.editableFieldset = element;
-					} }
 					disabled={ isSaving }
 					aria-busy={ isSaving }
 				>
-					<div
-						id={ panelId }
-						role="tabpanel"
-						aria-labelledby={ tabId }
-						tabIndex="0"
-					>
-						{ 'pricing' === activeTab && (
-							<PricingSection
-								settings={ document.general || {} }
-								onChange={ ( field, value ) =>
-									this.updateField( 'general', field, value )
-								}
-							/>
-						) }
-						{ 'presentation' === activeTab && (
-							<PresentationSection
-								document={ document }
-								onChange={ this.updateField }
-							/>
-						) }
-						{ 'advanced' === activeTab && (
-							<AdvancedSection
-								settings={ document.compatibility || {} }
-								onChange={ ( field, value ) =>
-									this.updateField( 'compatibility', field, value )
-								}
-							/>
-						) }
-					</div>
+					{ availableTabs.map( ( tab ) => (
+						<div
+							key={ tab.name }
+							id={ `darven-precos-parcelados-panel-${ tab.name }` }
+							role="tabpanel"
+							aria-labelledby={ `darven-precos-parcelados-tab-${ tab.name }` }
+							tabIndex="0"
+							hidden={ activeTab !== tab.name }
+						>
+							{ 'pricing' === tab.name && (
+								<PricingSection
+									settings={ document.general || {} }
+									onChange={ ( field, value ) =>
+										this.updateField( 'general', field, value )
+									}
+								/>
+							) }
+							{ 'presentation' === tab.name && (
+								<PresentationSection
+									document={ document }
+									onChange={ this.updateField }
+								/>
+							) }
+							{ 'advanced' === tab.name && (
+								<AdvancedSection
+									settings={ document.compatibility || {} }
+									onChange={ ( field, value ) =>
+										this.updateField( 'compatibility', field, value )
+									}
+								/>
+							) }
+						</div>
+					) ) }
 					<button
 						className="button button-primary"
 						type="button"

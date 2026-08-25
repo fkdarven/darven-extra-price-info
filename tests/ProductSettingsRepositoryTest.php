@@ -121,6 +121,21 @@ final class ProductSettingsRepositoryTest extends TestCase {
 		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
 	}
 
+	public function test_save_reports_a_silent_persistence_failure(): void {
+		$product = new WC_Product( '100.00', 'simple', null, array(), 42 );
+		$repository = new ProductSettingsRepository(
+			new LegacyProductSettingsAdapter(), static function (): WC_Product {
+				return new WC_Product( '100.00', 'simple', null, array(), 42 );
+			}
+		);
+
+		$result = $repository->save(
+			$product, array( 'disable_incash' => true, 'disable_installments' => false )
+		);
+
+		self::assertFalse( $result );
+	}
+
 	private function get_repository(): ProductSettingsRepository {
 		return new ProductSettingsRepository( new LegacyProductSettingsAdapter() );
 	}

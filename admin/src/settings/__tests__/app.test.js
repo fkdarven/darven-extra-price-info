@@ -432,7 +432,7 @@ describe( 'SettingsApp', () => {
 		click( findButton( 'Presentation' ) );
 
 		const groups = Array.from(
-			container.querySelectorAll(
+			container.querySelector( '[role="tabpanel"]:not([hidden])' ).querySelectorAll(
 				'.darven-precos-parcelados-admin__group'
 			)
 		);
@@ -648,12 +648,45 @@ describe( 'SettingsApp', () => {
 			'[name="darven_epi_max_installments"]'
 		);
 		const busyRegion = container.querySelector( 'fieldset[aria-busy]' );
-		expect( field.disabled ).toBe( true );
+		expect( field.closest( 'fieldset[aria-busy]' ).disabled ).toBe( true );
 		expect( findButton( 'Saving…' ).disabled ).toBe( true );
 		expect( busyRegion.getAttribute( 'aria-busy' ) ).toBe( 'true' );
 
 		resolveSave( settingsDocument );
 		await flushPromises();
+	} );
+
+	it( 'preserves boundary button disabled states after saving', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn().mockResolvedValue( settingsDocument ),
+		} );
+		await flushPromises();
+
+		click( findButton( 'Presentation' ) );
+		const boundaryButton = container.querySelector(
+			'[data-position-field] button:disabled'
+		);
+		expect( boundaryButton ).not.toBeNull();
+
+		click( findButton( 'Save settings' ) );
+		await flushPromises();
+
+		expect( boundaryButton.disabled ).toBe( true );
+	} );
+
+	it( 'keeps every tab aria-controls target mounted', async () => {
+		renderApp( {
+			loadSettings: jest.fn().mockResolvedValue( settingsDocument ),
+			saveSettings: jest.fn(),
+		} );
+		await flushPromises();
+
+		container.querySelectorAll( '[role="tab"]' ).forEach( ( tab ) => {
+			expect(
+				container.querySelector( `#${ tab.getAttribute( 'aria-controls' ) }` )
+			).not.toBeNull();
+		} );
 	} );
 
 	it( 'moves roving tab focus with arrow, Home and End keys', async () => {

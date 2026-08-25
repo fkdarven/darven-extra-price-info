@@ -2,7 +2,7 @@
 Contributors: fkdarven
 Tags: parcelas, parcelamento, preços, preço à vista, preço parcelado
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 4.0.0
 Requires PHP: 8.0
 License: GPLv2 or later
@@ -141,6 +141,5 @@ Agora é possível definir taxas de juros personalizadas, parcela a parcela. Bas
 = 1.0.1 =
 
 Ajustes para melhorar a compatibilidade com versões anteriores do PHP.
-
 
 

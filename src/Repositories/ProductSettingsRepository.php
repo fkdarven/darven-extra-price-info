@@ -15,8 +15,16 @@ final class ProductSettingsRepository {
 	 */
 	private $adapter;
 
-	public function __construct( LegacyProductSettingsAdapter $adapter ) {
-		$this->adapter = $adapter;
+	/**
+	 * @var callable
+	 */
+	private $product_reloader;
+
+	public function __construct( LegacyProductSettingsAdapter $adapter, ?callable $product_reloader = null ) {
+		$this->adapter          = $adapter;
+		$this->product_reloader = $product_reloader ?? static function ( int $product_id ) {
+			return function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : false;
+		};
 	}
 
 	public function getSettings( \WC_Product $product ): array {
@@ -79,11 +87,17 @@ final class ProductSettingsRepository {
 		$product->update_meta_data( self::LEGACY_INSTALLMENTS_META_KEY, $legacy_meta[ self::LEGACY_INSTALLMENTS_META_KEY ] );
 		if ( $persist ) {
 			$product->save();
+			$saved_product = call_user_func( $this->product_reloader, (int) $product->get_id() );
+			if ( ! $saved_product instanceof \WC_Product ) {
+				return false;
+			}
+		} else {
+			$saved_product = $product;
 		}
 
-		return $canonical_settings === $product->get_meta( self::META_KEY, true )
-			&& $legacy_meta[ self::LEGACY_INCASH_META_KEY ] === $product->get_meta( self::LEGACY_INCASH_META_KEY, true )
-			&& $legacy_meta[ self::LEGACY_INSTALLMENTS_META_KEY ] === $product->get_meta( self::LEGACY_INSTALLMENTS_META_KEY, true );
+		return $canonical_settings === $saved_product->get_meta( self::META_KEY, true )
+			&& $legacy_meta[ self::LEGACY_INCASH_META_KEY ] === $saved_product->get_meta( self::LEGACY_INCASH_META_KEY, true )
+			&& $legacy_meta[ self::LEGACY_INSTALLMENTS_META_KEY ] === $saved_product->get_meta( self::LEGACY_INSTALLMENTS_META_KEY, true );
 	}
 
 	private function isCanonicalSettings( $settings ): bool {

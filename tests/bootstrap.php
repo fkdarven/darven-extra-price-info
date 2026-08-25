@@ -190,10 +190,12 @@ function register_rest_route( $namespace, $route, $args ): void {
 class WP_REST_Request {
 	private $params;
 	private $json_params;
+	private $body;
 
-	public function __construct( array $params = array(), $json_params = array() ) {
+	public function __construct( array $params = array(), $json_params = array(), ?string $body = null ) {
 		$this->params      = $params;
 		$this->json_params = $json_params;
+		$this->body        = null === $body ? (string) json_encode( $json_params ) : $body;
 	}
 
 	public function get_param( $key ) {
@@ -202,6 +204,10 @@ class WP_REST_Request {
 
 	public function get_json_params() {
 		return $this->json_params;
+	}
+
+	public function get_body(): string {
+		return $this->body;
 	}
 }
 
@@ -421,6 +427,7 @@ class WC_Product {
 
 	public function save(): void {
 		$this->save_count++;
+		$GLOBALS['darven_epi_test_products'][ $this->id ] = $this;
 	}
 
 	public function get_save_count(): int {
@@ -473,7 +480,11 @@ function wp_strip_all_tags( $text ) {
 }
 
 function wp_unslash( $value ) {
-	return $value;
+	if ( is_array( $value ) ) {
+		return array_map( 'wp_unslash', $value );
+	}
+
+	return is_string( $value ) ? stripslashes( $value ) : $value;
 }
 
 function sanitize_text_field( $value ): string {

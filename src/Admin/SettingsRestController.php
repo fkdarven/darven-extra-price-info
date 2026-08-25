@@ -18,9 +18,17 @@ final class SettingsRestController {
 	 */
 	private $product_settings_repository;
 
-	public function __construct( SettingsRepository $settings_repository, ProductSettingsRepository $product_settings_repository ) {
+	/**
+	 * @var callable
+	 */
+	private $product_resolver;
+
+	public function __construct( SettingsRepository $settings_repository, ProductSettingsRepository $product_settings_repository, ?callable $product_resolver = null ) {
 		$this->settings_repository         = $settings_repository;
 		$this->product_settings_repository = $product_settings_repository;
+		$this->product_resolver            = $product_resolver ?? static function ( int $product_id ) {
+			return function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : null;
+		};
 	}
 
 	public function register(): void {
@@ -94,7 +102,7 @@ final class SettingsRestController {
 	 */
 	public function updateSettings( \WP_REST_Request $request ) {
 		$document = $request->get_json_params();
-		if ( ! is_array( $document ) ) {
+		if ( ! is_array( $document ) || ! $this->hasJsonObjectBody( $request ) ) {
 			return new \WP_Error(
 				'darven_epi_invalid_settings',
 				__( 'The settings payload must be an object.', 'darven-multiplos-precos-informativos' ),
@@ -130,7 +138,7 @@ final class SettingsRestController {
 	 */
 	public function updateProductSettings( \WP_REST_Request $request ) {
 		$settings = $request->get_json_params();
-		if ( ! is_array( $settings ) ) {
+		if ( ! is_array( $settings ) || ! $this->hasJsonObjectBody( $request ) ) {
 			return new \WP_Error(
 				'darven_epi_invalid_product_settings',
 				__( 'The product settings payload must be an object.', 'darven-multiplos-precos-informativos' ),
@@ -158,9 +166,17 @@ final class SettingsRestController {
 	 * @return \WC_Product|\WP_Error
 	 */
 	private function getProduct( \WP_REST_Request $request ) {
-		$product = wc_get_product( absint( $request->get_param( 'id' ) ) );
+		$product = call_user_func( $this->product_resolver, absint( $request->get_param( 'id' ) ) );
 		if ( $product instanceof \WC_Product ) {
 			return $product;
+		}
+
+		if ( null === $product ) {
+			return new \WP_Error(
+				'darven_epi_woocommerce_unavailable',
+				__( 'WooCommerce is required to manage product settings.', 'darven-multiplos-precos-informativos' ),
+				array( 'status' => 503 )
+			);
 		}
 
 		return new \WP_Error(
@@ -168,6 +184,10 @@ final class SettingsRestController {
 			__( 'The requested product was not found.', 'darven-multiplos-precos-informativos' ),
 			array( 'status' => 404 )
 		);
+	}
+
+	private function hasJsonObjectBody( \WP_REST_Request $request ): bool {
+		return is_object( json_decode( $request->get_body() ) );
 	}
 
 	private function forbiddenError(): \WP_Error {

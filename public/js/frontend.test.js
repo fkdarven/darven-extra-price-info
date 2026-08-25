@@ -96,6 +96,24 @@ describe( 'installment popup', () => {
 		expect( triggers[ 1 ].getAttribute( 'aria-expanded' ) ).toBe( 'true' );
 	} );
 
+	it( 'opens when Element.closest is unavailable', () => {
+		const nativeClosest = Element.prototype.closest;
+		Element.prototype.closest = undefined;
+		const trigger = document.querySelector(
+			'.darven-epi-installments-toggle'
+		);
+		const modal = document.getElementById(
+			trigger.getAttribute( 'aria-controls' )
+		);
+
+		try {
+			click( trigger );
+			expect( modal.hidden ).toBe( false );
+		} finally {
+			Element.prototype.closest = nativeClosest;
+		}
+	} );
+
 	it( 'resolves duplicate dialog ids inside the clicked statement', () => {
 		document.body.innerHTML =
 			popupMarkup( 'shared' ) + popupMarkup( 'shared' );
