@@ -19,8 +19,7 @@ final class ProductSettingsRepositoryTest extends TestCase {
 		$settings = $this->get_repository()->getSettings( $product );
 
 		self::assertSame(
-			array( 'disable_incash' => true, 'disable_installments' => false ),
-			$settings
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $settings
 		);
 		self::assertSame( '', $product->get_meta( ProductSettingsRepository::META_KEY, true ) );
 		self::assertSame( 0, $product->get_save_count() );
@@ -39,8 +38,47 @@ final class ProductSettingsRepositoryTest extends TestCase {
 			)
 		);
 
-		self::assertSame( $canonical, $this->get_repository()->getSettings( $product ) );
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => false, 'disable_installments' => true ), $this->get_repository()->getSettings( $product )
+		);
 		self::assertSame( 0, $product->get_save_count() );
+	}
+
+	public function test_variation_inherits_parent_flags_when_it_has_no_direct_meta(): void {
+		$parent = new WC_Product(
+			'100.00', 'variable', '90.00', array(
+				ProductSettingsRepository::META_KEY => array(
+					'disable_incash'       => true,
+					'disable_installments' => false,
+				),
+			), 10
+		);
+		$variation = new WC_Product( '90.00', 'variation', $parent, array(), 11 );
+
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $this->get_repository()->getSettings( $variation )
+		);
+	}
+
+	public function test_direct_variation_legacy_meta_wins_over_parent_flags(): void {
+		$parent = new WC_Product(
+			'100.00', 'variable', '90.00', array(
+				ProductSettingsRepository::META_KEY => array(
+					'disable_incash'       => true,
+					'disable_installments' => false,
+				),
+			), 10
+		);
+		$variation = new WC_Product(
+			'90.00', 'variation', $parent, array(
+				'_darven_epi_is_incash_enabled'      => 'no',
+				'_darven_epi_is_installment_enabled' => 'yes',
+			), 11
+		);
+
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => false, 'disable_installments' => true ), $this->get_repository()->getSettings( $variation )
+		);
 	}
 
 	public function test_saves_canonical_settings_and_projects_the_legacy_flags(): void {
@@ -53,12 +91,49 @@ final class ProductSettingsRepositoryTest extends TestCase {
 
 		self::assertTrue( $result );
 		self::assertSame(
-			array( 'disable_incash' => true, 'disable_installments' => false ),
-			$product->get_meta( '_darven_epi_product_settings', true )
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => false ), $product->get_meta( '_darven_epi_product_settings', true )
 		);
 		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
 		self::assertSame( 'no', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
-		self::assertSame( 0, $product->get_save_count() );
+		self::assertSame( 1, $product->get_save_count() );
+	}
+
+	public function test_save_preserves_existing_flags_that_are_not_in_a_partial_payload(): void {
+		$product = new WC_Product(
+			'100.00', 'simple', null, array(
+				ProductSettingsRepository::META_KEY              => array(
+					'schema_version'       => 1,
+					'disable_incash'       => false,
+					'disable_installments' => true,
+				),
+				'_darven_epi_is_incash_enabled'                  => 'no',
+				'_darven_epi_is_installment_enabled'             => 'yes',
+			)
+		);
+
+		$result = $this->get_repository()->save( $product, array( 'disable_incash' => true ) );
+
+		self::assertTrue( $result );
+		self::assertSame(
+			array( 'schema_version' => 1, 'disable_incash' => true, 'disable_installments' => true ), $product->get_meta( ProductSettingsRepository::META_KEY, true )
+		);
+		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_incash_enabled', true ) );
+		self::assertSame( 'yes', $product->get_meta( '_darven_epi_is_installment_enabled', true ) );
+	}
+
+	public function test_save_reports_a_silent_persistence_failure(): void {
+		$product = new WC_Product( '100.00', 'simple', null, array(), 42 );
+		$repository = new ProductSettingsRepository(
+			new LegacyProductSettingsAdapter(), static function (): WC_Product {
+				return new WC_Product( '100.00', 'simple', null, array(), 42 );
+			}
+		);
+
+		$result = $repository->save(
+			$product, array( 'disable_incash' => true, 'disable_installments' => false )
+		);
+
+		self::assertFalse( $result );
 	}
 
 	private function get_repository(): ProductSettingsRepository {

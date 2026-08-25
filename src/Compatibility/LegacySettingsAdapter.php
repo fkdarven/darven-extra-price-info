@@ -12,7 +12,7 @@ final class LegacySettingsAdapter {
 
 	public function fromLegacyOptions( array $legacy_options ): array {
 		$settings = array(
-			'schema_version' => 1,
+			'schema_version' => 2,
 		);
 
 		foreach ( self::OPTION_BY_SECTION as $section => $option_name ) {

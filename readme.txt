@@ -1,16 +1,18 @@
-=== Plugin Name ===
+=== Darven Preços Parcelados ===
 Contributors: fkdarven
-Tags: parcelas, parcelamento, preços, installments, price, woocommerce
-Requires at least: 4.7
-Tested up to: 6.2
-Stable tag: 3.3.0
-Requires PHP: 7.4
+Tags: parcelas, parcelamento, preços, preço à vista, preço parcelado
+Requires at least: 5.0
+Tested up to: 7.1
+Stable tag: 4.0.0
+Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Language: pt_BR, en_US
 Requires WooCommerce
 
 Mostra múltiplos preços em um produto. Preço á vista e com parcelamento (preço parcelado).
+
+Anteriormente: Darven Múltiplos Preços Informativos.
 
 == Description ==
 
@@ -73,6 +75,13 @@ Os juros na primeira parcela serão aplicados somente a 1 parcela
 4. Produto individual com o preço á vista e com parcelamento ativados
 
 == Changelog ==
+= 4.0.0 =
+    • Nova identidade pública: Darven Preços Parcelados. Anteriormente: Darven Múltiplos Preços Informativos.
+    • Preparada a infraestrutura de ativos administrativos separados para configurações e opções de produto.
+
+= 3.3.1 =
+    • Validado com WordPress 7.0.2 e WooCommerce 10.9.4.
+
 = 3.3.0 =
     • Refatoração orientada à compatibilidade, preservando configurações e metadados legados.
     • Resolução automática da integração YITH, com fallback seguro para os preços padrão do WooCommerce.
@@ -132,6 +141,5 @@ Agora é possível definir taxas de juros personalizadas, parcela a parcela. Bas
 = 1.0.1 =
 
 Ajustes para melhorar a compatibilidade com versões anteriores do PHP.
-
 
 

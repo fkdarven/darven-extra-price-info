@@ -1,0 +1,100 @@
+{
+    "translation-revision-date": "2026-07-31 00:00+0000",
+    "generator": "build-translations.php",
+    "source": "build/product-options/index.js",
+    "domain": "darven-multiplos-precos-informativos",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "darven-multiplos-precos-informativos",
+                "lang": "pt_BR",
+                "plural-forms": "nplurals=2; plural=(n > 1);"
+            },
+            "Disable cash price for this product": [
+                "Desativar o preço à vista para este produto"
+            ],
+            "Disable installment price for this product": [
+                "Desativar o preço parcelado para este produto"
+            ],
+            "Hides the cash price only for the current product.": [
+                "Oculta o preço à vista apenas para este produto."
+            ],
+            "Hides the installment price only for the current product.": [
+                "Oculta o preço parcelado apenas para este produto."
+            ],
+            "Installment prices": [
+                "Preços parcelados"
+            ],
+            "Loading product options…": [
+                "Carregando opções do produto…"
+            ],
+            "Product options saved.": [
+                "Opções do produto salvas."
+            ],
+            "Retry save": [
+                "Tentar salvar novamente"
+            ],
+            "Save the product before editing Darven options.": [
+                "Salve o produto antes de editar as opções do Darven."
+            ],
+            "Saving…": [
+                "Salvando…"
+            ],
+            "The product options could not be loaded.": [
+                "Não foi possível carregar as opções do produto."
+            ],
+            "The product options could not be saved.": [
+                "Não foi possível salvar as opções do produto."
+            ],
+            "The selected change has not been saved yet.": [
+                "A alteração selecionada ainda não foi salva."
+            ]
+        },
+        "darven-multiplos-precos-informativos": {
+            "": {
+                "domain": "darven-multiplos-precos-informativos",
+                "lang": "pt_BR",
+                "plural-forms": "nplurals=2; plural=(n > 1);"
+            },
+            "Disable cash price for this product": [
+                "Desativar o preço à vista para este produto"
+            ],
+            "Disable installment price for this product": [
+                "Desativar o preço parcelado para este produto"
+            ],
+            "Hides the cash price only for the current product.": [
+                "Oculta o preço à vista apenas para este produto."
+            ],
+            "Hides the installment price only for the current product.": [
+                "Oculta o preço parcelado apenas para este produto."
+            ],
+            "Installment prices": [
+                "Preços parcelados"
+            ],
+            "Loading product options…": [
+                "Carregando opções do produto…"
+            ],
+            "Product options saved.": [
+                "Opções do produto salvas."
+            ],
+            "Retry save": [
+                "Tentar salvar novamente"
+            ],
+            "Save the product before editing Darven options.": [
+                "Salve o produto antes de editar as opções do Darven."
+            ],
+            "Saving…": [
+                "Salvando…"
+            ],
+            "The product options could not be loaded.": [
+                "Não foi possível carregar as opções do produto."
+            ],
+            "The product options could not be saved.": [
+                "Não foi possível salvar as opções do produto."
+            ],
+            "The selected change has not been saved yet.": [
+                "A alteração selecionada ainda não foi salva."
+            ]
+        }
+    }
+}

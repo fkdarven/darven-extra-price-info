@@ -56,48 +56,107 @@ final class InstallmentPriceFormatter {
 			'installments'
 		);
 
-		if ( 'popup' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' ) ) {
-			$statement = $prefix
-				. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
-				. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_table[1] ) ) . '</span>'
-				. $suffix;
+		$mode = (string) ( $this->general_settings['darven_epi_mode_of_view'] ?? '' );
+		$installment_count = sprintf(
+			/* translators: %1$s: number of installments. */
+			__( '%1$sx of', 'darven-multiplos-precos-informativos' ), $number_of_installments
+		);
+
+		if ( 'popup' === $mode ) {
+			$statement = $this->getStatement(
+				$prefix, $installment_count, wp_strip_all_tags( wc_price( $price_table[1] ) ), $suffix
+			);
 
 			return $this->markup_builder->div(
 				'installments-price-statement darven-epi-installments-price-statement',
-				$statement,
+				$statement . $this->getPopupMarkup( $price_table[0] ),
 				'installments'
 			);
 		}
 
-		if ( 'nofee' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' ) ) {
-			$statement = $prefix
-				. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
-				. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $installment_price ) ) . '</span>'
-				. $suffix;
-			$popup_content = '<div class="messagepop pop darven-epi-installments-popup" aria-hidden="true">'
-				. $price_table[0]
-				. '</div>';
-			$popup_toggle = '<button type="button" class="darven-epi-installments-toggle" aria-expanded="false">'
-				. (string) ( $this->general_settings['darven_epi_popup_text'] ?? '' )
-				. '</button>';
+		if ( 'nofee' === $mode ) {
+			$statement = $this->getStatement(
+				$prefix, $installment_count, wp_strip_all_tags( wc_price( $installment_price ) ), $suffix
+			);
 
 			return $this->markup_builder->div(
 				'installments-price-statement darven-epi-installments-price-statement',
-				$statement . $popup_content . $popup_toggle,
+				$statement . $this->getPopupMarkup( $price_table[0] ),
 				'installments'
 			);
 		}
 
-		$statement = $prefix
-			. '<span class="darven-epi-installment-count">' . $number_of_installments . 'x de</span>'
-			. '<span class="darven-epi-installment-price"> ' . wp_strip_all_tags( wc_price( $price_table[1] ) ) . '</span>'
-			. $suffix;
+		$statement = $this->getStatement(
+			$prefix, $installment_count, wp_strip_all_tags( wc_price( $price_table[1] ) ), $suffix
+		);
 
 		return $this->markup_builder->div(
 			'installments-price-statement darven-epi-installments-price-statement',
 			$statement,
 			'installments'
 		);
+	}
+
+	private function getStatement( string $prefix, string $count, string $price, string $suffix ): string {
+		return sprintf(
+			'%s<span class="darven-epi-installment-count">%s</span><span class="darven-epi-installment-price"> %s</span>%s', $prefix, $count, $price, $suffix
+		);
+	}
+
+	private function getPopupMarkup( string $price_table ): string {
+		$instance_id = $this->getPopupInstanceId();
+		$dialog_id   = $instance_id . '-dialog';
+		$title_id    = $instance_id . '-title';
+		$popup_text  = wp_kses(
+			(string) ( $this->general_settings['darven_epi_popup_text'] ?? '' ),
+			array(
+				'br'   => array(),
+				'b'    => array(),
+				'em'   => array(),
+				'i'    => array(),
+				'span' => array(
+					'class' => array(),
+					'style' => array(),
+				),
+			)
+		);
+		$popup_label = trim(
+			html_entity_decode( wp_strip_all_tags( $popup_text ), ENT_QUOTES | ENT_HTML5, 'UTF-8' )
+		);
+
+		if ( '' === $popup_label ) {
+			$popup_label = __( 'View installment options', 'darven-multiplos-precos-informativos' );
+			$popup_text  = esc_html( $popup_label );
+		}
+
+		$title       = esc_html( __( 'Installment options', 'darven-multiplos-precos-informativos' ) );
+		$close_label = esc_attr( __( 'Close installment options', 'darven-multiplos-precos-informativos' ) );
+
+		$popup = '<div id="' . esc_attr( $dialog_id )
+			. '" class="messagepop pop darven-epi-installments-popup" hidden aria-hidden="true"'
+			. ' role="dialog" aria-modal="true" aria-labelledby="' . esc_attr( $title_id ) . '">'
+			. '<div class="darven-epi-installments-backdrop" aria-hidden="true"></div>'
+			. '<div class="darven-epi-installments-dialog" role="document">'
+			. '<h2 id="' . esc_attr( $title_id )
+			. '" class="screen-reader-text darven-epi-installments-title">' . $title . '</h2>'
+			. '<button type="button" class="darven-epi-installments-close" aria-label="' . $close_label . '">'
+			. '<span aria-hidden="true">&times;</span>'
+			. '</button>'
+			. '<div class="darven-epi-installments-table-wrap">' . $price_table . '</div>'
+			. '</div>'
+			. '</div>';
+		$toggle = '<button type="button" class="darven-epi-installments-toggle" aria-expanded="false" aria-controls="'
+			. esc_attr( $dialog_id ) . '" aria-label="' . esc_attr( $popup_label ) . '">' . $popup_text . '</button>';
+
+		return $popup . $toggle;
+	}
+
+	private function getPopupInstanceId(): string {
+		$unique_id = function_exists( 'wp_generate_uuid4' )
+		? wp_generate_uuid4()
+		: uniqid( '', true );
+
+		return 'darven-epi-installments-' . $unique_id;
 	}
 
 	public function getPriceTable( float $price ): array {
@@ -107,19 +166,19 @@ final class InstallmentPriceFormatter {
 
 		if ( ! empty( $this->general_settings['darven_epi_installments_interest_fee_is_table_enabled'] ) ) {
 			$customised_values = array_map(
-				static function ( $value ): float {
-					$value = str_replace( ',', '.', trim( $value ) );
+			static function ( $value ): float {
+				$value = str_replace( ',', '.', trim( $value ) );
 
-					return is_numeric( $value ) ? (float) $value : 0.0;
-				},
+				return is_numeric( $value ) ? (float) $value : 0.0;
+			},
 				explode( '|', (string) ( $this->general_settings['darven_epi_installments_interest_fee_table'] ?? '' ) )
 			);
-			$interest_fee_from = max( 1, (int) ( $this->general_settings['darven_epi_installments_interest_fee_from'] ?? 0 ) );
+			$interest_fee_from = (int) ( $this->general_settings['darven_epi_installments_interest_fee_from'] ?? 0 );
 
 			for ( $installment = 1; $installment <= $install_count; $installment++ ) {
 				$interest_rate = 0.0;
 
-				if ( $installment >= $interest_fee_from ) {
+				if ( 0 !== $interest_fee_from && $installment >= $interest_fee_from ) {
 					$interest_index = $installment - $interest_fee_from;
 					$interest_rate  = $customised_values[ $interest_index ] ?? 0.0;
 				}
@@ -127,7 +186,11 @@ final class InstallmentPriceFormatter {
 				$total_with_interest = $price * ( 1 + ( $interest_rate / 100 ) );
 				$installment_price   = $total_with_interest / $installment;
 				$html_result        .= '<tr>';
-				$html_result        .= '<td>' . $installment . 'x de</td><td>' . wc_price( $installment_price ) . '</td>';
+				$installment_label   = sprintf(
+				/* translators: %1$s: number of installments. */
+				__( '%1$sx of', 'darven-multiplos-precos-informativos' ), $installment
+				);
+				$html_result        .= '<td>' . $installment_label . '</td><td>' . wc_price( $installment_price ) . '</td>';
 				$html_result        .= '</tr>';
 			}
 
@@ -144,14 +207,14 @@ final class InstallmentPriceFormatter {
 			if ( 0 !== $interest_fee_from && $installment >= $interest_fee_from ) {
 				if ( $first_install ) {
 					$price_for_interest = ( $price_for_interest
-						* (float) ( $this->general_settings['darven_epi_installments_interest_fee_first_install'] ?? 0 ) / 100 )
+					* (float) ( $this->general_settings['darven_epi_installments_interest_fee_first_install'] ?? 0 ) / 100 )
 						+ $price_for_interest;
 					$first_install = false;
 				}
 
 				$installment_price = $this->getTaxCalculation( $price_for_interest, 'second_period', $installment );
 				$html_result      .= '<td>' . $installment . 'x</td><td>' . wc_price( $installment_price )
-					. '  = ' . wc_price( $installment_price * $installment ) . '</td>';
+				. '  = ' . wc_price( $installment_price * $installment ) . '</td>';
 			} else {
 				$installment_price = $price_for_interest / $installment;
 				$html_result      .= '<td>' . $installment . 'x</td><td>' . wc_price( $installment_price ) . '</td>';
@@ -222,18 +285,19 @@ final class InstallmentPriceFormatter {
 		$interest_fee_from = (int) ( $this->general_settings['darven_epi_installments_interest_fee_from'] ?? 0 );
 
 		if (
-			$price_count > $interest_fee_from
-			&& $display_count > $interest_fee_from
-			&& 'nofee' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' )
+		0 !== $interest_fee_from
+		&& $price_count >= $interest_fee_from
+		&& $display_count >= $interest_fee_from
+		&& 'nofee' === ( $this->general_settings['darven_epi_mode_of_view'] ?? '' )
 		) {
 			$price_count   = $interest_fee_from - 1;
 			$display_count = $price_count;
 		}
 
 		return array(
-			'table_count'   => $table_count,
-			'display_count' => $display_count,
-			'price_count'   => $price_count,
+		'table_count'   => $table_count,
+		'display_count' => $display_count,
+		'price_count'   => $price_count,
 		);
 	}
 }

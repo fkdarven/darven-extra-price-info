@@ -21,6 +21,14 @@ final class ReleasePackageTest extends TestCase {
 	}
 
 	public function test_builds_a_runtime_only_distribution_archive(): void {
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'docs/brand/darven-precos-parcelados-logo.svg' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'docs/brand/darven-precos-parcelados-banner.svg' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/icon.svg' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/icon-128x128.png' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/icon-256x256.png' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/banner-772x250.png' );
+		self::assertFileExists( DARVEN_EPI_DIR_PATH . 'wordpress-org-assets/banner-1544x500.png' );
+
 		$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
 
 		self::assertSame( 0, $result['status'], $result['output'] );
@@ -30,8 +38,22 @@ final class ReleasePackageTest extends TestCase {
 		self::assertTrue( $archive->open( $this->archive_path ) );
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/darven-extra-price-info.php' ) );
 		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/vendor/autoload.php' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/settings/index.js' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/settings/index.asset.php' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/settings/style-index.css' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/index.js' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/index.asset.php' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/build/product-options/style-index.css' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos.pot' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR.po' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR.mo' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR-darven-precos-parcelados-settings.json' ) );
+		self::assertNotFalse( $archive->locateName( 'darven-extra-price-info/languages/darven-multiplos-precos-informativos-pt_BR-darven-precos-parcelados-product-options.json' ) );
+		self::assertFalse( $archive->locateName( 'darven-extra-price-info/i18n/languages/darven-epi.pot' ) );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/tests/bootstrap.php' ) );
 		self::assertFalse( $archive->locateName( 'darven-extra-price-info/.superpowers/release-3.3.0-plan.md' ) );
+		self::assertFalse( $archive->locateName( 'darven-extra-price-info/docs/brand/darven-precos-parcelados-logo.svg' ) );
+		self::assertFalse( $archive->locateName( 'darven-extra-price-info/wordpress-org-assets/icon.svg' ) );
 
 		$forbidden_segments = array(
 			'.git/',
@@ -42,7 +64,11 @@ final class ReleasePackageTest extends TestCase {
 			'.worktrees/',
 			'dist/',
 			'docs/',
+			'wordpress-org-assets/',
 			'tests/',
+			'node_modules/',
+			'admin/src/',
+			'node_modules/',
 			'vendor/bin/',
 			'composer.json',
 			'composer.lock',
@@ -54,6 +80,8 @@ final class ReleasePackageTest extends TestCase {
 			$name = $archive->getNameIndex( $index );
 
 			self::assertStringStartsWith( 'darven-extra-price-info/', $name );
+			self::assertSame( 0, preg_match( '/\.test\.js$/', $name ), 'Release archive contains a JavaScript test: ' . $name );
+			self::assertSame( 0, preg_match( '#/languages/darven-multiplos-precos-informativos-pt_BR-[a-f0-9]{32}\\.json$#', $name ), 'Release archive contains a source-path-only JSON catalogue: ' . $name );
 
 			foreach ( $forbidden_segments as $segment ) {
 				self::assertStringNotContainsString( $segment, $name );
@@ -78,39 +106,21 @@ final class ReleasePackageTest extends TestCase {
 		self::assertSame( hash_file( 'sha256', $this->archive_path ), hash_file( 'sha256', $this->second_archive_path ) );
 	}
 
-	public function test_uses_a_laragon_php_with_openssl_for_the_local_composer_phar_when_php74_has_none(): void {
-		if ( PHP_VERSION_ID >= 80000 || '\\' !== DIRECTORY_SEPARATOR ) {
-			self::markTestSkipped( 'This regression applies only to the Windows PHP 7.4 validation runtime.' );
+	public function test_executes_a_composer_phar_override_with_php(): void {
+		$composer_phar = 'C:\\laragon\\bin\\composer\\composer.phar';
+
+		if ( ! is_file( $composer_phar ) ) {
+			self::markTestSkipped( 'The local Composer PHAR is not available.' );
 		}
 
-		self::assertFalse( extension_loaded( 'openssl' ), 'The PHP 7.4 matrix must run without OpenSSL for this regression.' );
-
-		$original_path     = getenv( 'PATH' );
 		$original_composer = getenv( 'COMPOSER_BINARY' );
-		$git_path          = $this->find_windows_executable( 'git' );
-		$system_root       = getenv( 'SystemRoot' );
 
-		self::assertNotFalse( $system_root );
-		self::assertNotFalse( $original_path );
-
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- The child builder must discover the local Composer PHAR without a PATH Composer command.
-		putenv( 'COMPOSER_BINARY' );
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Git remains available for the builder while Composer is intentionally absent from PATH.
-		putenv( 'PATH=' . dirname( $git_path ) . PATH_SEPARATOR . $system_root . DIRECTORY_SEPARATOR . 'System32' );
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Exercise the documented Composer override in the child builder.
+		putenv( 'COMPOSER_BINARY=' . $composer_phar );
 
 		try {
-			$composer_lookup = array();
-			$composer_status = 0;
-
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec -- Prove that the real builder cannot satisfy this regression through a PATH Composer command.
-			exec( 'where composer 2>&1', $composer_lookup, $composer_status );
-			self::assertNotSame( 0, $composer_status, implode( "\n", $composer_lookup ) );
-
 			$result = $this->run_builder( '--output=' . escapeshellarg( $this->archive_path ) );
 		} finally {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore the process environment after the child builder exits.
-			putenv( 'PATH=' . $original_path );
-
 			if ( false === $original_composer ) {
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv -- Restore an unset Composer override.
 				putenv( 'COMPOSER_BINARY' );
@@ -265,16 +275,4 @@ final class ReleasePackageTest extends TestCase {
 		);
 	}
 
-	private function find_windows_executable( $name ): string {
-		$output = array();
-		$status = 0;
-
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec -- The test isolates PATH while retaining the Git executable required by the real builder.
-		exec( 'where ' . escapeshellarg( $name ) . ' 2>&1', $output, $status );
-
-		self::assertSame( 0, $status, implode( "\n", $output ) );
-		self::assertNotEmpty( $output );
-
-		return $output[0];
-	}
 }

@@ -28,9 +28,17 @@ final class InstallmentsPriceTest extends TestCase {
 	public function test_formats_default_installment_markup(): void {
 		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
 
-		self::assertStringContainsString( '4x de', $result );
+		self::assertStringContainsString( '4x of', $result );
 		self::assertStringContainsString( 'R$ 25.00', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
+	}
+
+	public function test_default_mode_does_not_render_popup_markup(): void {
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringNotContainsString( 'darven-epi-installments-toggle', $result );
+		self::assertStringNotContainsString( 'darven-epi-installments-popup', $result );
+		self::assertStringNotContainsString( 'role="dialog"', $result );
 	}
 
 	public function test_returns_installment_values_as_floats(): void {

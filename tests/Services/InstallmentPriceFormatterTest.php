@@ -13,12 +13,13 @@ final class InstallmentPriceFormatterTest extends TestCase {
 			'darven_epi_option_general' => $this->getDefaultGeneralSettings(),
 		);
 		$GLOBALS['darven_epi_test_option_reads'] = array();
+		$GLOBALS['darven_epi_test_translations']  = array();
 	}
 
 	public function test_formats_default_installments_with_the_existing_markup(): void {
 		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
 
-		self::assertStringContainsString( '4x de', $result );
+		self::assertStringContainsString( '4x of', $result );
 		self::assertStringContainsString( 'R$ 25.00', $result );
 		self::assertStringContainsString( 'darven-epi-installments-price-statement', $result );
 	}
@@ -55,13 +56,51 @@ final class InstallmentPriceFormatterTest extends TestCase {
 		$first_result  = $formatter->getPriceTable( 100.00 );
 		$second_result = $formatter->getPriceTable( 100.00 );
 
-		self::assertStringContainsString( '<td>2x de</td><td>R$ 50.00</td>', $first_result[0] );
-		self::assertStringContainsString( '<td>3x de</td><td>R$ 35.00</td>', $first_result[0] );
-		self::assertStringContainsString( '<td>4x de</td><td>R$ 26.75</td>', $first_result[0] );
+		self::assertStringContainsString( '<td>2x of</td><td>R$ 50.00</td>', $first_result[0] );
+		self::assertStringContainsString( '<td>3x of</td><td>R$ 35.00</td>', $first_result[0] );
+		self::assertStringContainsString( '<td>4x of</td><td>R$ 26.75</td>', $first_result[0] );
 		self::assertSame( $first_result, $second_result );
 	}
 
-	public function test_popup_markup_uses_repeatable_classes_and_accessible_attributes(): void {
+	public function test_custom_interest_table_treats_zero_start_as_no_interest(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
+			$this->getDefaultGeneralSettings(), array(
+				'darven_epi_installments_interest_fee_is_table_enabled' => 'darven_epi_installments_interest_fee_is_table_enabled',
+				'darven_epi_installments_interest_fee_from' => '0',
+				'darven_epi_installments_interest_fee_table' => '5|7',
+			)
+		);
+
+		$result = $this->getFormatter()->getPriceTable( 100.00 );
+
+		self::assertStringContainsString( '<td>1x of</td><td>R$ 100.00</td>', $result[0] );
+		self::assertStringContainsString( '<td>4x of</td><td>R$ 25.00</td>', $result[0] );
+	}
+
+	public function test_nofee_mode_with_zero_interest_start_keeps_all_installments(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general']['darven_epi_mode_of_view'] = 'nofee';
+
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringContainsString( '4x of', $result );
+		self::assertStringContainsString( 'R$ 25.00', $result );
+	}
+
+	public function test_nofee_mode_excludes_the_interest_start_installment(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
+			$this->getDefaultGeneralSettings(), array(
+				'darven_epi_mode_of_view' => 'nofee',
+				'darven_epi_installments_interest_fee_from' => '4',
+			)
+		);
+
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringContainsString( '3x of', $result );
+		self::assertStringNotContainsString( '4x of', $result );
+	}
+
+	public function test_nofee_popup_preserves_legacy_component_classes(): void {
 		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
 			$this->getDefaultGeneralSettings(),
 			array(
@@ -73,14 +112,43 @@ final class InstallmentPriceFormatterTest extends TestCase {
 
 		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
 
-		self::assertStringNotContainsString( ' id=', $result );
+		self::assertStringContainsString( 'installments-price-statement darven-epi-installments-price-statement', $result );
+		self::assertStringContainsString( 'messagepop pop darven-epi-installments-popup', $result );
+		self::assertStringContainsString( 'installments_table darven-epi-installments-table', $result );
 		self::assertStringContainsString( 'darven-epi-installments-table', $result );
 		self::assertStringContainsString( 'darven-epi-installments-popup', $result );
-		self::assertStringContainsString(
-			'<button type="button" class="darven-epi-installments-toggle" aria-expanded="false">',
-			$result
+		self::assertStringContainsString( 'class="darven-epi-installments-toggle"', $result );
+	}
+
+	public function test_installment_connector_is_translatable_with_the_count_placeholder(): void {
+		$GLOBALS['darven_epi_test_translations']['%1$sx of'] = '%1$s installments';
+
+		$result = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		self::assertStringContainsString( '>4 installments</span>', $result );
+	}
+
+	public function test_independent_popup_renders_use_distinct_cross_request_ids(): void {
+		$GLOBALS['darven_epi_test_options']['darven_epi_option_general'] = array_merge(
+			$this->getDefaultGeneralSettings(), array(
+				'darven_epi_mode_of_view' => 'popup',
+				'darven_epi_popup_text'   => 'View installments',
+			)
 		);
-		self::assertStringContainsString( 'aria-hidden="true"', $result );
+
+		$GLOBALS['darven_epi_test_unique_id'] = 0;
+		$first = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+		$GLOBALS['darven_epi_test_unique_id'] = 0;
+		$second = $this->getFormatter()->format( new WC_Product( '100.00' ) );
+
+		preg_match( '/aria-controls="([^"]+)"/', $first, $first_controls );
+		preg_match( '/aria-controls="([^"]+)"/', $second, $second_controls );
+
+		self::assertNotEmpty( $first_controls[1] ?? '' );
+		self::assertNotEmpty( $second_controls[1] ?? '' );
+		self::assertNotSame( $first_controls[1], $second_controls[1] );
+		self::assertStringContainsString( 'id="' . $first_controls[1] . '"', $first );
+		self::assertStringContainsString( 'id="' . $second_controls[1] . '"', $second );
 	}
 
 	public function test_installments_table_has_balanced_rows(): void {

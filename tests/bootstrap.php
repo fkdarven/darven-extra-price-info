@@ -2,6 +2,7 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'DARVEN_EPI_DIR_PATH', dirname( __DIR__ ) . '/' );
+define( 'DARVEN_EPI_LANGUAGE_DOMAIN', 'darven-multiplos-precos-informativos' );
 
 require_once DARVEN_EPI_DIR_PATH . 'vendor/autoload.php';
 
@@ -14,6 +15,14 @@ $GLOBALS['darven_epi_test_option_reads'] = array();
 $GLOBALS['darven_epi_test_settings_sanitizers'] = array();
 $GLOBALS['darven_epi_test_update_option_calls'] = array();
 $GLOBALS['darven_epi_test_update_option_depth'] = 0;
+$GLOBALS['darven_epi_test_rest_routes'] = array();
+$GLOBALS['darven_epi_test_rest_dispatch_log'] = array();
+$GLOBALS['darven_epi_test_products'] = array();
+$GLOBALS['darven_epi_test_localized_scripts'] = array();
+$GLOBALS['darven_epi_test_enqueued_media'] = 0;
+$GLOBALS['darven_epi_test_screen'] = null;
+$GLOBALS['darven_epi_test_loaded_textdomains'] = array();
+$GLOBALS['darven_epi_test_translations'] = array();
 
 function get_option( $name, $default = false ) {
 	$GLOBALS['darven_epi_test_option_reads'][] = $name;
@@ -170,9 +179,205 @@ function add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, 
 	);
 }
 
+function register_rest_route( $namespace, $route, $args ): void {
+	$GLOBALS['darven_epi_test_rest_routes'][] = array(
+		'namespace' => $namespace,
+		'route'     => $route,
+		'args'      => $args,
+	);
+}
+
+class WP_REST_Request {
+	private $params;
+	private $json_params;
+	private $body;
+
+	public function __construct( array $params = array(), $json_params = array(), ?string $body = null ) {
+		$this->params      = $params;
+		$this->json_params = $json_params;
+		$this->body        = null === $body ? (string) json_encode( $json_params ) : $body;
+	}
+
+	public function get_param( $key ) {
+		return $this->params[ $key ] ?? null;
+	}
+
+	public function get_json_params() {
+		return $this->json_params;
+	}
+
+	public function get_body(): string {
+		return $this->body;
+	}
+}
+
+class WP_REST_Response {
+	private $data;
+	private $status;
+
+	public function __construct( $data, $status = 200 ) {
+		$this->data   = $data;
+		$this->status = $status;
+	}
+
+	public function get_data() {
+		return $this->data;
+	}
+
+	public function get_status(): int {
+		return $this->status;
+	}
+}
+
+class WP_Error {
+	private $code;
+	private $message;
+	private $data;
+
+	public function __construct( $code = '', $message = '', $data = null ) {
+		$this->code    = $code;
+		$this->message = $message;
+		$this->data    = $data;
+	}
+
+	public function get_error_code(): string {
+		return $this->code;
+	}
+
+	public function get_error_data() {
+		return $this->data;
+	}
+
+	public function get_error_message(): string {
+		return $this->message;
+	}
+}
+
+function rest_ensure_response( $response ): WP_REST_Response {
+	if ( $response instanceof WP_Error ) {
+		$error_data = $response->get_error_data();
+		$status     = is_array( $error_data ) && isset( $error_data['status'] ) ? $error_data['status'] : 500;
+
+		return new WP_REST_Response(
+			array(
+				'code'    => $response->get_error_code(),
+				'message' => $response->get_error_message(),
+				'data'    => $error_data,
+			),
+			$status
+		);
+	}
+
+	return $response instanceof WP_REST_Response ? $response : new WP_REST_Response( $response );
+}
+
+function darven_epi_test_dispatch_rest_request( $namespace, $method, $path, WP_REST_Request $request ): WP_REST_Response {
+	foreach ( $GLOBALS['darven_epi_test_rest_routes'] as $route ) {
+		if ( $namespace !== $route['namespace'] || $method !== $route['args']['methods'] ) {
+			continue;
+		}
+
+		if ( 1 !== preg_match( '#^' . $route['route'] . '$#', $path ) ) {
+			continue;
+		}
+
+		$GLOBALS['darven_epi_test_rest_dispatch_log'][] = 'permission';
+		$permission = call_user_func( $route['args']['permission_callback'], $request );
+		if ( true !== $permission ) {
+			return rest_ensure_response( $permission );
+		}
+
+		$GLOBALS['darven_epi_test_rest_dispatch_log'][] = 'callback';
+
+		return rest_ensure_response( call_user_func( $route['args']['callback'], $request ) );
+	}
+
+	return new WP_REST_Response( array( 'code' => 'rest_no_route' ), 404 );
+}
+
+function wp_create_nonce( $action ): string {
+	$GLOBALS['darven_epi_test_nonce_action'] = $action;
+
+	return 'test-rest-nonce';
+}
+
+function wp_localize_script( $handle, $object_name, $data ): void {
+	$GLOBALS['darven_epi_test_localized_scripts'][] = array(
+		'handle'      => $handle,
+		'object_name' => $object_name,
+		'data'        => $data,
+	);
+}
+
+function wp_enqueue_media(): void {
+	$GLOBALS['darven_epi_test_enqueued_media']++;
+}
+
+function get_current_screen() {
+	return $GLOBALS['darven_epi_test_screen'];
+}
+
+function wc_get_product( $product_id ) {
+	return $GLOBALS['darven_epi_test_products'][ (int) $product_id ] ?? false;
+}
+
+function rest_url( $path = '' ): string {
+	return 'https://example.test/wp-json/' . ltrim( $path, '/' );
+}
+
+function absint( $value ): int {
+	return abs( (int) $value );
+}
+
+function esc_attr( $value ): string {
+	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+}
+
+function esc_html( $value ): string {
+	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+}
+
+function esc_url( $value ): string {
+	return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+}
+
+function wp_unique_id( $prefix = '' ): string {
+	$GLOBALS['darven_epi_test_unique_id'] = ( $GLOBALS['darven_epi_test_unique_id'] ?? 0 ) + 1;
+
+	return (string) $prefix . $GLOBALS['darven_epi_test_unique_id'];
+}
+
+function wp_nonce_field( $action, $name ): void {
+	$GLOBALS['darven_epi_test_nonce_field'] = array( $action, $name );
+	echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="test-settings-nonce">';
+}
+
+function admin_url( $path = '' ): string {
+	return 'https://example.test/wp-admin/' . ltrim( $path, '/' );
+}
+
+function add_query_arg( array $args, $url ): string {
+	return $url . ( false === strpos( $url, '?' ) ? '?' : '&' ) . http_build_query( $args );
+}
+
+function wp_safe_redirect( $location ): bool {
+	$GLOBALS['darven_epi_test_safe_redirect'] = $location;
+
+	return true;
+}
+
+function wp_generate_uuid4(): string {
+	static $sequence = 0;
+
+	$sequence++;
+
+	return sprintf( '00000000-0000-4000-8000-%012d', $sequence );
+}
+
 class WC_Product {
 	private $id;
 	private $meta;
+	private $parent_id = 0;
 	private $price;
 	private $type;
 	private $variation_price;
@@ -184,6 +389,12 @@ class WC_Product {
 		$this->price           = $price;
 		$this->type            = $type;
 		$this->variation_price = $variation_price;
+
+		if ( 'variation' === $type && $variation_price instanceof self ) {
+			$this->parent_id = $variation_price->get_id();
+			$GLOBALS['darven_epi_test_products'][ $this->parent_id ] = $variation_price;
+			$this->variation_price = null;
+		}
 	}
 
 	public function get_id() {
@@ -192,6 +403,10 @@ class WC_Product {
 
 	public function get_price() {
 		return $this->price;
+	}
+
+	public function get_parent_id() {
+		return $this->parent_id;
 	}
 
 	public function is_type( $type ) {
@@ -212,6 +427,7 @@ class WC_Product {
 
 	public function save(): void {
 		$this->save_count++;
+		$GLOBALS['darven_epi_test_products'][ $this->id ] = $this;
 	}
 
 	public function get_save_count(): int {
@@ -264,7 +480,11 @@ function wp_strip_all_tags( $text ) {
 }
 
 function wp_unslash( $value ) {
-	return $value;
+	if ( is_array( $value ) ) {
+		return array_map( 'wp_unslash', $value );
+	}
+
+	return is_string( $value ) ? stripslashes( $value ) : $value;
 }
 
 function sanitize_text_field( $value ): string {
@@ -272,7 +492,7 @@ function sanitize_text_field( $value ): string {
 }
 
 function __( $text, $domain = null ): string {
-	return (string) $text;
+	return (string) ( $GLOBALS['darven_epi_test_translations'][ $text ] ?? $text );
 }
 
 function wp_kses( $value, $allowed_html ): string {
@@ -305,6 +525,15 @@ function plugin_basename( $plugin_file ): string {
 	$GLOBALS['darven_epi_test_plugin_basename_input'] = $plugin_file;
 
 	return basename( $plugin_file );
+}
+
+function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ): bool {
+	$GLOBALS['darven_epi_test_loaded_textdomains'][] = array(
+		'domain' => $domain,
+		'path'   => $plugin_rel_path,
+	);
+
+	return true;
 }
 
 function deactivate_plugins( $plugin ): void {

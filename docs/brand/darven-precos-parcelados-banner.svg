@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1544 500" role="img" aria-labelledby="title desc">
+  <title id="title">Darven Preços Parcelados — Parcelamento sem complicação</title>
+  <desc id="desc">Banner em creme e laranja com a mensagem Seus preços transparentes.</desc>
+  <rect width="1544" height="500" fill="#fff3df"/>
+  <path d="M1035-70c183 9 381 55 509 168v402H969c-85-99-123-218-93-330 25-94 82-180 159-240z" fill="#f15a24"/>
+  <circle cx="1450" cy="72" r="144" fill="#ff8b35" opacity=".65"/>
+  <circle cx="1062" cy="452" r="168" fill="#ffd8a8" opacity=".5"/>
+  <g transform="translate(80 65)">
+    <rect width="206" height="74" rx="37" fill="#32170d"/>
+    <text x="103" y="49" fill="#fffaf2" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" text-anchor="middle">DARVEN</text>
+    <text x="0" y="184" fill="#32170d" font-family="Arial, Helvetica, sans-serif" font-size="63" font-weight="900" letter-spacing="-2">Parcelamento</text>
+    <text x="0" y="250" fill="#32170d" font-family="Arial, Helvetica, sans-serif" font-size="63" font-weight="900" letter-spacing="-2">sem complicação</text>
+    <rect y="291" width="500" height="73" rx="36" fill="#ff7214"/>
+    <text x="250" y="339" fill="#32170d" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="800" text-anchor="middle">Seus preços transparentes</text>
+  </g>
+  <g transform="translate(1010 83) rotate(-5)">
+    <rect width="390" height="326" rx="46" fill="#fffaf2" stroke="#32170d" stroke-width="10"/>
+    <rect x="34" y="34" width="322" height="72" rx="24" fill="#ff7214"/>
+    <text x="195" y="80" fill="#32170d" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="900" text-anchor="middle">PREÇOS PARCELADOS</text>
+    <text x="52" y="164" fill="#32170d" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">12x de</text>
+    <text x="52" y="230" fill="#32170d" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="900">R$ 49,90</text>
+    <path d="M52 266h286" stroke="#f15a24" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="67" cy="291" r="10" fill="#f15a24"/>
+    <circle cx="100" cy="291" r="10" fill="#f15a24"/>
+    <circle cx="133" cy="291" r="10" fill="#f15a24"/>
+  </g>
+</svg>

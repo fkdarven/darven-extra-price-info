@@ -8,7 +8,7 @@ final class LegacySettingsAdapterTest extends TestCase {
 		$adapter  = new LegacySettingsAdapter();
 		$settings = $adapter->fromLegacyOptions( $this->get_legacy_options() );
 
-		self::assertSame( 1, $settings['schema_version'] );
+		self::assertSame( 2, $settings['schema_version'] );
 		self::assertSame(
 			array(
 				'darven_epi_incash_is_enabled' => 'darven_epi_incash_is_enabled',
@@ -45,7 +45,7 @@ final class LegacySettingsAdapterTest extends TestCase {
 		$adapter = new LegacySettingsAdapter();
 		$result  = $adapter->projectToLegacyOptions(
 			array(
-				'schema_version' => 1,
+				'schema_version' => 2,
 				'general'        => array(
 					'darven_epi_max_installments' => '12',
 				),
@@ -113,7 +113,7 @@ final class LegacySettingsAdapterTest extends TestCase {
 
 		self::assertSame(
 			array(
-				'schema_version' => 1,
+				'schema_version' => 2,
 				'general'        => array(),
 				'positions'      => array(),
 				'display'        => array(),

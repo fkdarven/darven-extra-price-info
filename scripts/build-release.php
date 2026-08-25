@@ -251,6 +251,10 @@ function darven_epi_release_composer_command(): string {
 	$composer = getenv( 'COMPOSER_BINARY' );
 
 	if ( false !== $composer && '' !== $composer ) {
+		if ( is_file( $composer ) && 'phar' === strtolower( pathinfo( $composer, PATHINFO_EXTENSION ) ) ) {
+			return escapeshellarg( darven_epi_release_composer_php_binary() ) . ' ' . escapeshellarg( $composer );
+		}
+
 		return escapeshellarg( $composer );
 	}
 
@@ -302,6 +306,7 @@ function darven_epi_release_is_excluded( $relative_path ): bool {
 		'.worktrees',
 		'dist',
 		'docs',
+		'node_modules',
 		'tests',
 		'vendor',
 	);
@@ -312,9 +317,13 @@ function darven_epi_release_is_excluded( $relative_path ): bool {
 		}
 	}
 
+	if ( 'admin' === $parts[0] && isset( $parts[1] ) && 'src' === $parts[1] ) {
+		return true;
+	}
+
 	$filename = end( $parts );
 
-	return in_array( $filename, $files, true ) || '~' === substr( $filename, -1 ) || darven_epi_release_is_git_ignored( $relative_path );
+	return 1 === preg_match( '/\.test\.js$/', $filename ) || in_array( $filename, $files, true ) || '~' === substr( $filename, -1 ) || darven_epi_release_is_git_ignored( $relative_path );
 }
 
 /**
@@ -523,6 +532,10 @@ function darven_epi_release_validate_zip( $archive_path ): void {
 			$archive->close();
 			throw new RuntimeException( 'Archive entry has an invalid root: ' . $name );
 		}
+		if ( 1 === preg_match( '/\.test\.js$/', $name ) ) {
+			$archive->close();
+			throw new RuntimeException( 'Archive contains JavaScript test: ' . $name );
+		}
 
 		foreach ( $forbidden as $segment ) {
 			if ( false !== strpos( $name, $segment ) ) {
@@ -536,8 +549,8 @@ function darven_epi_release_validate_zip( $archive_path ): void {
 }
 
 try {
-	if ( PHP_VERSION_ID < 70400 ) {
-		throw new RuntimeException( 'PHP 7.4 or later is required to build a release.' );
+	if ( PHP_VERSION_ID < 80000 ) {
+		throw new RuntimeException( 'PHP 8.0 or later is required to build a release.' );
 	}
 
 	if ( ! class_exists( 'ZipArchive' ) ) {
@@ -556,6 +569,10 @@ try {
 
 	if ( false === $repository_real_path ) {
 		throw new RuntimeException( 'Unable to resolve the repository root.' );
+	}
+
+	if ( ! is_dir( $repository_root . DIRECTORY_SEPARATOR . 'build' ) ) {
+		throw new RuntimeException( 'The build directory is required to build a release. Run npm run build:admin first.' );
 	}
 
 	darven_epi_release_validate_archive_destination( $archive_path, $repository_real_path );
@@ -585,8 +602,7 @@ try {
 	try {
 		$runtime_paths = array(
 			'admin',
-			'i18n',
-			'includes',
+			'build',
 			'languages',
 			'public',
 			'src',

@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "test": "wp-scripts test-unit-js",
+    "build:settings": "wp-scripts build --webpack-src-dir=admin/src/settings --output-path=build/settings",
+    "build:product-options": "wp-scripts build --webpack-src-dir=admin/src/product-options --output-path=build/product-options",
+    "build:admin": "npm run build:settings && npm run build:product-options",
+    "start:settings": "wp-scripts start --webpack-src-dir=admin/src/settings --output-path=build/settings",
+    "start:product-options": "wp-scripts start --webpack-src-dir=admin/src/product-options --output-path=build/product-options",
+    "i18n:pot": "npm run build:admin && php scripts/build-translations.php",
+    "i18n:json": "npm run build:admin && php scripts/build-translations.php"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "7.29.7",
+    "@wordpress/scripts": "34.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.4.5"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "unrs-resolver@1.12.2": true,
+    "core-js": false,
+    "core-js-pure": false,
+    "fsevents": false
+  },
+  "overrides": {
+    "adm-zip": "0.6.0",
+    "cosmiconfig": {
+      "js-yaml": "4.3.1"
+    },
+    "fast-uri": "3.1.5",
+    "lighthouse": "13.4.1",
+    "markdownlint-cli": "0.49.1",
+    "nanoid": "3.3.18",
+    "serialize-javascript": "7.0.7",
+    "uuid": "11.1.1"
+  }
+}
