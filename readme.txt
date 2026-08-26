@@ -32,9 +32,6 @@ Para gerar o pacote de distribuição, execute:
 
 Guia para configuração do plugin: [Darven MPI Guia de Configuração](https://github.com/fkdarven/darven-extra-price-info/raw/main/darven-epi-manual.pdf)
 
-***Atenção! As personalizações de cores e tamanhos estão desabilitadas temporariamente ***
-  • Desabilitada a aba de personalização de cores e tamanhos temporariamente, para resolver problemas relativos a performance, número de headers enviadas e conflitos com o Bling. Assim que solucionado, será reativada.
-
 == Frequently Asked Questions ==
 
 = Posso adicionar juros ao preço com parcelamento? =
@@ -75,8 +72,19 @@ Os juros na primeira parcela serão aplicados somente a 1 parcela
 
 == Changelog ==
 = 4.0.0 =
-    • Nova identidade pública: Darven Preços Parcelados. Anteriormente: Darven Múltiplos Preços Informativos.
-    • Preparada a infraestrutura de ativos administrativos separados para configurações e opções de produto.
+* Nova identidade pública: Darven Preços Parcelados, anteriormente Darven Múltiplos Preços Informativos.
+* Novo painel administrativo em React, com configurações reorganizadas por tarefa e feedback claro de carregamento, validação e salvamento.
+* Nova API REST autenticada para configurações globais e opções por produto.
+* Novo editor visual para ordenar preço original, preço à vista e preço parcelado.
+* Controles de apresentação, posicionamento e compatibilidade agora produzem efeito real e sanitizado na vitrine.
+* Nova janela acessível de parcelas, responsiva, com navegação por teclado, controle de foco, tecla Esc e suporte a múltiplos produtos na mesma página.
+* Opções do Darven modernizadas no editor de produtos, incluindo comportamento correto para produtos variáveis e configurações herdadas.
+* Migração não destrutiva das configurações e metadados da linha 3.x, preservando os dados e espelhos legados existentes.
+* Integração automática e segura com YITH WooCommerce Dynamic Pricing and Discounts, com fallback para os preços do WooCommerce.
+* Tradução completa para português do Brasil no PHP e nas duas aplicações administrativas.
+* Correções de persistência, cálculos de juros, limites de parcelas, estados sem juros, salvamentos concorrentes e validação das requisições REST.
+* Compatibilidade validada com WordPress 7.1 e WooCommerce 11.0.0.
+* A versão 4.0.0 requer PHP 8.0 ou superior; a versão 3.3.1 permanece disponível para instalações com PHP 7.4.
 
 = 3.3.1 =
     • Validado com WordPress 7.0.2 e WooCommerce 10.9.4.
@@ -140,4 +148,3 @@ Agora é possível definir taxas de juros personalizadas, parcela a parcela. Bas
 = 1.0.1 =
 
 Ajustes para melhorar a compatibilidade com versões anteriores do PHP.
-
