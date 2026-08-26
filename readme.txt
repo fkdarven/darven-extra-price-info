@@ -69,10 +69,9 @@ Os juros na primeira parcela serão aplicados somente a 1 parcela
 
 == Screenshots ==
 
-1. Catálogo de produtos com o preço á vista e com parcelamento ativados
-2. Configurações do preço com parcelamento
-3. Configurações do preço á vista
-4. Produto individual com o preço á vista e com parcelamento ativados
+1. Configurações do Darven Preços Parcelados no menu do WooCommerce.
+2. Opções do Darven no editor de produto do WooCommerce.
+3. Lista acessível de parcelas aberta na página do produto.
 
 == Changelog ==
 = 4.0.0 =
@@ -141,5 +140,4 @@ Agora é possível definir taxas de juros personalizadas, parcela a parcela. Bas
 = 1.0.1 =
 
 Ajustes para melhorar a compatibilidade com versões anteriores do PHP.
-
 
